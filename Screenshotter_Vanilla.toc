@@ -1,0 +1,9 @@
+## Interface: 11500
+## Title: Screenshotter
+## Notes: Take screenshots on events throughout adventures in Azeroth and beyond
+## Author: martinbjeldbak
+## Version: 0.1.0
+## SavedVariables: ScreenshotterDB
+
+Screenshotter.lua
+Options.lua
