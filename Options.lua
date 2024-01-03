@@ -1,4 +1,3 @@
-
 local function InitializeOptions(frame, db, addonName, version)
   frame.panel = CreateFrame("Frame")
   frame.panel.name = "Screenshotter"
@@ -34,14 +33,21 @@ local function InitializeOptions(frame, db, addonName, version)
   header.right:SetTexCoord(0.81, 0.94, 0.5, 1)
   header.left:SetPoint("RIGHT", header.label, "LEFT", -5, 0)
 
-  local cb = CreateFrame("CheckButton", nil, header, "InterfaceOptionsCheckButtonTemplate")
-  cb:SetPoint("TOPLEFT", 20, -20)
-  cb.Text:SetText("On level up")
-  cb:HookScript("OnClick", function(_, btn, down)
-    db.testEvent = cb:GetChecked()
-  end)
+  local offset = -20
+  for k, e in pairs(db.screenshottableEvents) do
+    local cb = CreateFrame("CheckButton", nil, header, "InterfaceOptionsCheckButtonTemplate")
+    print("KEY")
+    print(k)
+    cb:SetPoint("TOPLEFT", 20, offset)
+    cb.Text:SetText(e.checkboxText)
+    cb:HookScript("OnClick", function(_, btn, down)
+      e.enabled = cb:GetChecked()
+    end)
 
-  cb:SetChecked(db.testEvent)
+    offset = offset - 20
+
+    cb:SetChecked(db.screenshottableEvents[k].enabled)
+  end
 
   InterfaceOptions_AddCategory(frame.panel)
 end
