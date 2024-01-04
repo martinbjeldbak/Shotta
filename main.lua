@@ -1,12 +1,9 @@
 local _, ns = ...
 
-local EventFrame = CreateFrame("Frame")
-
-local Screenshotter = {}
+Screenshotter = {}
 Screenshotter.ADDON_NAME = "Screenshotter"
 Screenshotter.VERSION = "@project-version@"
 Screenshotter.COLOR = "245DC6FF"
-
 
 ---@class Event
 ---@field name string Event name as defiend in https://wowpedia.fandom.com/wiki/Category:API_events
@@ -49,40 +46,9 @@ local DB_DEFAULTS = {
   }
 }
 
---- Print formatted message to chat
----@param message string
----@return nil
-local function printToChat(message)
-  print(format("%s: %s", WrapTextInColorCode(Screenshotter.ADDON_NAME, Screenshotter.COLOR), message))
-end
-
-ns.PrintToChat = printToChat
-
---- Creates or gets the SavedVariable for this addon
----@param defaults any
----@return ScreenshotterDatabase
-local function fetchOrCreateDatabase(defaults)
-  local db = ScreenshotterDB or {}
-
-  for k, v in pairs(defaults) do
-    if db[k] == nil then
-      db[k] = v
-    end
-  end
-
-  -- Table keys may already exist so let's make sure we pick up any new events
-  for k, v in pairs(defaults.screenshottableEvents) do
-    if db.screenshottableEvents[k] == nil then
-      db.screenshottableEvents[k] = v
-    end
-  end
-
-  return db
-end
-
 local screenshotFrame = CreateFrame("Frame")
 screenshotFrame:SetScript("OnEvent", function(_, event)
-  printToChat(format("Got event %s, taking screenshot", event))
+  ns.PrintToChat(format("Got event %s, taking screenshot", event))
 
   Screenshot()
 end)
@@ -90,7 +56,7 @@ end)
 function screenshotFrame:registerUnregisterEvent(event)
   if event.enabled then
     self:RegisterEvent(event.name)
-    printToChat(format("Will screenshot for event %s", event.name))
+    ns.PrintToChat(format("Will screenshot for event %s", event.name))
   else
     self:UnregisterEvent(event.name)
   end
@@ -102,11 +68,11 @@ local function EventHandler(self, event, addOnName)
   end
 
   if event ~= "ADDON_LOADED" then
-    printToChat(format("Got unknown event %s", event))
+    ns.PrintToChat(format("Got unknown event %s", event))
     return
   end
 
-  local db = fetchOrCreateDatabase(DB_DEFAULTS)
+  local db = ns.FetchOrCreateDatabase(DB_DEFAULTS)
 
   ns.InitializeOptions(self, db, screenshotFrame, Screenshotter.ADDON_NAME, Screenshotter.VERSION)
 
@@ -119,8 +85,9 @@ local function EventHandler(self, event, addOnName)
 
   self:UnregisterEvent(event)
 
-  printToChat("v" .. Screenshotter.VERSION .. " loaded")
+  ns.PrintToChat("v" .. Screenshotter.VERSION .. " loaded")
 end
 
+local EventFrame = CreateFrame("Frame")
 EventFrame:RegisterEvent("ADDON_LOADED")
 EventFrame:SetScript("OnEvent", EventHandler)

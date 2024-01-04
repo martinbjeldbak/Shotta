@@ -6,5 +6,6 @@
 ## Version: @project-version@
 ## SavedVariables: ScreenshotterDB
 
+utils.lua
 main.lua
 options.lua
