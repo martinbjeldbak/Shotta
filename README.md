@@ -4,7 +4,7 @@
 
 - UI Button: Reset all event state
 - Settings are global: make profile or chracter-specific bindings
-- Timer https://wowpedia.fandom.com/wiki/API_C_Timer After ie 10s after readcheck
+- [Timer](https://wowpedia.fandom.com/wiki/API_C_Timer) After ie 10s after readcheck
 
 ## Event ideas
 
