@@ -15,7 +15,7 @@ repository:
 
 then click "Import", you should see the below screen
 
-![Screenshot of WoWUp client installing this Addon](https://github.com/martinbjeldbak/screenshotter/assets/823316/25b92bbd-03aa-422d-abe9-10f68a0b175)
+![Screenshot of WoWUp client installing this Addon](https://github.com/martinbjeldbak/screenshotter/assets/823316/25b92bbd-03aa-422d-abe9-10f68a0b1752)
 
 Simply click "Install" and you're done. You will be prompted to update on any future releases.
 
