@@ -48,7 +48,7 @@ local DB_DEFAULTS = {
 
 local screenshotFrame = CreateFrame("Frame")
 screenshotFrame:SetScript("OnEvent", function(_, event)
-  ns.PrintToChat(format("Got event %s, taking screenshot", event))
+  ns.PrintToChat(format("Got event %s, taking screenshot!", event))
 
   Screenshot()
 end)
@@ -85,7 +85,7 @@ local function EventHandler(self, event, addOnName)
 
   self:UnregisterEvent(event)
 
-  ns.PrintToChat("v" .. Screenshotter.VERSION .. " loaded")
+  ns.PrintToChat(Screenshotter.VERSION .. " loaded")
 end
 
 local EventFrame = CreateFrame("Frame")

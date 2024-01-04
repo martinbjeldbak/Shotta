@@ -28,7 +28,7 @@ local function InitializeOptions(frame, db, screenshotFrame, addonName, version)
   title:SetHeight(70)
   title.frameTitle = title:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
   title.frameTitle:SetPoint("TOP", title, "TOP", 0, -20);
-  title.frameTitle:SetText(addonName .. " v" .. version)
+  title.frameTitle:SetText(addonName .. " " .. version)
 
   local header = CreateFrame("Frame", nil, title)
   header:SetHeight(18)
