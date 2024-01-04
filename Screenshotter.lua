@@ -7,12 +7,14 @@ COLOR = "245DC6FF"
 
 
 ---@class Event
----@field name string
----@field enabled boolean
----@field checkboxText string
+---@field name string Event name as defiend in https://wowpedia.fandom.com/wiki/Category:API_events
+---@field enabled boolean Whether or not the user has enabled this event
+---@field checkboxText string Value displayed in AddOn options checkbox for togglign
+
+---@alias friendlyEventName string Key use to define the event that Screenshotter can listen to. Unique.
 
 ---@class ScreenshotterDatabase
----@field screenshottableEvents { [string]: Event }
+---@field screenshottableEvents { [friendlyEventName]: Event }
 
 ---@type ScreenshotterDatabase
 local DB_DEFAULTS = {
@@ -38,7 +40,7 @@ local DB_DEFAULTS = {
       checkboxText = "On level up"
     },
   }
-} --- Creates or gets the SavedVariable for this addon
+}
 
 --- Print formatted message to chat
 ---@param message string
@@ -72,7 +74,7 @@ local function fetchOrCreateDatabase(defaults)
 end
 
 local screenshotFrame = CreateFrame("Frame")
-screenshotFrame:SetScript("OnEvent", function(self, event, ...)
+screenshotFrame:SetScript("OnEvent", function(_, event)
   printToChat(format("Got event %s, taking screenshot", event))
 
   Screenshot()
