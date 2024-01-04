@@ -4,7 +4,7 @@ on:  # yamllint disable-line rule:truthy
   push: null
   pull_request: null
 jobs:
-  lint:
+  super-linter:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -21,6 +21,12 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_LUA: false
+
+  luacheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Luacheck
         uses: lunarmodules/luacheck@v1
