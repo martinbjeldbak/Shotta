@@ -12,9 +12,15 @@ local function EnabledHumanized(option)
 end
 
 
+---Initialize addon options panel
+---@param frame any
+---@param db ScreenshotterDatabase
+---@param screenshotFrame any
+---@param addonName string
+---@param version string
 local function InitializeOptions(frame, db, screenshotFrame, addonName, version)
   frame.panel = CreateFrame("Frame")
-  frame.panel.name = "Screenshotter"
+  frame.panel.name = addonName
 
   local title = CreateFrame("Frame", nil, frame.panel)
   title:SetPoint("TOPLEFT", frame.panel, "TOPLEFT")
@@ -47,6 +53,7 @@ local function InitializeOptions(frame, db, screenshotFrame, addonName, version)
   header.right:SetTexCoord(0.81, 0.94, 0.5, 1)
   header.left:SetPoint("RIGHT", header.label, "LEFT", -5, 0)
 
+  -- Create checkboxes for all events we should listen to
   local offset = -20
   for k, e in pairs(db.screenshottableEvents) do
     local cb = CreateFrame("CheckButton", nil, header, "InterfaceOptionsCheckButtonTemplate")
@@ -59,7 +66,6 @@ local function InitializeOptions(frame, db, screenshotFrame, addonName, version)
 
       ns.PrintToChat(format("%s is now %s", k, EnabledHumanized(e.enabled)))
     end)
-
 
     offset = offset - 20
 
