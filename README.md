@@ -4,6 +4,7 @@
 
 - UI Button: Reset all event state
 - Settings are global: make profile or chracter-specific bindings
+- Timer https://wowpedia.fandom.com/wiki/API_C_Timer After ie 10s after readcheck
 
 ## Event ideas
 
@@ -13,6 +14,10 @@ not sure if any of these are possible
 - [ ] When close to a friend
 - [ ] When emoting with a friend/target
 - [ ] When emoting at all
+- [ ] Low health
+
+
+Full event list [here](https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_list))
 
 ## Consider events
 

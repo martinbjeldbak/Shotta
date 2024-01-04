@@ -39,6 +39,11 @@ local DB_DEFAULTS = {
       enabled = true,
       checkboxText = "On level up"
     },
+    readyCheck = {
+      name = "READY_CHECK",
+      enabled = false,
+      checkboxText = "On ready check"
+    }
   }
 }
 
@@ -103,12 +108,14 @@ local function EventHandler(self, event, addOnName)
 
   ns.InitializeOptions(self, db, screenshotFrame, ADDON_NAME, VERSION)
 
+  --- Persist DB as SavedVariable since we've been using it as a local
+  ScreenshotterDB = db
+
   for _, e in pairs(db.screenshottableEvents) do
     screenshotFrame:registerUnregisterEvent(e)
   end
 
-  --- Persist DB as SavedVariable since we've been using it as a local
-  ScreenshotterDB = db
+  self:UnregisterEvent(event)
 
   printToChat("v" .. VERSION .. " loaded")
 end
