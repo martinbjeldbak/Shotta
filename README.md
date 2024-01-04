@@ -2,6 +2,23 @@
 [![Release](https://github.com/martinbjeldbak/screenshotter/actions/workflows/release.yml/badge.svg)](https://github.com/martinbjeldbak/screenshotter/actions/workflows/release.yml)
 [![Lint](https://github.com/martinbjeldbak/screenshotter/actions/workflows/lint.yml/badge.svg)](https://github.com/martinbjeldbak/screenshotter/actions/workflows/lint.yml)
 
+
+## Installing
+
+Currently WoWUp is the only known supported addon client. I have not released
+this to Cursforge, WoWInterface, Wago, etc. yet.
+
+Go to `Get Addons`, then `Install from URL` and paste in the link to this
+repository:
+
+- <https://github.com/martinbjeldbak/screenshotter>
+
+then click "Import", you should see the below screen
+
+![Screenshot of WoWUp client installing this Addon](https://github.com/martinbjeldbak/screenshotter/assets/823316/25b92bbd-03aa-422d-abe9-10f68a0b175)
+
+Simply click "Install" and you're done. You will be prompted to update on any future releases.
+
 ## TODO
 
 - UI Button: Reset all event state

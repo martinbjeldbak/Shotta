@@ -4,7 +4,7 @@ local _, ns = ...
 -- Localization table
 ns.T = {}
 ns.T["checkboxText.channelChat"] = "On message in channel"
-ns.T["checkboxText.movementStart"] = "On start moving"
+ns.T["checkboxText.movementStart"] = "On start moving (for easier debugging)"
 ns.T["checkboxText.levelUp"] = "On level up"
 ns.T["checkboxText.zoneChanged"] = "When entering a new zone or area"
 ns.T["checkboxText.login"] = "On login"

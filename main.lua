@@ -80,7 +80,7 @@ local function EventHandler(self, event, addOnName)
   end
 
   if event ~= "ADDON_LOADED" then
-    ns.PrintToChat(format("Got unknown event %s", event))
+    ns.PrintToChat(format("Got unsupported event %s, should only be ADDON_LOADED", event))
     return
   end
 
