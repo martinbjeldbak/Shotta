@@ -1,0 +1,3 @@
+enable-toc-creation: yes
+ignore:
+  - README.md
