@@ -6,48 +6,45 @@ Screenshotter.VERSION = "@project-version@"
 Screenshotter.COLOR = "245DC6FF"
 
 ---@class Event
----@field name string Event name as defiend in https://wowpedia.fandom.com/wiki/Category:API_events
 ---@field enabled boolean Whether or not the user has enabled this event
----@field checkboxText string Value displayed in AddOn options checkbox for togglign
 
 ---@alias friendlyEventName string Key use to define the event that Screenshotter can listen to. Unique.
 
 ---@class ScreenshotterDatabase
 ---@field screenshottableEvents { [friendlyEventName]: Event }
 
+---@enum EventNameForTrigger
+local EventNameForTrigger = {
+  login = "PLAYER_LOGIN",
+  channelChat = "CHAT_MSG_CHANNEL",
+  movementStart = "PLAYER_STARTED_MOVING",
+  levelUp = "PLAYER_LEVEL_UP",
+  readyCheck = "READY_CHECK",
+  zone = "ZONE_CHANGED_NEW_AREA",
+}
+ns.EventNameForTrigger = EventNameForTrigger
+
 ---@type ScreenshotterDatabase
 local DB_DEFAULTS = {
   screenshottableEvents = {
     login = {
-      name = "PLAYER_LOGIN",
       enabled = false,
-      checkboxText = "On login"
     },
     channelChat = {
-      name = "CHAT_MSG_CHANNEL",
       enabled = false,
-      checkboxText = "On message in channel"
     },
     movementStart = {
-      name = "PLAYER_STARTED_MOVING",
       enabled = false,
-      checkboxText = "On start moving"
     },
     levelUp = {
-      name = "PLAYER_LEVEL_UP",
       enabled = true,
-      checkboxText = "On level up"
+    },
+    zone = {
+      enabled = false,
     },
     readyCheck = {
-      name = "READY_CHECK",
       enabled = false,
-      checkboxText = "On ready check"
     },
-    zoneChanged = {
-      name = "ZONE_CHANGED_NEW_AREA",
-      enabled = false,
-      checkboxText = "When entering a new zone or area"
-    }
   }
 }
 
@@ -58,12 +55,16 @@ screenshotFrame:SetScript("OnEvent", function(_, event)
   Screenshot()
 end)
 
-function screenshotFrame:registerUnregisterEvent(event)
-  if event.enabled then
-    self:RegisterEvent(event.name)
-    ns.PrintToChat(format("Will screenshot for event %s", event.name))
+---Conditionally register or unregister event based on enabled
+---@param trigger string
+---@param enabled boolean
+function screenshotFrame:registerUnregisterEvent(trigger, enabled)
+  local eventName = ns.EventNameForTrigger[trigger]
+
+  if enabled then
+    self:RegisterEvent(eventName)
   else
-    self:UnregisterEvent(event.name)
+    self:UnregisterEvent(eventName)
   end
 end
 
@@ -84,8 +85,8 @@ local function EventHandler(self, event, addOnName)
   --- Persist DB as SavedVariable since we've been using it as a local
   ScreenshotterDB = db
 
-  for _, e in pairs(db.screenshottableEvents) do
-    screenshotFrame:registerUnregisterEvent(e)
+  for trigger, e in pairs(db.screenshottableEvents) do
+    screenshotFrame:registerUnregisterEvent(trigger, e.enabled)
   end
 
   self:UnregisterEvent(event)
