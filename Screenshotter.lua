@@ -16,6 +16,11 @@ DB_DEFAULTS = {
       name = "CHAT_MSG_CHANNEL",
       enabled = false,
       checkboxText = "On message in channel"
+    },
+    movementStart = {
+      name = "PLAYER_STARTED_MOVING",
+      enabled = false,
+      checkboxText = "On start moving"
     }
   }
 } --- Creates or gets the SavedVariable for this addon
@@ -26,6 +31,8 @@ DB_DEFAULTS = {
 local function printToChat(message)
   print(format("%s: %s", WrapTextInColorCode(ADDON_NAME, COLOR), message))
 end
+
+ns.PrintToChat = printToChat
 
 --- Creates or gets the SavedVariable for this addon
 ----@return Database
@@ -38,22 +45,33 @@ local function fetchOrCreateDatabase(defaults)
     end
   end
 
-  -- for k, v in pairs(defaults.screenshottableEvents) do
-  --   if db.screenshottableEvents[k] == nil then
-  --     db.screenshottableEvents[k] = v
-  --   end
-  -- end
+  -- Table keys may already exist so let's make sure we pick up any new events
+  for k, v in pairs(defaults.screenshottableEvents) do
+    if db.screenshottableEvents[k] == nil then
+      db.screenshottableEvents[k] = v
+    end
+  end
 
   return db
 end
 
-local function TakeScreenshot(self, event, addonName)
-  printToChat(format("Got event %s, taking screenshot", event))
-  Screenshot()
-end
 local screenshotFrame = CreateFrame("Frame")
-screenshotFrame:SetScript("OnEvent", TakeScreenshot)
+screenshotFrame:SetScript("OnEvent", function(self, event, ...)
+  printToChat(format("Got event %s, taking screenshot", event))
 
+  Screenshot()
+end)
+
+local function registerUnregisterEvent(screenshotFrame, event)
+  if event.enabled then
+    screenshotFrame:RegisterEvent(event.name)
+    printToChat(format("Will screenshot for event %s", event.name))
+  else
+    screenshotFrame:UnregisterEvent(event.name)
+  end
+end
+
+ns.registerUnregisterEvent = registerUnregisterEvent
 
 local function EventHandler(self, event, addOnName)
   if addOnName ~= ADDON_NAME then
@@ -63,13 +81,10 @@ local function EventHandler(self, event, addOnName)
   if event == "ADDON_LOADED" then
     local db = fetchOrCreateDatabase(DB_DEFAULTS)
 
-    ns.InitializeOptions(self, db, ADDON_NAME, VERSION)
-    for _, e in pairs(db.screenshottableEvents) do
+    ns.InitializeOptions(self, db, screenshotFrame, ADDON_NAME, VERSION)
 
-      if e.enabled then
-        printToChat(format("Should screenshot for event %s", e.name))
-        screenshotFrame:RegisterEvent(e.name)
-      end
+    for _, e in pairs(db.screenshottableEvents) do
+      registerUnregisterEvent(screenshotFrame, e)
     end
     ScreenshotterDB = db
     printToChat("v" .. VERSION .. " loaded")

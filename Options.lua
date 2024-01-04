@@ -1,4 +1,18 @@
-local function InitializeOptions(frame, db, addonName, version)
+local _, ns = ...
+
+---Convert a boolean into humanized enabled/disabled
+---@param option boolean
+---@return string "Enabled" or "Disabled" depending on boolean value
+local function EnabledHumanized(option)
+  if option then
+    return "enabled"
+  else
+    return "disabled"
+  end
+end
+
+
+local function InitializeOptions(frame, db, screenshotFrame, addonName, version)
   frame.panel = CreateFrame("Frame")
   frame.panel.name = "Screenshotter"
 
@@ -36,22 +50,24 @@ local function InitializeOptions(frame, db, addonName, version)
   local offset = -20
   for k, e in pairs(db.screenshottableEvents) do
     local cb = CreateFrame("CheckButton", nil, header, "InterfaceOptionsCheckButtonTemplate")
-    print("KEY")
-    print(k)
     cb:SetPoint("TOPLEFT", 20, offset)
     cb.Text:SetText(e.checkboxText)
     cb:HookScript("OnClick", function(_, btn, down)
       e.enabled = cb:GetChecked()
+
+      ns.registerUnregisterEvent(screenshotFrame, e)
+
+      ns.PrintToChat(format("%s is now %s", k, EnabledHumanized(e.enabled)))
     end)
+
 
     offset = offset - 20
 
-    cb:SetChecked(db.screenshottableEvents[k].enabled)
+    cb:SetChecked(e.enabled)
   end
 
   InterfaceOptions_AddCategory(frame.panel)
 end
 
 
-local _, ns = ...
 ns.InitializeOptions = InitializeOptions
