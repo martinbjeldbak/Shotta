@@ -5,6 +5,7 @@
     "../wow-ui-source/Interface/"
   ],
   "diagnostics.globals": [
+    "Screenshotter",
     "Screenshot",
     "format",
     "CreateFrame",

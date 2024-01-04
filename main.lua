@@ -37,24 +37,12 @@ ns.TriggerHandlers = TriggerHandlers
 ---@field screenshottableEvents { [triggerId]: Event }
 local DB_DEFAULTS = {
   screenshottableEvents = {
-    login = {
-      enabled = true,
-    },
-    channelChat = {
-      enabled = false,
-    },
-    movementStart = {
-      enabled = false,
-    },
-    levelUp = {
-      enabled = true,
-    },
-    zoneChanged = {
-      enabled = false,
-    },
-    readyCheck = {
-      enabled = false,
-    },
+    login = { enabled = true, },
+    channelChat = { enabled = false, },
+    movementStart = { enabled = false, },
+    levelUp = { enabled = true, },
+    zoneChanged = { enabled = false, },
+    readyCheck = { enabled = false, },
   }
 }
 
