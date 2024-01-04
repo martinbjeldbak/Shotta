@@ -12,12 +12,13 @@
 
 not sure if any of these are possible
 
+- [ ] Boss/Rare/elite kills
 - [ ] Every x minutes
 - [ ] When close to a friend
 - [ ] When emoting with a friend/target
 - [ ] When emoting at all
 - [ ] Low health
-
+- [ ] Trade windows
 
 Full event list [here](https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_list))
 
@@ -28,3 +29,8 @@ Full event list [here](https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_
 ## Resources
 
 - [WoW API](https://github.com/Gethe/wow-ui-source)
+
+## Similar addons
+
+- [Memoria](https://www.curseforge.com/wow/addons/memoria)
+- [Multishot](https://www.wowinterface.com/downloads/info9590-MultishotScreenshot.html)
