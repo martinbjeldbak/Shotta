@@ -2,6 +2,7 @@
 ## Notes: Take screenshots on events throughout adventures in Azeroth and beyond
 ## Author: martinbjeldbak
 ## Version: 0.1.0
+## Interface: 100200
 ## Interface-Classic: 11500
 ## SavedVariables: ScreenshotterDB
 
