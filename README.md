@@ -5,7 +5,7 @@
 
 ## Installing
 
-Currently WoWUp is the only known supported addon client. I have not released
+Currently [WoWUp] is the only known supported addon client. I have not released
 this to Cursforge, WoWInterface, Wago, etc. yet.
 
 Go to `Get Addons`, then `Install from URL` and paste in the link to this
@@ -51,3 +51,5 @@ Full event list [here](https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_
 
 - [Memoria](https://www.curseforge.com/wow/addons/memoria)
 - [Multishot](https://www.wowinterface.com/downloads/info9590-MultishotScreenshot.html)
+
+[WoWUp]: https://wowup.io/
