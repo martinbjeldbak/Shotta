@@ -5,7 +5,17 @@ ADDON_NAME = "Screenshotter"
 VERSION = "0.1.0"
 COLOR = "245DC6FF"
 
-DB_DEFAULTS = {
+
+---@class Event
+---@field name string
+---@field enabled boolean
+---@field checkboxText string
+
+---@class ScreenshotterDatabase
+---@field screenshottableEvents { [string]: Event }
+
+---@type ScreenshotterDatabase
+local DB_DEFAULTS = {
   screenshottableEvents = {
     login = {
       name = "PLAYER_LOGIN",
@@ -40,7 +50,8 @@ end
 ns.PrintToChat = printToChat
 
 --- Creates or gets the SavedVariable for this addon
-----@return Database
+---@param defaults any
+---@return ScreenshotterDatabase
 local function fetchOrCreateDatabase(defaults)
   local db = ScreenshotterDB or {}
 
