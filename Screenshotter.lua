@@ -21,7 +21,12 @@ DB_DEFAULTS = {
       name = "PLAYER_STARTED_MOVING",
       enabled = false,
       checkboxText = "On start moving"
-    }
+    },
+    levelUp = {
+      name = "PLAYER_LEVEL_UP",
+      enabled = true,
+      checkboxText = "On level up"
+    },
   }
 } --- Creates or gets the SavedVariable for this addon
 
@@ -62,35 +67,39 @@ screenshotFrame:SetScript("OnEvent", function(self, event, ...)
   Screenshot()
 end)
 
-local function registerUnregisterEvent(screenshotFrame, event)
+function screenshotFrame:registerUnregisterEvent(event)
   if event.enabled then
-    screenshotFrame:RegisterEvent(event.name)
+    self:RegisterEvent(event.name)
     printToChat(format("Will screenshot for event %s", event.name))
   else
-    screenshotFrame:UnregisterEvent(event.name)
+    self:UnregisterEvent(event.name)
   end
 end
 
-ns.registerUnregisterEvent = registerUnregisterEvent
+-- ns.registerUnregisterEvent = registerUnregisterEvent
 
 local function EventHandler(self, event, addOnName)
   if addOnName ~= ADDON_NAME then
-    return nil
+    return
   end
 
-  if event == "ADDON_LOADED" then
-    local db = fetchOrCreateDatabase(DB_DEFAULTS)
-
-    ns.InitializeOptions(self, db, screenshotFrame, ADDON_NAME, VERSION)
-
-    for _, e in pairs(db.screenshottableEvents) do
-      registerUnregisterEvent(screenshotFrame, e)
-    end
-    ScreenshotterDB = db
-    printToChat("v" .. VERSION .. " loaded")
-  else
+  if event ~= "ADDON_LOADED" then
     printToChat(format("Got unknown event %s", event))
+    return
   end
+
+  local db = fetchOrCreateDatabase(DB_DEFAULTS)
+
+  ns.InitializeOptions(self, db, screenshotFrame, ADDON_NAME, VERSION)
+
+  for _, e in pairs(db.screenshottableEvents) do
+    screenshotFrame:registerUnregisterEvent(e)
+  end
+
+  --- Persist DB as SavedVariable since we've been using it as a local
+  ScreenshotterDB = db
+
+  printToChat("v" .. VERSION .. " loaded")
 end
 
 EventFrame:RegisterEvent("ADDON_LOADED")

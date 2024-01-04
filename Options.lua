@@ -55,7 +55,7 @@ local function InitializeOptions(frame, db, screenshotFrame, addonName, version)
     cb:HookScript("OnClick", function(_, btn, down)
       e.enabled = cb:GetChecked()
 
-      ns.registerUnregisterEvent(screenshotFrame, e)
+      screenshotFrame:registerUnregisterEvent(e)
 
       ns.PrintToChat(format("%s is now %s", k, EnabledHumanized(e.enabled)))
     end)

@@ -14,6 +14,10 @@ not sure if any of these are possible
 - [ ] When emoting with a friend/target
 - [ ] When emoting at all
 
+## Consider events
+
+- [`CHAT_MSG_BN_INLINE_TOAST_ALERT`](https://wowpedia.fandom.com/wiki/CHAT_MSG_BN_INLINE_TOAST_ALERT)
+
 ## Resources
 
 - [WoW API](https://github.com/Gethe/wow-ui-source)
