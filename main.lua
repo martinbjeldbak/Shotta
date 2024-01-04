@@ -1,9 +1,11 @@
 local _, ns = ...
 
 local EventFrame = CreateFrame("Frame")
-ADDON_NAME = "Screenshotter"
-VERSION = "0.1.0"
-COLOR = "245DC6FF"
+
+local Screenshotter = {}
+Screenshotter.ADDON_NAME = "Screenshotter"
+Screenshotter.VERSION = "@project-version@"
+Screenshotter.COLOR = "245DC6FF"
 
 
 ---@class Event
@@ -51,7 +53,7 @@ local DB_DEFAULTS = {
 ---@param message string
 ---@return nil
 local function printToChat(message)
-  print(format("%s: %s", WrapTextInColorCode(ADDON_NAME, COLOR), message))
+  print(format("%s: %s", WrapTextInColorCode(Screenshotter.ADDON_NAME, Screenshotter.COLOR), message))
 end
 
 ns.PrintToChat = printToChat
@@ -95,7 +97,7 @@ function screenshotFrame:registerUnregisterEvent(event)
 end
 
 local function EventHandler(self, event, addOnName)
-  if addOnName ~= ADDON_NAME then
+  if addOnName ~= Screenshotter.ADDON_NAME then
     return
   end
 
@@ -106,7 +108,7 @@ local function EventHandler(self, event, addOnName)
 
   local db = fetchOrCreateDatabase(DB_DEFAULTS)
 
-  ns.InitializeOptions(self, db, screenshotFrame, ADDON_NAME, VERSION)
+  ns.InitializeOptions(self, db, screenshotFrame, Screenshotter.ADDON_NAME, Screenshotter.VERSION)
 
   --- Persist DB as SavedVariable since we've been using it as a local
   ScreenshotterDB = db
@@ -117,7 +119,7 @@ local function EventHandler(self, event, addOnName)
 
   self:UnregisterEvent(event)
 
-  printToChat("v" .. VERSION .. " loaded")
+  printToChat("v" .. Screenshotter.VERSION .. " loaded")
 end
 
 EventFrame:RegisterEvent("ADDON_LOADED")

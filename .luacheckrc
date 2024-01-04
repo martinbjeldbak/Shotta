@@ -1,5 +1,5 @@
 std = {
-  read_globals = {
+  globals = {
     "Screenshot",
     "format",
     "CreateFrame",
