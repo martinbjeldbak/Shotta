@@ -6,4 +6,5 @@ read_globals = {
   "format",
   "CreateFrame",
   "WrapTextInColorCode",
+  "InterfaceOptions_AddCategory",
 }
