@@ -59,7 +59,7 @@ local function InitializeOptions(frame, db, screenshotFrame, addonName, version)
     local cb = CreateFrame("CheckButton", nil, header, "InterfaceOptionsCheckButtonTemplate")
     cb:SetPoint("TOPLEFT", 20, offset)
     cb.Text:SetText(e.checkboxText)
-    cb:HookScript("OnClick", function(_, btn, down)
+    cb:HookScript("OnClick", function()
       e.enabled = cb:GetChecked()
 
       screenshotFrame:registerUnregisterEvent(e)
