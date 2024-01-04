@@ -1,7 +1,7 @@
-std = {
-  globals = {
-    "Screenshot",
-    "format",
-    "CreateFrame",
-  }
+globals = {
+  "Screenshot",
+  "format",
+  "CreateFrame",
+
+  "ScreenshotterDB"
 }
