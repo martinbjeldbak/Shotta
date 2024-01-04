@@ -1,4 +1,3 @@
-ignore = {"321"}
 globals = {
   "Screenshot",
   "format",
