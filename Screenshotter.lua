@@ -76,8 +76,6 @@ function screenshotFrame:registerUnregisterEvent(event)
   end
 end
 
--- ns.registerUnregisterEvent = registerUnregisterEvent
-
 local function EventHandler(self, event, addOnName)
   if addOnName ~= ADDON_NAME then
     return

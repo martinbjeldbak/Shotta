@@ -1,4 +1,12 @@
 {
-  "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
-  "workspace.library": ["../wow-ui-source/Interface/"]
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+  "runtime.version": "Lua 5.1",
+  "workspace.library": [
+    "../wow-ui-source/Interface/"
+  ],
+  "diagnostics.globals": [
+    "Screenshot",
+    "format",
+    "CreateFrame"
+  ]
 }
