@@ -42,6 +42,11 @@ local DB_DEFAULTS = {
       name = "READY_CHECK",
       enabled = false,
       checkboxText = "On ready check"
+    },
+    zoneChanged = {
+      name = "ZONE_CHANGED_NEW_AREA",
+      enabled = false,
+      checkboxText = "When entering a new zone or area"
     }
   }
 }
