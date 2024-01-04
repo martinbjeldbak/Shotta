@@ -1,11 +1,21 @@
-name: Luacheck
-on: [push, pull_request]
+name: Lint
+on:  # yamllint disable-line rule:truthy
+  push: null
+  pull_request: null
 jobs:
-  sile:
+  lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Luacheck linter
-        uses: lunarmodules/luacheck@v1
+      - name: Super-linter
+        uses: super-linter/super-linter@v5
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
