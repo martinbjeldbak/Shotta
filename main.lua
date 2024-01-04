@@ -5,15 +5,13 @@ Screenshotter.ADDON_NAME = "Screenshotter"
 Screenshotter.VERSION = "@project-version@"
 Screenshotter.COLOR = "245DC6FF"
 
----@class Event
----@field enabled boolean Whether or not the user has enabled this event
+---@alias triggerId string Key use to define the event that Screenshotter can listen to. Unique.
 
----@alias friendlyEventName string Key use to define the event that Screenshotter can listen to. Unique.
+---@class TriggerHandler
+---@field eventName string
+---@field triggerFunc (fun(): nil)|nil
 
----@class ScreenshotterDatabase
----@field screenshottableEvents { [friendlyEventName]: Event }
-
-
+---@type { [triggerId]: TriggerHandler }
 local TriggerHandlers = {
   login = { eventName = "PLAYER_LOGIN", },
   channelChat = { eventName = "CHAT_MSG_CHANNEL", },
@@ -27,13 +25,16 @@ local TriggerHandlers = {
   },
   readyCheck = { eventName = "READY_CHECK", },
   zoneChanged = { eventName = "ZONE_CHANGED_NEW_AREA", },
-  movementStart = {
-    eventName = "PLAYER_STARTED_MOVING",
-  }
+  movementStart = { eventName = "PLAYER_STARTED_MOVING", }
 }
 ns.TriggerHandlers = TriggerHandlers
 
----@type ScreenshotterDatabase
+
+---@class Event
+---@field enabled boolean Whether or not the user has enabled this event
+
+---@class ScreenshotterDatabase
+---@field screenshottableEvents { [triggerId]: Event }
 local DB_DEFAULTS = {
   screenshottableEvents = {
     login = {
@@ -59,10 +60,10 @@ local DB_DEFAULTS = {
 
 local screenshotFrame = CreateFrame("Frame")
 screenshotFrame:SetScript("OnEvent", function(_, event)
-  ns.PrintToChat(format("Got event %s, taking screenshot!", event))
-
   for _, details in pairs(TriggerHandlers) do
     if details.eventName == event then
+      ns.PrintToChat(format("Got event %s, taking screenshot!", event))
+
       if details.triggerFunc == nil then
         Screenshot()
       else
