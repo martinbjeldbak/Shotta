@@ -20,3 +20,7 @@ jobs:
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_LUA: false
+
+      - name: Luacheck
+        uses: lunarmodules/luacheck@v1
