@@ -20,7 +20,7 @@ local EventNameForTrigger = {
   movementStart = "PLAYER_STARTED_MOVING",
   levelUp = "PLAYER_LEVEL_UP",
   readyCheck = "READY_CHECK",
-  zone = "ZONE_CHANGED_NEW_AREA",
+  zoneChanged = "ZONE_CHANGED_NEW_AREA",
 }
 ns.EventNameForTrigger = EventNameForTrigger
 
@@ -39,7 +39,7 @@ local DB_DEFAULTS = {
     levelUp = {
       enabled = true,
     },
-    zone = {
+    zoneChanged = {
       enabled = false,
     },
     readyCheck = {
