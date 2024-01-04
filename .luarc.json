@@ -7,6 +7,7 @@
   "diagnostics.globals": [
     "Screenshot",
     "format",
-    "CreateFrame"
+    "CreateFrame",
+    "C_Timer"
   ]
 }

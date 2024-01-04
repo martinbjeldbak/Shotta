@@ -13,22 +13,31 @@ Screenshotter.COLOR = "245DC6FF"
 ---@class ScreenshotterDatabase
 ---@field screenshottableEvents { [friendlyEventName]: Event }
 
----@enum EventNameForTrigger
-local EventNameForTrigger = {
-  login = "PLAYER_LOGIN",
-  channelChat = "CHAT_MSG_CHANNEL",
-  movementStart = "PLAYER_STARTED_MOVING",
-  levelUp = "PLAYER_LEVEL_UP",
-  readyCheck = "READY_CHECK",
-  zoneChanged = "ZONE_CHANGED_NEW_AREA",
+
+local TriggerHandlers = {
+  login = { eventName = "PLAYER_LOGIN", },
+  channelChat = { eventName = "CHAT_MSG_CHANNEL", },
+  levelUp = {
+    eventName = "PLAYER_LEVEL_UP",
+    triggerFunc = function()
+      C_Timer.After(0.5, function()
+        Screenshot()
+      end)
+    end
+  },
+  readyCheck = { eventName = "READY_CHECK", },
+  zoneChanged = { eventName = "ZONE_CHANGED_NEW_AREA", },
+  movementStart = {
+    eventName = "PLAYER_STARTED_MOVING",
+  }
 }
-ns.EventNameForTrigger = EventNameForTrigger
+ns.TriggerHandlers = TriggerHandlers
 
 ---@type ScreenshotterDatabase
 local DB_DEFAULTS = {
   screenshottableEvents = {
     login = {
-      enabled = false,
+      enabled = true,
     },
     channelChat = {
       enabled = false,
@@ -52,14 +61,22 @@ local screenshotFrame = CreateFrame("Frame")
 screenshotFrame:SetScript("OnEvent", function(_, event)
   ns.PrintToChat(format("Got event %s, taking screenshot!", event))
 
-  Screenshot()
+  for _, details in pairs(TriggerHandlers) do
+    if details.eventName == event then
+      if details.triggerFunc == nil then
+        Screenshot()
+      else
+        details.triggerFunc()
+      end
+    end
+  end
 end)
 
 ---Conditionally register or unregister event based on enabled
 ---@param trigger string
 ---@param enabled boolean
 function screenshotFrame:registerUnregisterEvent(trigger, enabled)
-  local eventName = ns.EventNameForTrigger[trigger]
+  local eventName = ns.TriggerHandlers[trigger].eventName
 
   if enabled then
     self:RegisterEvent(eventName)

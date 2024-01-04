@@ -7,4 +7,5 @@ read_globals = {
   "CreateFrame",
   "WrapTextInColorCode",
   "InterfaceOptions_AddCategory",
+  "C_Timer",
 }
