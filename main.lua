@@ -30,7 +30,7 @@ local Triggers = {
 }
 
 ---@class Event
----@field enabled boolean Whether or not the user has enabled this event
+---@field enabled boolean|nil Whether or not the user has enabled this event
 
 ---@class ScreenshotterDatabase
 ---@field screenshottableEvents { [triggerId]: Event }

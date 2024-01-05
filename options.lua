@@ -65,9 +65,11 @@ local function InitializeOptions(frame, db, triggerHandlers, screenshotFrame, ad
 
       if isChecked then
         if db.screenshottableEvents[k] == nil then
-          db.screenshottableEvents[k] = { enabled = true }
+          db.screenshottableEvents[k] = {}
         end
         db.screenshottableEvents[k].enabled = true
+      else
+        db.screenshottableEvents[k].enabled = nil
       end
 
       screenshotFrame:registerUnregisterEvent(k, isChecked)
