@@ -15,10 +15,11 @@ end
 ---Initialize addon options panel
 ---@param frame any
 ---@param db ScreenshotterDatabase
+---@param triggerHandlers TriggerHandler
 ---@param screenshotFrame any
 ---@param addonName string
 ---@param version string
-local function InitializeOptions(frame, db, screenshotFrame, addonName, version)
+local function InitializeOptions(frame, db, triggerHandlers, screenshotFrame, addonName, version)
   frame.panel = CreateFrame("Frame")
   frame.panel.name = addonName
 
@@ -55,21 +56,33 @@ local function InitializeOptions(frame, db, screenshotFrame, addonName, version)
 
   -- Create checkboxes for all events we should listen to
   local offset = -20
-  for k, e in pairs(db.screenshottableEvents) do
+  for k, _ in pairs(triggerHandlers) do
     local cb = CreateFrame("CheckButton", nil, header, "InterfaceOptionsCheckButtonTemplate")
     cb:SetPoint("TOPLEFT", 20, offset)
     cb.Text:SetText(ns.T["checkboxText." .. k])
     cb:HookScript("OnClick", function()
-      e.enabled = cb:GetChecked()
+      local isChecked = cb:GetChecked()
 
-      screenshotFrame:registerUnregisterEvent(k, e.enabled)
+      if isChecked then
+        if db.screenshottableEvents[k] == nil then
+          db.screenshottableEvents[k] = { enabled = true }
+        end
+        db.screenshottableEvents[k].enabled = true
+      end
 
-      ns.PrintToChat(format("%s is now %s", k, EnabledHumanized(e.enabled)))
+      screenshotFrame:registerUnregisterEvent(k, isChecked)
+
+      ns.PrintToChat(format("%s is now %s", k, EnabledHumanized(isChecked)))
     end)
 
     offset = offset - 20
 
-    cb:SetChecked(e.enabled)
+    local enabled = false
+    if db.screenshottableEvents[k] then
+      enabled = db.screenshottableEvents[k].enabled
+    end
+
+    cb:SetChecked(enabled)
   end
 
   InterfaceOptions_AddCategory(frame.panel)

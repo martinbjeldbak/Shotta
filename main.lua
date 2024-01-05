@@ -23,6 +23,7 @@ local TriggerHandlers = {
       end)
     end
   },
+  mailboxOpened = { eventName = "MAIL_SHOW", },
   readyCheck = { eventName = "READY_CHECK", },
   zoneChanged = { eventName = "ZONE_CHANGED_NEW_AREA", },
   movementStart = { eventName = "PLAYER_STARTED_MOVING", }
@@ -38,11 +39,7 @@ ns.TriggerHandlers = TriggerHandlers
 local DB_DEFAULTS = {
   screenshottableEvents = {
     login = { enabled = true, },
-    channelChat = { enabled = false, },
-    movementStart = { enabled = false, },
     levelUp = { enabled = true, },
-    zoneChanged = { enabled = false, },
-    readyCheck = { enabled = false, },
   }
 }
 
@@ -86,13 +83,20 @@ local function EventHandler(self, event, addOnName)
 
   local db = ns.FetchOrCreateDatabase(DB_DEFAULTS)
 
-  ns.InitializeOptions(self, db, screenshotFrame, Screenshotter.ADDON_NAME, Screenshotter.VERSION)
+  ns.InitializeOptions(self, db, TriggerHandlers, screenshotFrame, Screenshotter.ADDON_NAME, Screenshotter.VERSION)
 
   --- Persist DB as SavedVariable since we've been using it as a local
   ScreenshotterDB = db
 
-  for trigger, e in pairs(db.screenshottableEvents) do
-    screenshotFrame:registerUnregisterEvent(trigger, e.enabled)
+  for trigger, _ in pairs(TriggerHandlers) do
+    local enabled = false
+
+    if db.screenshottableEvents[trigger] then
+      enabled = db.screenshottableEvents[trigger].enabled
+    end
+
+
+    screenshotFrame:registerUnregisterEvent(trigger, enabled)
   end
 
   self:UnregisterEvent(event)
