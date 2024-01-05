@@ -11,15 +11,43 @@ local function EnabledHumanized(option)
   end
 end
 
+---Sort table by keys. Source: https://www.lua.org/pil/19.3.html
+---@generic T
+---@param t T[]
+---@param f fun(a: T, b: T)
+---@return function
+local function pairsByKeys(t, f)
+  local a = {}
+  for n in pairs(t) do table.insert(a, n) end
+  table.sort(a, f)
+  local i = 0             -- iterator variable
+  local iter = function() -- iterator function
+    i = i + 1
+    if a[i] == nil then
+      return nil
+    else
+      return a[i], t[a[i]]
+    end
+  end
+  return iter
+end
+
+---Compares the translated checkbox text values to support ordering
+---@param a string
+---@param b string
+---@return boolean
+local function compareByCheckboxText(a, b)
+  return ns.T[format("checkboxText.%s", a)]:upper() < ns.T[format("checkboxText.%s", b)]:upper()
+end
 
 ---Initialize addon options panel
 ---@param frame any
 ---@param db ScreenshotterDatabase
----@param triggerHandlers Trigger
+---@param triggers Trigger
 ---@param screenshotFrame any
 ---@param addonName string
 ---@param version string
-local function InitializeOptions(frame, db, triggerHandlers, screenshotFrame, addonName, version)
+local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName, version)
   frame.panel = CreateFrame("Frame")
   frame.panel.name = addonName
 
@@ -56,7 +84,8 @@ local function InitializeOptions(frame, db, triggerHandlers, screenshotFrame, ad
 
   -- Create checkboxes for all events we should listen to
   local offset = -20
-  for k, _ in pairs(triggerHandlers) do
+
+  for k, _ in pairsByKeys(triggers, compareByCheckboxText) do
     local cb = CreateFrame("CheckButton", nil, header, "InterfaceOptionsCheckButtonTemplate")
     cb:SetPoint("TOPLEFT", 20, offset)
     cb.Text:SetText(ns.T["checkboxText." .. k])
