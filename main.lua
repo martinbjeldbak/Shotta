@@ -7,12 +7,12 @@ Screenshotter.COLOR = "245DC6FF"
 
 ---@alias triggerId string Key use to define the event that Screenshotter can listen to. Unique.
 
----@class TriggerHandler
+---@class Trigger
 ---@field eventName string
 ---@field triggerFunc (fun(): nil)|nil
 
----@type { [triggerId]: TriggerHandler }
-local TriggerHandlers = {
+---@type { [triggerId]: Trigger }
+local Triggers = {
   login = { eventName = "PLAYER_LOGIN", },
   channelChat = { eventName = "CHAT_MSG_CHANNEL", },
   levelUp = {
@@ -28,8 +28,6 @@ local TriggerHandlers = {
   zoneChanged = { eventName = "ZONE_CHANGED_NEW_AREA", },
   movementStart = { eventName = "PLAYER_STARTED_MOVING", }
 }
-ns.TriggerHandlers = TriggerHandlers
-
 
 ---@class Event
 ---@field enabled boolean Whether or not the user has enabled this event
@@ -45,7 +43,7 @@ local DB_DEFAULTS = {
 
 local screenshotFrame = CreateFrame("Frame")
 screenshotFrame:SetScript("OnEvent", function(_, event)
-  for _, details in pairs(TriggerHandlers) do
+  for _, details in pairs(Triggers) do
     if details.eventName == event then
       ns.PrintToChat(format("Got event %s, taking screenshot!", event))
 
@@ -62,7 +60,7 @@ end)
 ---@param trigger string
 ---@param enabled boolean
 function screenshotFrame:registerUnregisterEvent(trigger, enabled)
-  local eventName = ns.TriggerHandlers[trigger].eventName
+  local eventName = Triggers[trigger].eventName
 
   if enabled then
     self:RegisterEvent(eventName)
@@ -83,12 +81,12 @@ local function EventHandler(self, event, addOnName)
 
   local db = ns.FetchOrCreateDatabase(DB_DEFAULTS)
 
-  ns.InitializeOptions(self, db, TriggerHandlers, screenshotFrame, Screenshotter.ADDON_NAME, Screenshotter.VERSION)
+  ns.InitializeOptions(self, db, Triggers, screenshotFrame, Screenshotter.ADDON_NAME, Screenshotter.VERSION)
 
   --- Persist DB as SavedVariable since we've been using it as a local
   ScreenshotterDB = db
 
-  for trigger, _ in pairs(TriggerHandlers) do
+  for trigger, _ in pairs(Triggers) do
     local enabled = false
 
     if db.screenshottableEvents[trigger] then

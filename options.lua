@@ -15,7 +15,7 @@ end
 ---Initialize addon options panel
 ---@param frame any
 ---@param db ScreenshotterDatabase
----@param triggerHandlers TriggerHandler
+---@param triggerHandlers Trigger
 ---@param screenshotFrame any
 ---@param addonName string
 ---@param version string
