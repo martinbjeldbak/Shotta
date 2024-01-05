@@ -33,6 +33,8 @@ local Triggers = {
   zoneChanged = { eventName = "ZONE_CHANGED_NEW_AREA", },
   movementStart = { eventName = "PLAYER_STARTED_MOVING", },
   auctionWindowShow = { eventName = "AUCTION_HOUSE_SHOW" },
+  groupFormed = { eventName = "GROUP_FORMED" },
+  tradeAccepted = { eventName = "TRADE_ACCEPT_UPDATE" },
 }
 
 

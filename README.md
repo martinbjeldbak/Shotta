@@ -53,6 +53,7 @@ Full event list [here](https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_
 ### Consider events
 
 - [`CHAT_MSG_BN_INLINE_TOAST_ALERT`](https://wowpedia.fandom.com/wiki/CHAT_MSG_BN_INLINE_TOAST_ALERT)
+- [`CHAT_MSG_LOOT`](https://wowpedia.fandom.com/wiki/CHAT_MSG_LOOT)
 
 ## Resources
 

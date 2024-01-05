@@ -11,6 +11,8 @@ ns.T["checkboxText.login"] = "On login"
 ns.T["checkboxText.readyCheck"] = "On ready check"
 ns.T["checkboxText.mailboxOpened"] = "On mailbox open"
 ns.T["checkboxText.auctionWindowShow"] = "On auction house window open"
+ns.T["checkboxText.groupFormed"] = "On joining or creating a group"
+ns.T["checkboxText.tradeAccepted"] = "Trade window is accepted by a party"
 
 setmetatable(ns.T, {
   __index = function(_, key)
