@@ -5,6 +5,11 @@ Screenshotter.ADDON_NAME = "Screenshotter"
 Screenshotter.VERSION = "@project-version@"
 Screenshotter.COLOR = "245DC6FF"
 
+local function TakeScreenshot()
+  ns.PrintToChat("Taking screenshot!")
+  Screenshot()
+end
+
 ---@alias triggerId string Key use to define the event that Screenshotter can listen to. Unique.
 
 ---@class Trigger
@@ -19,7 +24,7 @@ local Triggers = {
     eventName = "PLAYER_LEVEL_UP",
     triggerFunc = function()
       C_Timer.After(0.5, function()
-        Screenshot()
+        TakeScreenshot()
       end)
     end
   },
@@ -28,6 +33,7 @@ local Triggers = {
   zoneChanged = { eventName = "ZONE_CHANGED_NEW_AREA", },
   movementStart = { eventName = "PLAYER_STARTED_MOVING", }
 }
+
 
 ---@class Event
 ---@field enabled boolean|nil Whether or not the user has enabled this event
@@ -48,7 +54,7 @@ screenshotFrame:SetScript("OnEvent", function(_, event)
       ns.PrintToChat(format("Got event %s, taking screenshot!", event))
 
       if details.triggerFunc == nil then
-        Screenshot()
+        TakeScreenshot()
       else
         details.triggerFunc()
       end
