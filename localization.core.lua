@@ -10,6 +10,7 @@ ns.T["checkboxText.zoneChanged"] = "When entering a new zone or area"
 ns.T["checkboxText.login"] = "On login"
 ns.T["checkboxText.readyCheck"] = "On ready check"
 ns.T["checkboxText.mailboxOpened"] = "On mailbox open"
+ns.T["checkboxText.auctionWindowShow"] = "On auction house window open"
 
 setmetatable(ns.T, {
   __index = function(_, key)

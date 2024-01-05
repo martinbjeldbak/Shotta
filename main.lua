@@ -31,7 +31,8 @@ local Triggers = {
   mailboxOpened = { eventName = "MAIL_SHOW", },
   readyCheck = { eventName = "READY_CHECK", },
   zoneChanged = { eventName = "ZONE_CHANGED_NEW_AREA", },
-  movementStart = { eventName = "PLAYER_STARTED_MOVING", }
+  movementStart = { eventName = "PLAYER_STARTED_MOVING", },
+  auctionWindowShow = { eventName = "AUCTION_HOUSE_SHOW" },
 }
 
 
