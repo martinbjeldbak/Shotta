@@ -5,6 +5,9 @@
 Automatically take screenshots of moments within Azeroth so you can cherish
 them forever.
 
+> [!IMPORTANT]
+> This has only been tested in WoW Classic, but it should work in all versions
+
 ## Installing
 
 Currently [WoWUp] is the only known supported addon client because it supports
@@ -33,7 +36,7 @@ Simply click `Install` and you're done! You will be prompted to update on any fu
 - [ ]Settings are global: make profile or chracter-specific bindings
 - [x] [Timer](https://wowpedia.fandom.com/wiki/API_C_Timer.After) after ie 10s after readcheck
 - [ ] Add slash command to open up options (if possible?)
-- [ ] Consider using [AceDB](https://www.wowace.com/projects/ace3)
+- [x] ~~Consider using [AceDB](https://www.wowace.com/projects/ace3)~~ too complicated, extra dependency
 
 ### Event ideas
 
@@ -48,6 +51,10 @@ not sure if any of these are possible
 - [ ] Low health
 - [x] Trade windows
 - [ ] More customizable every x minutes with [slider](https://wowpedia.fandom.com/wiki/API_Slider_SetStepsPerPage)
+- [ ] Reputation gains
+- [ ] PvP: Arena endings
+- [ ] PvP: Battleground endings
+- [ ] PvE: Mythic+ dungion runs
 
 Full event list [here](https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_list))
 
@@ -62,8 +69,8 @@ Full event list [here](https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_
 
 ### Similar addons
 
-- [Memoria](https://www.curseforge.com/wow/addons/memoria)
-- [Multishot](https://www.wowinterface.com/downloads/info9590-MultishotScreenshot.html)
+- [Memoria](https://www.curseforge.com/wow/addons/memoria), simpler triggers
+- [Multishot](https://www.wowinterface.com/downloads/info9590-MultishotScreenshot.html), not updated since april 2015
 
 [WoWUp]: https://wowup.io/
 [wowup-get-addons]: https://wowup.io/guide/get-addons/overview
