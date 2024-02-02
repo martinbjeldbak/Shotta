@@ -29,5 +29,6 @@ local function fetchOrCreateDatabase(defaults)
 
   return db
 end
+
 ns.FetchOrCreateDatabase = fetchOrCreateDatabase
 
