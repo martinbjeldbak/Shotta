@@ -40,13 +40,14 @@ Simply click `Install` and you're done! You will be prompted to update on any fu
 not sure if any of these are possible
 
 - [ ] Boss/Rare/elite kills
-- [ ] Every x minutes
+- [x] Every 5/10 minutes
 - [ ] When joining a party (with a friend)
 - [ ] When close to a friend
 - [ ] When emoting with a friend/target
 - [ ] When emoting at all
 - [ ] Low health
-- [ ] Trade windows
+- [x] Trade windows
+- [ ] More customizable every x minutes with [slider](https://wowpedia.fandom.com/wiki/API_Slider_SetStepsPerPage)
 
 Full event list [here](https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_list))
 

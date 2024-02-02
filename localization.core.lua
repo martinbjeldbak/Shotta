@@ -14,7 +14,8 @@ ns.T["checkboxText.mailboxOpened"] = "On mailbox open"
 ns.T["checkboxText.auctionWindowShow"] = "On auction house window open"
 ns.T["checkboxText.groupFormed"] = "On joining or creating a group"
 ns.T["checkboxText.tradeAccepted"] = "Trade window is accepted by a player"
-ns.T["checkboxText.everyXMinute"] = "Every X minutes"
+ns.T["checkboxText.every5Minutes"] = "Every 5 minutes"
+ns.T["checkboxText.every10Minutes"] = "Every 10 minutes"
 
 setmetatable(ns.T, {
   __index = function(_, key)

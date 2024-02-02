@@ -51,6 +51,7 @@ local BlizzardEventTriggers = {
   tradeAccepted = { eventName = "TRADE_ACCEPT_UPDATE" },
 }
 
+
 local function everyXSecond(seconds, callback)
   C_Timer.After(seconds, function()
     local continue = callback()
@@ -62,13 +63,31 @@ local function everyXSecond(seconds, callback)
   end)
 end
 
+local function everyXMinute(minutes, callback)
+  everyXSecond(minutes * 60, callback)
+end
+
 local CustomTriggers = {
-  everyXMinute = {
+  every5Minutes = {
     on = true,
     registerFunc = function(self)
       self.on = true
-      ns.PrintToChat(format("Registered event everyXMinute!"))
-      everyXSecond(5, function()
+      everyXMinute(5, function()
+        if self.on then
+          TakeScreenshot()
+        end
+        return self.on
+      end)
+    end,
+    unregisterFunc = function(self)
+      self.on = false
+    end,
+  },
+  every10Minutes = {
+    on = true,
+    registerFunc = function(self)
+      self.on = true
+      everyXMinute(10, function()
         if self.on then
           TakeScreenshot()
         end
