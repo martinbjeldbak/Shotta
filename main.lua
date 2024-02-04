@@ -5,8 +5,13 @@ Screenshotter.ADDON_NAME = "Screenshotter"
 Screenshotter.VERSION = "@project-version@"
 Screenshotter.COLOR = "245DC6FF"
 
-local function TakeScreenshot()
-  ns.PrintToChat("Taking screenshot!")
+local function TakeScreenshot(text)
+  if text == nil then
+    text = "Taking screenshot!"
+  end
+
+  ns.PrintToChat(text)
+
   Screenshot()
 end
 
