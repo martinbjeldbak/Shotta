@@ -30,40 +30,36 @@ local function everyXMinute(minutes, callback)
   everyXSecond(minutes * 60, callback)
 end
 
+local function registerEvent(self, frame)
+  frame:RegisterEvent(self.eventName)
+end
+
+local function unregisterEvent(self, frame)
+  frame:UnregisterEvent(self.eventName)
+end
 
 ---@alias triggerId string Key use to define the event that Screenshotter can listen to. Unique.
 ---@class Trigger
----@field eventName string
----@field triggerFunc (fun(): nil)|nil
+---@field eventName string|nil Name of Blizzard event, or nil if custom event
+---@field register (fun(self, frame): nil)
+---@field unregister (fun(self, frame): nil)
+---@field triggerFunc (fun(): nil)|nil Function to excute if not to take a random screenshot
 ---@type { [triggerId]: Trigger }
-local BlizzardEventTriggers = {
+local Triggers = {
   login = {
     eventName = "PLAYER_LOGIN",
-    register = function(self, frame)
-      frame:RegisterEvent(self.eventName)
-    end,
-    unregister = function(self, frame)
-      frame:UnregisterEvent(self.eventName)
-    end,
+    register = registerEvent,
+    unregister = unregisterEvent,
   },
   channelChat = {
     eventName = "CHAT_MSG_CHANNEL",
-    register = function(self, frame)
-      frame:RegisterEvent(self.eventName)
-    end,
-    unregister = function(self, frame)
-      frame:UnregisterEvent(self.eventName)
-    end,
+    register = registerEvent,
+    unregister = unregisterEvent,
   },
   levelUp = {
     eventName = "PLAYER_LEVEL_UP",
-    register = function(self, frame)
-      frame:RegisterEvent(self.eventName)
-    end,
-    unregister = function(self, frame)
-      frame:UnregisterEvent(self.eventName)
-    end,
-
+    register = registerEvent,
+    unregister = unregisterEvent,
     triggerFunc = function()
       C_Timer.After(0.5, function()
         TakeScreenshot()
@@ -72,79 +68,43 @@ local BlizzardEventTriggers = {
   },
   mailboxOpened = {
     eventName = "MAIL_SHOW",
-
-    register = function(self, frame)
-      frame:RegisterEvent(self.eventName)
-    end,
-    unregister = function(self, frame)
-      frame:UnregisterEvent(self.eventName)
-    end,
+    register = registerEvent,
+    unregister = unregisterEvent,
   },
   readyCheck = {
     eventName = "READY_CHECK",
-
-    register = function(self, frame)
-      frame:RegisterEvent(self.eventName)
-    end,
-    unregister = function(self, frame)
-      frame:UnregisterEvent(self.eventName)
-    end,
+    register = registerEvent,
+    unregister = unregisterEvent,
   },
   zoneChanged = {
     eventName = "ZONE_CHANGED",
-    register = function(self, frame)
-      frame:RegisterEvent(self.eventName)
-    end,
-    unregister = function(self, frame)
-      frame:UnregisterEvent(self.eventName)
-    end,
+    register = registerEvent,
+    unregister = unregisterEvent,
   },
   zoneChangedNewArea = {
     eventName = "ZONE_CHANGED_NEW_AREA",
-    register = function(self, frame)
-      frame:RegisterEvent(self.eventName)
-    end,
-    unregister = function(self, frame)
-      frame:UnregisterEvent(self.eventName)
-    end,
+    register = registerEvent,
+    unregister = unregisterEvent,
   },
   movementStart = {
     eventName = "PLAYER_STARTED_MOVING",
-
-    register = function(self, frame)
-      frame:RegisterEvent(self.eventName)
-    end,
-    unregister = function(self, frame)
-      frame:UnregisterEvent(self.eventName)
-    end,
+    register = registerEvent,
+    unregister = unregisterEvent,
   },
   auctionWindowShow = {
     eventName = "AUCTION_HOUSE_SHOW",
-    register = function(self, frame)
-      frame:RegisterEvent(self.eventName)
-    end,
-    unregister = function(self, frame)
-      frame:UnregisterEvent(self.eventName)
-    end,
+    register = registerEvent,
+    unregister = unregisterEvent,
   },
   groupFormed = {
     eventName = "GROUP_FORMED",
-    register = function(self, frame)
-      frame:RegisterEvent(self.eventName)
-    end,
-    unregister = function(self, frame)
-      frame:UnregisterEvent(self.eventName)
-    end,
+    register = registerEvent,
+    unregister = unregisterEvent,
   },
   tradeAccepted = {
     eventName = "TRADE_ACCEPT_UPDATE",
-
-    register = function(self, frame)
-      frame:RegisterEvent(self.eventName)
-    end,
-    unregister = function(self, frame)
-      frame:UnregisterEvent(self.eventName)
-    end,
+    register = registerEvent,
+    unregister = unregisterEvent,
   },
   every5Minutes = {
     on = true,
@@ -178,6 +138,7 @@ local BlizzardEventTriggers = {
   },
 }
 
+
 ---@class Event
 ---@field enabled boolean|nil Whether or not the user has enabled this event
 
@@ -193,7 +154,7 @@ local DB_DEFAULTS = {
 
 local screenshotFrame = CreateFrame("Frame")
 screenshotFrame:SetScript("OnEvent", function(_, event)
-  for _, details in pairs(BlizzardEventTriggers) do
+  for _, details in pairs(Triggers) do
     if event == details.eventName then
       ns.PrintToChat(format("Got event \"%s\", taking screenshot!", event))
 
@@ -210,29 +171,13 @@ end)
 ---@param trigger string
 ---@param enabled boolean
 function screenshotFrame:registerUnregisterEvent(trigger, enabled)
-  local event = BlizzardEventTriggers[trigger]
+  local event = Triggers[trigger]
 
   if enabled then
     event:register(self)
   else
     event:unregister(self)
   end
-
-  -- if event.register == nil then
-  --   local eventName = AllTriggers[trigger].eventName
-
-  --   if enabled then
-  --     self:RegisterEvent(eventName)
-  --   else
-  --     self:UnregisterEvent(eventName)
-  --   end
-  -- else
-  --   if enabled then
-  --     event:register()
-  --   else
-  --     event:unregister()
-  --   end
-  -- end
 end
 
 local function EventHandler(self, event, addOnName)
@@ -253,13 +198,13 @@ local function EventHandler(self, event, addOnName)
     version = "dev"
   end
 
-  ns.InitializeOptions(self, db, BlizzardEventTriggers, screenshotFrame,
+  ns.InitializeOptions(self, db, Triggers, screenshotFrame,
     Screenshotter.ADDON_NAME, version)
 
   --- Persist DB as SavedVariable since we've been using it as a local
   ScreenshotterDB = db
 
-  for trigger, _ in pairs(BlizzardEventTriggers) do
+  for trigger, _ in pairs(Triggers) do
     local enabled = false
 
     if db.screenshottableEvents[trigger] then
