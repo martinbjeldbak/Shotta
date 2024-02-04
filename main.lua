@@ -84,11 +84,13 @@ local triggers = {
     register = registerEvent,
     unregister = unregisterEvent,
   },
+  --@alpha@
   movementStart = {
     eventName = "PLAYER_STARTED_MOVING",
     register = registerEvent,
     unregister = unregisterEvent,
   },
+  --@end-alpha@
   auctionWindowShow = {
     eventName = "AUCTION_HOUSE_SHOW",
     register = registerEvent,
