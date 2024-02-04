@@ -8,6 +8,21 @@ them forever.
 > [!IMPORTANT]
 > This has only been tested in WoW Classic, but it should work in all versions
 
+## Features
+
+Ever wished you had more pictures of your adventures throughout Azeroth and
+beyond? Look no further!
+
+Screenshotter will automatically take screenshots
+
+- at regular intervals
+- at specific events
+- when you're alone
+- when you're with your friends
+- when you down a boss
+
+It runs with zero dependencies and minimal code.
+
 ## Installing
 
 Currently [WoWUp] is the only known supported addon client because it supports

@@ -85,7 +85,7 @@ local CustomTriggers = {
   },
   every10Minutes = {
     on = true,
-    registerFunc = function(self)
+    register = function(self)
       self.on = true
       everyXMinute(10, function()
         if self.on then
@@ -94,7 +94,7 @@ local CustomTriggers = {
         return self.on
       end)
     end,
-    unregisterFunc = function(self)
+    unregister = function(self)
       self.on = false
     end,
   },
@@ -137,7 +137,7 @@ end)
 function screenshotFrame:registerUnregisterEvent(trigger, enabled)
   local event = AllTriggers[trigger]
 
-  if event.registerFunc == nil then
+  if event.register == nil then
     local eventName = AllTriggers[trigger].eventName
 
     if enabled then
@@ -147,9 +147,9 @@ function screenshotFrame:registerUnregisterEvent(trigger, enabled)
     end
   else
     if enabled then
-      event:registerFunc()
+      event:register()
     else
-      event:unregisterFunc()
+      event:unregister()
     end
   end
 end
