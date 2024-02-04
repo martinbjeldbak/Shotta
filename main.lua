@@ -111,6 +111,11 @@ local triggers = {
     register = registerEvent,
     unregister = unregisterEvent,
   },
+  encounterEnd = {
+    eventName = "ENCOUNTER_END",
+    register = registerEvent,
+    unregister = unregisterEvent,
+  },
   every5Minutes = {
     on = true,
     register = function(self)
