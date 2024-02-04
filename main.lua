@@ -4,9 +4,6 @@ Screenshotter = {}
 Screenshotter.ADDON_NAME = "Screenshotter"
 Screenshotter.VERSION = "@project-version@"
 Screenshotter.COLOR = "245DC6FF"
-Screenshotter.DEBUG = true
-
-ns.DEBUG = Screenshotter.DEBUG
 
 local function TakeScreenshot(text)
   if text ~= nil then

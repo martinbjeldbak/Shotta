@@ -9,9 +9,9 @@ end
 ns.PrintToChat = printToChat
 
 local function debug(message)
-  if ns.DEBUG then
-    ns.PrintToChat(message)
-  end
+  --@debug--
+  ns.PrintToChat(message)
+  --@end-debug@
 end
 ns.Debug = debug
 
