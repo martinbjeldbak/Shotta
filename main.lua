@@ -227,6 +227,7 @@ SLASH_SCREENSHOTTER1, SLASH_SCREENSHOTTER2 = "/screenshotter", "/ss"
 
 SlashCmdList["SCREENSHOTTER"] = function()
   InterfaceOptionsFrame_OpenToCategory(Screenshotter.ADDON_NAME)
-  InterfaceOptionsFrame_OpenToCategory(Screenshotter.ADDON_NAME) -- Call this twice to ensure the correct category is selected
+  -- Call this twice to ensure the correct category is selected
+  InterfaceOptionsFrame_OpenToCategory(Screenshotter.ADDON_NAME)
   InterfaceOptionsFrame_Show()
 end
