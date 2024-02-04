@@ -5,6 +5,8 @@
 Automatically take screenshots of moments within Azeroth so you can cherish
 them forever.
 
+![Screenshotter overview](./previews/overview.jpg)
+
 > [!IMPORTANT]
 > This has only been tested in WoW Classic, but it should work in all versions
 
