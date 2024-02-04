@@ -215,9 +215,18 @@ local function EventHandler(self, event, addOnName)
 
   self:UnregisterEvent(event)
 
-  ns.PrintToChat(version .. " loaded")
+  ns.PrintToChat(version .. " loaded. Use /screenshotter or /ss to open the options menu.")
 end
 
 local EventFrame = CreateFrame("Frame")
 EventFrame:RegisterEvent("ADDON_LOADED")
 EventFrame:SetScript("OnEvent", EventHandler)
+
+
+SLASH_SCREENSHOTTER1, SLASH_SCREENSHOTTER2 = "/screenshotter", "/ss"
+
+SlashCmdList["SCREENSHOTTER"] = function()
+  InterfaceOptionsFrame_OpenToCategory(Screenshotter.ADDON_NAME)
+  InterfaceOptionsFrame_OpenToCategory(Screenshotter.ADDON_NAME) -- Call this twice to ensure the correct category is selected
+  InterfaceOptionsFrame_Show()
+end

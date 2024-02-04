@@ -9,6 +9,7 @@
     "Screenshot",
     "format",
     "CreateFrame",
-    "C_Timer"
+    "C_Timer",
+    "InterfaceOptionsFrame_Show"
   ]
 }
