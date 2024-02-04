@@ -44,13 +44,44 @@ Simply click `Install` and you're done! You will be prompted to update on any fu
 
 ## Usage
 
+Once installed, there will be an addon loaded message in the chat, see
+
+![Addon loaded](./.previews/screenshot-taken.png)
+
+You can then open the menu and start configuring the events you want to
+screenshot by typing `/ss` or `/screenshotter` in the chat
+
+![Addon menu](./.previews/menu.png)
+
+Click the boxes you are interested in and they will trigger on the next time
+that event occurs!
+
+For example, on level up
+
+![Leveled up screenshot confirmation](./.previews/level-up.png)
+
+I get this sweet screenshot
+
+![Leveled up screenshot](./.previews/level-up-screenshot.jpg)
 
 ## Contributing
 
+First of all, thanks for helping contribute! There are many ways you can help contribute
+
+- filing feature request, bugs, or general issues using <https://github.com/martinbjeldbak/screenshotter/issues/new>
+- code contributions 
+- translation strings for each supported language
+
+If you wish to run this addon locally, I highly recommend setting up a symlink
+to the cloned repository directory following the guide here:
+<https://wowpedia.fandom.com/wiki/Symlinking_AddOn_folders>, this will make it
+so that you only need to reload the UI with `/reload` to see your changes.
+
 ### TODO
 
+- [ ] More translation strings, see `localization.core.lua`
 - [ ] UI Button: Reset state to default
-- [ ]Settings are global: make profile or chracter-specific bindings
+- [ ] Settings are global: make profile or chracter-specific bindings
 - [x] [Timer](https://wowpedia.fandom.com/wiki/API_C_Timer.After) after ie 10s after readcheck
 - [x] Add slash command to open up options (if possible?)
 - [x] ~~Consider using [AceDB](https://www.wowace.com/projects/ace3)~~ too complicated, extra dependency
