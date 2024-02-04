@@ -16,6 +16,7 @@ ns.T["checkboxText.groupFormed"] = "On joining or creating a group"
 ns.T["checkboxText.tradeAccepted"] = "Trade window is accepted by a player"
 ns.T["checkboxText.every5Minutes"] = "Every 5 minutes"
 ns.T["checkboxText.every10Minutes"] = "Every 10 minutes"
+ns.T["checkboxText.bossKill"] = "On boss kill, including raids"
 
 setmetatable(ns.T, {
   __index = function(_, key)

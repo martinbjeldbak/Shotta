@@ -106,6 +106,11 @@ local triggers = {
     register = registerEvent,
     unregister = unregisterEvent,
   },
+  bossKill = {
+    eventName = "BOSS_KILL",
+    register = registerEvent,
+    unregister = unregisterEvent,
+  },
   every5Minutes = {
     on = true,
     register = function(self)
