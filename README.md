@@ -49,10 +49,10 @@ Simply click `Install` and you're done! You will be prompted to update on any fu
 
 ### TODO
 
-- [ ] UI Button: Reset all event state
+- [ ] UI Button: Reset state to default
 - [ ]Settings are global: make profile or chracter-specific bindings
 - [x] [Timer](https://wowpedia.fandom.com/wiki/API_C_Timer.After) after ie 10s after readcheck
-- [ ] Add slash command to open up options (if possible?)
+- [x] Add slash command to open up options (if possible?)
 - [x] ~~Consider using [AceDB](https://www.wowace.com/projects/ace3)~~ too complicated, extra dependency
 
 ### Event ideas
