@@ -125,8 +125,6 @@ local screenshotFrame = CreateFrame("Frame")
 screenshotFrame:SetScript("OnEvent", function(_, event)
   for _, details in pairs(BlizzardEventTriggers) do
     if event == details.eventName then
-      ns.PrintToChat(format("Got event %s, taking screenshot!", event))
-
       if details.triggerFunc == nil then
         TakeScreenshot()
       else
@@ -172,10 +170,13 @@ local function EventHandler(self, event, addOnName)
   ---@type ScreenshotterDatabase
   local db = ns.FetchOrCreateDatabase(DB_DEFAULTS)
 
+  local version = Screenshotter.VERSION
+  if version == "@project-version@" then
+    version = "dev"
+  end
 
   ns.InitializeOptions(self, db, AllTriggers, screenshotFrame,
-    Screenshotter.ADDON_NAME,
-    Screenshotter.VERSION)
+    Screenshotter.ADDON_NAME, version)
 
   --- Persist DB as SavedVariable since we've been using it as a local
   ScreenshotterDB = db
@@ -207,7 +208,7 @@ local function EventHandler(self, event, addOnName)
     end
   end
 
-  ns.PrintToChat(Screenshotter.VERSION .. " loaded")
+  ns.PrintToChat(version .. " loaded")
 end
 
 local EventFrame = CreateFrame("Frame")
