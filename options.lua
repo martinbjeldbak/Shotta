@@ -103,7 +103,7 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
 
       screenshotFrame:registerUnregisterEvent(k, isChecked)
 
-      ns.PrintToChat(format("%s is now %s", k, EnabledHumanized(isChecked)))
+      ns.Debug(format("%s is now %s", k, EnabledHumanized(isChecked)))
     end)
 
     offset = offset - 20

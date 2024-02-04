@@ -4,13 +4,14 @@ Screenshotter = {}
 Screenshotter.ADDON_NAME = "Screenshotter"
 Screenshotter.VERSION = "@project-version@"
 Screenshotter.COLOR = "245DC6FF"
+Screenshotter.DEBUG = true
+
+ns.DEBUG = Screenshotter.DEBUG
 
 local function TakeScreenshot(text)
-  if text == nil then
-    text = "Taking screenshot!"
+  if text ~= nil then
+    ns.PrintToChat(text)
   end
-
-  ns.PrintToChat(text)
 
   Screenshot()
 end
@@ -45,7 +46,7 @@ end
 ---@field unregister (fun(self, frame): nil)
 ---@field triggerFunc (fun(): nil)|nil Function to excute if not to take a random screenshot
 ---@type { [triggerId]: Trigger }
-local Triggers = {
+local triggers = {
   login = {
     eventName = "PLAYER_LOGIN",
     register = registerEvent,
@@ -154,9 +155,9 @@ local DB_DEFAULTS = {
 
 local screenshotFrame = CreateFrame("Frame")
 screenshotFrame:SetScript("OnEvent", function(_, event)
-  for _, details in pairs(Triggers) do
+  for id, details in pairs(triggers) do
     if event == details.eventName then
-      ns.PrintToChat(format("Got event \"%s\", taking screenshot!", event))
+      ns.PrintToChat(format("Got event \"%s\", taking screenshot!", ns.T[format("checkboxText.%s", id)]:lower()))
 
       if details.triggerFunc == nil then
         TakeScreenshot()
@@ -171,7 +172,7 @@ end)
 ---@param trigger string
 ---@param enabled boolean
 function screenshotFrame:registerUnregisterEvent(trigger, enabled)
-  local event = Triggers[trigger]
+  local event = triggers[trigger]
 
   if enabled then
     event:register(self)
@@ -198,13 +199,13 @@ local function EventHandler(self, event, addOnName)
     version = "dev"
   end
 
-  ns.InitializeOptions(self, db, Triggers, screenshotFrame,
+  ns.InitializeOptions(self, db, triggers, screenshotFrame,
     Screenshotter.ADDON_NAME, version)
 
   --- Persist DB as SavedVariable since we've been using it as a local
   ScreenshotterDB = db
 
-  for trigger, _ in pairs(Triggers) do
+  for trigger, _ in pairs(triggers) do
     local enabled = false
 
     if db.screenshottableEvents[trigger] then

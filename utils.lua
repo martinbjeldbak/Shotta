@@ -8,6 +8,13 @@ local function printToChat(message)
 end
 ns.PrintToChat = printToChat
 
+local function debug(message)
+  if ns.DEBUG then
+    ns.PrintToChat(message)
+  end
+end
+ns.Debug = debug
+
 --- Creates or gets the SavedVariable for this addon
 ---@param defaults any
 ---@return ScreenshotterDatabase
@@ -31,4 +38,3 @@ local function fetchOrCreateDatabase(defaults)
 end
 
 ns.FetchOrCreateDatabase = fetchOrCreateDatabase
-
