@@ -228,7 +228,7 @@ local function EventHandler(self, event, addOnName)
 
   self:UnregisterEvent(event)
 
-  ns.PrintToChat(version .. " loaded. Use /screenshotter or /ss to open the options menu.")
+  ns.PrintToChat(version .. " loaded. Use /shotta or /sh to open the options menu.")
 end
 
 local EventFrame = CreateFrame("Frame")

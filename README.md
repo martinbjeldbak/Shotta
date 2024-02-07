@@ -85,6 +85,7 @@ so that you only need to reload the UI with `/reload` to see your changes.
 - [x] [Timer](https://wowpedia.fandom.com/wiki/API_C_Timer.After) after ie 10s after readcheck
 - [x] Add slash command to open up options (if possible?)
 - [x] ~~Consider using [AceDB](https://www.wowace.com/projects/ace3)~~ too complicated, extra dependency
+- [ ] Make event success printing an option. Currently always printing to chat
 
 ### Event ideas
 
