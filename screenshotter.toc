@@ -1,10 +1,10 @@
 ## Interface: 100200
 ## Interface-Classic: 11500
-## Title: Screenshotter
+## Title: Shotta
 ## Notes: Take screenshots on events throughout adventures in Azeroth and beyond
 ## Author: martinbjeldbak
 ## Version: @project-version@
-## SavedVariables: ScreenshotterDB
+## SavedVariables: ShottaDB
 
 localization.core.lua
 utils.lua

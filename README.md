@@ -1,11 +1,11 @@
-# Screenshotter
+# Shotta
 [![Release](https://github.com/martinbjeldbak/screenshotter/actions/workflows/release.yml/badge.svg)](https://github.com/martinbjeldbak/screenshotter/actions/workflows/release.yml)
 [![Lint](https://github.com/martinbjeldbak/screenshotter/actions/workflows/lint.yml/badge.svg)](https://github.com/martinbjeldbak/screenshotter/actions/workflows/lint.yml)
 
-Automatically take screenshots of moments within Azeroth so you can cherish
-them forever.
+(_screen_)-shotta, mate. Automatically take screenshots of moments within
+Azeroth so you can cherish them forever.
 
-![Screenshotter overview](.previews/overview.jpg)
+![Shotta overview](.previews/overview.jpg)
 
 > [!IMPORTANT]
 > This has only been tested in WoW Classic, but it should work in all client versions
@@ -15,7 +15,7 @@ them forever.
 Ever wished you had more pictures of your adventures throughout Azeroth and
 beyond? Look no further!
 
-Screenshotter will automatically take screenshots
+Shotta will automatically take screenshots
 
 - at regular intervals
 - at specific events

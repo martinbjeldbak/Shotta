@@ -4,7 +4,7 @@ local _, ns = ...
 ---@param message string
 ---@return nil
 local function printToChat(message)
-  print(format("%s: %s", WrapTextInColorCode(Screenshotter.ADDON_NAME, Screenshotter.COLOR), message))
+  print(format("%s: %s", WrapTextInColorCode(Shotta.ADDON_NAME, Shotta.COLOR), message))
 end
 ns.PrintToChat = printToChat
 
@@ -17,9 +17,9 @@ ns.Debug = debug
 
 --- Creates or gets the SavedVariable for this addon
 ---@param defaults any
----@return ScreenshotterDatabase
+---@return ShottaDatabase
 local function fetchOrCreateDatabase(defaults)
-  local db = ScreenshotterDB or {}
+  local db = ShottaDB or {}
 
   for k, v in pairs(defaults) do
     if db[k] == nil then

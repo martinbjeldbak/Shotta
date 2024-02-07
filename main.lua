@@ -1,9 +1,9 @@
 local _, ns = ...
 
-Screenshotter = {}
-Screenshotter.ADDON_NAME = "Screenshotter"
-Screenshotter.VERSION = "@project-version@"
-Screenshotter.COLOR = "245DC6FF"
+Shotta = {}
+Shotta.ADDON_NAME = "Shotta"
+Shotta.VERSION = "@project-version@"
+Shotta.COLOR = "245DC6FF"
 
 local function TakeScreenshot(text)
   if text ~= nil then
@@ -36,7 +36,7 @@ local function unregisterEvent(self, frame)
   frame:UnregisterEvent(self.eventName)
 end
 
----@alias triggerId string Key use to define the event that Screenshotter can listen to. Unique.
+---@alias triggerId string Key use to define the event that Shotta can listen to. Unique.
 ---@class Trigger
 ---@field eventName string|nil Name of Blizzard event, or nil if custom event
 ---@field register (fun(self, frame): nil)
@@ -152,7 +152,7 @@ local triggers = {
 ---@class Event
 ---@field enabled boolean|nil Whether or not the user has enabled this event
 
----@class ScreenshotterDatabase
+---@class ShottaDatabase
 ---@field screenshottableEvents { [triggerId]: Event }
 local DB_DEFAULTS = {
   screenshottableEvents = {
@@ -191,7 +191,7 @@ function screenshotFrame:registerUnregisterEvent(trigger, enabled)
 end
 
 local function EventHandler(self, event, addOnName)
-  if addOnName ~= Screenshotter.ADDON_NAME then
+  if addOnName ~= Shotta.ADDON_NAME then
     return
   end
 
@@ -200,19 +200,19 @@ local function EventHandler(self, event, addOnName)
     return
   end
 
-  ---@type ScreenshotterDatabase
+  ---@type ShottaDatabase
   local db = ns.FetchOrCreateDatabase(DB_DEFAULTS)
 
-  local version = Screenshotter.VERSION
+  local version = Shotta.VERSION
   if version == "@project-version@" then
     version = "dev"
   end
 
   ns.InitializeOptions(self, db, triggers, screenshotFrame,
-    Screenshotter.ADDON_NAME, version)
+    Shotta.ADDON_NAME, version)
 
   --- Persist DB as SavedVariable since we've been using it as a local
-  ScreenshotterDB = db
+  ShottaDB = db
 
   for trigger, _ in pairs(triggers) do
     local enabled = false
@@ -235,11 +235,11 @@ EventFrame:RegisterEvent("ADDON_LOADED")
 EventFrame:SetScript("OnEvent", EventHandler)
 
 
-SLASH_SCREENSHOTTER1, SLASH_SCREENSHOTTER2 = "/screenshotter", "/ss"
+SLASH_SHOTTA1, SLASH_SHOTTA2 = "/shotta", "/sh"
 
-SlashCmdList["SCREENSHOTTER"] = function()
-  InterfaceOptionsFrame_OpenToCategory(Screenshotter.ADDON_NAME)
+SlashCmdList["SHOTTA"] = function()
+  InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
   -- Call this twice to ensure the correct category is selected
-  InterfaceOptionsFrame_OpenToCategory(Screenshotter.ADDON_NAME)
+  InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
   InterfaceOptionsFrame_Show()
 end

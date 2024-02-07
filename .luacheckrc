@@ -1,6 +1,6 @@
 globals = {
-  "Screenshotter",
-  "ScreenshotterDB",
+  "Shotta",
+  "ShottaDB",
   "SLASH_SCREENSHOTTER1",
   "SLASH_SCREENSHOTTER2",
   "SlashCmdList",

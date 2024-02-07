@@ -42,7 +42,7 @@ end
 
 ---Initialize addon options panel
 ---@param frame any
----@param db ScreenshotterDatabase
+---@param db ShottaDatabase
 ---@param triggers Trigger
 ---@param screenshotFrame any
 ---@param addonName string
