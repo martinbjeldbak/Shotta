@@ -158,6 +158,7 @@ local DB_DEFAULTS = {
   screenshottableEvents = {
     login = { enabled = true, },
     levelUp = { enabled = true, },
+    encounterEnd = { enabled = true, },
   }
 }
 
