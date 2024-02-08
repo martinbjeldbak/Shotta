@@ -69,7 +69,7 @@ I get this sweet screenshot
 First of all, thanks for helping contribute! There are many ways you can help contribute
 
 - filing feature request, bugs, or general issues using <https://github.com/martinbjeldbak/shotta/issues/new>
-- code contributions 
+- code contributions
 - translation strings for each supported language
 
 If you wish to run this addon locally, I highly recommend setting up a symlink
