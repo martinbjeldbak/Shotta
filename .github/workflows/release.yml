@@ -20,3 +20,4 @@ jobs:
         uses: BigWigsMods/packager@v2
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+          CF_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
