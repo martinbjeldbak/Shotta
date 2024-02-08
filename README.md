@@ -1,6 +1,6 @@
 # Shotta
-[![Release](https://github.com/martinbjeldbak/screenshotter/actions/workflows/release.yml/badge.svg)](https://github.com/martinbjeldbak/screenshotter/actions/workflows/release.yml)
-[![Lint](https://github.com/martinbjeldbak/screenshotter/actions/workflows/lint.yml/badge.svg)](https://github.com/martinbjeldbak/screenshotter/actions/workflows/lint.yml)
+[![Release](https://github.com/martinbjeldbak/shotta/actions/workflows/release.yml/badge.svg)](https://github.com/martinbjeldbak/shotta/actions/workflows/release.yml)
+[![Lint](https://github.com/martinbjeldbak/shotta/actions/workflows/lint.yml/badge.svg)](https://github.com/martinbjeldbak/shotta/actions/workflows/lint.yml)
 
 (_screen_)-shotta, mate. Automatically take screenshots of moments within
 Azeroth so you can cherish them forever.
@@ -34,11 +34,11 @@ WoWInterface, Wago, etc. yet.
 Go to `Get Addons`, then `Install from URL` and paste in the link to this
 repository:
 
-- <https://github.com/martinbjeldbak/screenshotter>
+- <https://github.com/martinbjeldbak/shotta>
 
 then click `Import`, you should see the below screen
 
-![Screenshot of WoWUp client installing this Addon](https://github.com/martinbjeldbak/screenshotter/assets/823316/25b92bbd-03aa-422d-abe9-10f68a0b1752)
+![Screenshot of WoWUp client installing this Addon](https://github.com/martinbjeldbak/shotta/assets/823316/25b92bbd-03aa-422d-abe9-10f68a0b1752)
 
 Simply click `Install` and you're done! You will be prompted to update on any future releases. For more details, see the WoWUp guide [here][wowup-get-addons]
 
@@ -49,7 +49,7 @@ Once installed, there will be an addon loaded message in the chat, see
 ![Addon loaded](./.previews/screenshot-taken.png)
 
 You can then open the menu and start configuring the events you want to
-screenshot by typing `/ss` or `/screenshotter` in the chat
+screenshot by typing `/ss` or `/shotta` in the chat
 
 ![Addon menu](./.previews/menu.png)
 
@@ -68,7 +68,7 @@ I get this sweet screenshot
 
 First of all, thanks for helping contribute! There are many ways you can help contribute
 
-- filing feature request, bugs, or general issues using <https://github.com/martinbjeldbak/screenshotter/issues/new>
+- filing feature request, bugs, or general issues using <https://github.com/martinbjeldbak/shotta/issues/new>
 - code contributions 
 - translation strings for each supported language
 

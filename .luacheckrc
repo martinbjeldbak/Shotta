@@ -1,8 +1,8 @@
 globals = {
   "Shotta",
   "ShottaDB",
-  "SLASH_SCREENSHOTTER1",
-  "SLASH_SCREENSHOTTER2",
+  "SLASH_SHOTTA1",
+  "SLASH_SHOTTA2",
   "SlashCmdList",
 }
 read_globals = {
