@@ -25,13 +25,26 @@ Shotta will automatically take screenshots
 
 It runs with zero dependencies and minimal code. I'm always adding new events as I come up with them and would love your feedback for what you'd like to see.
 
+Screenshots will be saved to the local folders below, depending on operating
+system and version of World of Warcraft you are playing.
+
+On Windows (assuming WoW is installed to C drive):
+
+- `C:\Program Files (x86)\World of Warcraft\_retail_\Screenshots`
+- `C:\Program Files (x86)\World of Warcraft\_classic_era_\Screenshots`
+
+On MacOS:
+
+- `\World of Warcraft\_retail_Screenshots`
+- `\World of Warcraft\_classic_era_Screenshots`
+
 ## Installing
 
 ### CurseForge
 
 You can download Shotta at the following link
 
-- https://legacy.curseforge.com/wow/addons/shotta
+- <https://legacy.curseforge.com/wow/addons/shotta>
 
 ### WoWUp
 

@@ -2,7 +2,7 @@
 ## Interface-Classic: 11500
 ## Title: Shotta
 ## Notes: Take screenshots on events throughout adventures in Azeroth and beyond
-## Author: martinbjeldbak
+## Author: martinbjeldbak <https://martinbjeldbak.com>
 ## Version: @project-version@
 ## SavedVariables: ShottaDB
 ## X-Curse-Project-ID: 972182
