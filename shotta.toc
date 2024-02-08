@@ -5,6 +5,7 @@
 ## Author: martinbjeldbak
 ## Version: @project-version@
 ## SavedVariables: ShottaDB
+## X-Curse-Project-ID: 972182
 
 localization.core.lua
 utils.lua

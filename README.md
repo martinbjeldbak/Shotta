@@ -23,9 +23,17 @@ Shotta will automatically take screenshots
 - when you're with your friends
 - when you down a boss
 
-It runs with zero dependencies and minimal code.
+It runs with zero dependencies and minimal code. I'm always adding new events as I come up with them and would love your feedback for what you'd like to see.
 
 ## Installing
+
+### CurseForge
+
+You can download Shotta at the following link
+
+- https://legacy.curseforge.com/wow/addons/shotta
+
+### WoWUp
 
 Currently [WoWUp] is the only known supported addon client because it supports
 installing Addons directly from GitHub. I have not released this to Curseforge,
