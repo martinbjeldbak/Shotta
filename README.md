@@ -46,6 +46,12 @@ You can download Shotta at the following link
 
 - <https://legacy.curseforge.com/wow/addons/shotta>
 
+## WoW Interface
+
+You can download Shotta at the following link
+
+- <https://www.wowinterface.com/downloads/info26687-Shotta.html>
+
 ### WoWUp
 
 Currently [WoWUp] is the only known supported addon client because it supports

@@ -6,6 +6,7 @@
 ## Version: @project-version@
 ## SavedVariables: ShottaDB
 ## X-Curse-Project-ID: 972182
+## X-WoWI-ID: 26687
 
 localization.core.lua
 utils.lua
