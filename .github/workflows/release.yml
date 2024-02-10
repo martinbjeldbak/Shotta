@@ -21,4 +21,5 @@ jobs:
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           CF_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-          WOWI_API_TOKEN: ${{ WOW_INTERFACE_API_KEY }}
+          WOWI_API_TOKEN: ${{ secrets.WOW_INTERFACE_API_KEY }}
+          WAGO_API_TOKEN: ${{ secrets.WAGO_API_KEY }}

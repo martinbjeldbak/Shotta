@@ -46,17 +46,17 @@ You can download Shotta at the following link
 
 - <https://legacy.curseforge.com/wow/addons/shotta>
 
-## WoW Interface
+### WoW Interface
 
 You can download Shotta at the following link
 
 - <https://www.wowinterface.com/downloads/info26687-Shotta.html>
 
-### WoWUp
+### Wago
 
-Currently [WoWUp] is the only known supported addon client because it supports
-installing Addons directly from GitHub. I have not released this to Curseforge,
-WoWInterface, Wago, etc. yet.
+- <https://addons.wago.io/addons/shotta>
+
+### WoWUp
 
 Go to `Get Addons`, then `Install from URL` and paste in the link to this
 repository:
@@ -127,7 +127,7 @@ not sure if any of these are possible
 - [ ] Low health
 - [x] Trade windows
 - [ ] More customizable every x minutes with [slider](https://wowpedia.fandom.com/wiki/API_Slider_SetStepsPerPage)
-- [ ] Reputation gains
+- [ ] Reputation level ups ([event](https://github.com/AtheneGenesis/Vanilla_enUS_FrameXML/blob/master/GlobalStrings.lua#L1944))
 - [ ] PvP: Arena endings
 - [ ] PvP: Battleground endings
 - [ ] PvE: Mythic+ dungion runs
