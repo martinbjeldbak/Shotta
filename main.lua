@@ -41,7 +41,7 @@ end
 ---@field eventName string|nil Name of Blizzard event, or nil if custom event
 ---@field register (fun(self, frame): nil)
 ---@field unregister (fun(self, frame): nil)
----@field triggerFunc (fun(): nil)|nil Function to excute if not to take a random screenshot
+---@field triggerFunc (fun(...): nil)|nil Function to excute if not to take a screenshot straight away
 ---@type { [triggerId]: Trigger }
 local triggers = {
   login = {
@@ -105,6 +105,11 @@ local triggers = {
     eventName = "TRADE_ACCEPT_UPDATE",
     register = registerEvent,
     unregister = unregisterEvent,
+    triggerFunc = function(playerAccepted)
+      if playerAccepted == 1 then
+        TakeScreenshot()
+      end
+    end,
   },
   bossKill = {
     eventName = "BOSS_KILL",
@@ -164,7 +169,7 @@ local DB_DEFAULTS = {
 
 
 local screenshotFrame = CreateFrame("Frame")
-screenshotFrame:SetScript("OnEvent", function(_, event)
+screenshotFrame:SetScript("OnEvent", function(_, event, ...)
   for id, details in pairs(triggers) do
     if event == details.eventName then
       ns.PrintToChat(format("Got event \"%s\", taking screenshot!", ns.T[format("checkboxText.%s", id)]:lower()))
@@ -172,7 +177,7 @@ screenshotFrame:SetScript("OnEvent", function(_, event)
       if details.triggerFunc == nil then
         TakeScreenshot()
       else
-        details.triggerFunc()
+        details.triggerFunc(...)
       end
     end
   end
