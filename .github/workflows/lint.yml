@@ -6,6 +6,7 @@ on:  # yamllint disable-line rule:truthy
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+permissions: read-all
 jobs:
   super-linter:
     runs-on: ubuntu-latest
