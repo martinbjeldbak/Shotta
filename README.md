@@ -58,7 +58,9 @@ You can download Shotta at the following link
 
 ### WoWUp
 
-Go to `Get Addons`, then `Install from URL` and paste in the link to this
+[WoWUp] is a great open source Addon client.
+
+Once installed, navigate to `Get Addons`, then `Install from URL` and paste in the link to this
 repository:
 
 - <https://github.com/martinbjeldbak/shotta>
