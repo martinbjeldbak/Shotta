@@ -12,11 +12,12 @@ jobs:
     permissions:
       contents: read
       packages: read
-      # To report GitHub Actions status checks
       statuses: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
 
       - name: Super-linter
         uses: super-linter/super-linter@v6
