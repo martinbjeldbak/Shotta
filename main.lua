@@ -37,22 +37,33 @@ local function unregisterEvent(self, frame)
 end
 
 ---@alias triggerId string Key use to define the event that Shotta can listen to. Unique.
+
 ---@class Trigger
 ---@field eventName string|nil Name of Blizzard event, or nil if custom event
 ---@field register (fun(self, frame): nil)
 ---@field unregister (fun(self, frame): nil)
 ---@field triggerFunc (fun(...): nil)|nil Function to excute if not to take a screenshot straight away
+---@field id? string sometimes added when top level triggerId not available, see blizzardTriggerMap
+
+
+local function defaultTriggerFunc(self)
+  ns.PrintToChat(format("Got event \"%s\", taking screenshot!", ns.T[format("checkboxText.%s", self.id)]:lower()))
+  TakeScreenshot()
+end
+
 ---@type { [triggerId]: Trigger }
 local triggers = {
   login = {
     eventName = "PLAYER_LOGIN",
     register = registerEvent,
     unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
   },
   channelChat = {
     eventName = "CHAT_MSG_CHANNEL",
     register = registerEvent,
     unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
   },
   levelUp = {
     eventName = "PLAYER_LEVEL_UP",
@@ -68,38 +79,45 @@ local triggers = {
     eventName = "MAIL_SHOW",
     register = registerEvent,
     unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
   },
   readyCheck = {
     eventName = "READY_CHECK",
     register = registerEvent,
     unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
   },
   zoneChanged = {
     eventName = "ZONE_CHANGED",
     register = registerEvent,
     unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
   },
   zoneChangedNewArea = {
     eventName = "ZONE_CHANGED_NEW_AREA",
     register = registerEvent,
     unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
   },
   --@alpha@
   movementStart = {
     eventName = "PLAYER_STARTED_MOVING",
     register = registerEvent,
     unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
   },
   --@end-alpha@
   auctionWindowShow = {
     eventName = "AUCTION_HOUSE_SHOW",
     register = registerEvent,
     unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
   },
   groupFormed = {
     eventName = "GROUP_FORMED",
     register = registerEvent,
     unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
   },
   tradeAccepted = {
     eventName = "TRADE_ACCEPT_UPDATE",
@@ -115,11 +133,13 @@ local triggers = {
     eventName = "BOSS_KILL",
     register = registerEvent,
     unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
   },
   encounterEnd = {
     eventName = "ENCOUNTER_END",
     register = registerEvent,
     unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
   },
   every5Minutes = {
     on = true,
@@ -153,7 +173,6 @@ local triggers = {
   },
 }
 
-
 ---@class Event
 ---@field enabled boolean|nil Whether or not the user has enabled this event
 
@@ -167,21 +186,25 @@ local DB_DEFAULTS = {
   }
 }
 
-
 local screenshotFrame = CreateFrame("Frame")
 screenshotFrame:SetScript("OnEvent", function(_, event, ...)
-  for id, details in pairs(triggers) do
-    if event == details.eventName then
-      ns.PrintToChat(format("Got event \"%s\", taking screenshot!", ns.T[format("checkboxText.%s", id)]:lower()))
+  screenshotFrame.blizzardTrigger[event]:triggerFunc(...)
+end)
 
-      if details.triggerFunc == nil then
-        TakeScreenshot()
-      else
-        details.triggerFunc(...)
-      end
+---@param ts Trigger[]
+---@return {[string]: Trigger}
+local function makeBlizzardTriggerMap(ts)
+  local blizzardTriggerMap = {}
+
+  for id, details in pairs(ts) do
+    if details.eventName then
+      blizzardTriggerMap[details.eventName] = details
+      blizzardTriggerMap[details.eventName].id = id
     end
   end
-end)
+
+  return blizzardTriggerMap
+end
 
 ---Conditionally register or unregister event based on enabled
 ---@param trigger string
@@ -196,7 +219,7 @@ function screenshotFrame:registerUnregisterEvent(trigger, enabled)
   end
 end
 
-local function EventHandler(self, event, addOnName)
+local function AddonLoadedEventHandler(self, event, addOnName)
   if addOnName ~= Shotta.ADDON_NAME then
     return
   end
@@ -220,6 +243,8 @@ local function EventHandler(self, event, addOnName)
   --- Persist DB as SavedVariable since we've been using it as a local
   ShottaDB = db
 
+  screenshotFrame.blizzardTrigger = makeBlizzardTriggerMap(triggers)
+
   for trigger, _ in pairs(triggers) do
     local enabled = false
 
@@ -238,7 +263,7 @@ end
 
 local EventFrame = CreateFrame("Frame")
 EventFrame:RegisterEvent("ADDON_LOADED")
-EventFrame:SetScript("OnEvent", EventHandler)
+EventFrame:SetScript("OnEvent", AddonLoadedEventHandler)
 
 
 SLASH_SHOTTA1, SLASH_SHOTTA2 = "/shotta", "/sh"
