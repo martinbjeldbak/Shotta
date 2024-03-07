@@ -1,5 +1,5 @@
-## Interface: 100200
-## Interface-Classic: 11500
+## Interface: 100205
+## Interface-Classic: 11501
 ## Title: Shotta
 ## Notes: Take screenshots on events throughout adventures in Azeroth and beyond
 ## Author: martinbjeldbak <https://martinbjeldbak.com>
