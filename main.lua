@@ -141,6 +141,18 @@ local triggers = {
     unregister = unregisterEvent,
     triggerFunc = defaultTriggerFunc,
   },
+  questFinished = {
+    eventName = "QUEST_FINISHED",
+    register = registerEvent,
+    unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
+  },
+  lootItemRollWin = {
+    eventName = "LOOT_ITEM_ROLL_WON",
+    register = registerEvent,
+    unregister = unregisterEvent,
+    triggerFunc = defaultTriggerFunc,
+  },
   every5Minutes = {
     on = true,
     register = function(self)

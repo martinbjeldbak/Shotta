@@ -18,6 +18,8 @@ ns.T["checkboxText.every5Minutes"] = "Every 5 minutes"
 ns.T["checkboxText.every10Minutes"] = "Every 10 minutes"
 ns.T["checkboxText.bossKill"] = "On boss kill, including raids"
 ns.T["checkboxText.encounterEnd"] = "At end of an instanced encounter, such as a dungeon or raid encounter"
+ns.T["checkboxText.questFinished"] = "Upon completion of a quest"
+ns.T["checkboxText.lootItemRollWin"] = "Upon winning a loot roll"
 
 setmetatable(ns.T, {
   __index = function(_, key)
