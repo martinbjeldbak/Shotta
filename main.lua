@@ -96,29 +96,29 @@ local triggers = {
   questFinished = setupBlizzardEvent("QUEST_FINISHED"),
   lootItemRollWin = setupBlizzardEvent("LOOT_ITEM_ROLL_WON"),
   every5Minutes = {
-    on = true,
+    registered = true,
     register = function(self)
-      self.on = true
+      self.registered = true
       everyXMinute(5, function()
-        if self.on then
+        if self.registered then
           TakeScreenshot()
         end
-        return self.on
+        return self.registered
       end)
     end,
     unregister = function(self)
-      self.on = false
+      self.registered = false
     end,
   },
   every10Minutes = {
-    on = true,
+    registered = true,
     register = function(self)
-      self.on = true
+      self.registered = true
       everyXMinute(10, function()
-        if self.on then
+        if self.registered then
           TakeScreenshot()
         end
-        return self.on
+        return self.registered
       end)
     end,
     unregister = function(self)
