@@ -44,7 +44,7 @@ On MacOS:
 
 You can download Shotta at the following link
 
-- <https://legacy.curseforge.com/wow/addons/shotta>
+- <https://www.curseforge.com/wow/addons/shotta>
 
 ### WoW Interface
 
