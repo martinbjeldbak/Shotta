@@ -46,25 +46,22 @@ end
 ---@field id? string sometimes added when top level triggerId not available, see blizzardTriggerMap
 
 
-local function defaultTriggerFunc(self)
-  ns.PrintToChat(format("Got event \"%s\", taking screenshot!", ns.T[format("checkboxText.%s", self.id)]:lower()))
-  TakeScreenshot()
+local function setupBlizzardEvent(eventName)
+  return {
+    eventName = eventName,
+    register = registerEvent,
+    unregister = unregisterEvent,
+    triggerFunc = function(self)
+      ns.PrintToChat(format("Got event \"%s\", taking screenshot!", ns.T[format("checkboxText.%s", self.id)]:lower()))
+      TakeScreenshot()
+    end,
+  }
 end
 
 ---@type { [triggerId]: Trigger }
 local triggers = {
-  login = {
-    eventName = "PLAYER_LOGIN",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
-  channelChat = {
-    eventName = "CHAT_MSG_CHANNEL",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
+  login = setupBlizzardEvent("PLAYER_LOGIN"),
+  channelChat = setupBlizzardEvent("CHAT_MSG_CHANNEL"),
   levelUp = {
     eventName = "PLAYER_LEVEL_UP",
     register = registerEvent,
@@ -75,50 +72,15 @@ local triggers = {
       end)
     end
   },
-  mailboxOpened = {
-    eventName = "MAIL_SHOW",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
-  readyCheck = {
-    eventName = "READY_CHECK",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
-  zoneChanged = {
-    eventName = "ZONE_CHANGED",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
-  zoneChangedNewArea = {
-    eventName = "ZONE_CHANGED_NEW_AREA",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
+  mailboxOpened = setupBlizzardEvent("MAIL_SHOW"),
+  readyCheck = setupBlizzardEvent("READY_CHECK"),
+  zoneChanged = setupBlizzardEvent("ZONE_CHANGED"),
+  zoneChangedNewArea = setupBlizzardEvent("ZONE_CHANGED_NEW_AREA"),
   --@alpha@
-  movementStart = {
-    eventName = "PLAYER_STARTED_MOVING",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
+  movementStart = setupBlizzardEvent("PLAYER_STARTED_MOVING"),
   --@end-alpha@
-  auctionWindowShow = {
-    eventName = "AUCTION_HOUSE_SHOW",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
-  groupFormed = {
-    eventName = "GROUP_FORMED",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
+  auctionWindowShow = setupBlizzardEvent("AUCTION_HOUSE_SHOW"),
+  groupFormed = setupBlizzardEvent("GROUP_FORMED"),
   tradeAccepted = {
     eventName = "TRADE_ACCEPT_UPDATE",
     register = registerEvent,
@@ -129,30 +91,10 @@ local triggers = {
       end
     end,
   },
-  bossKill = {
-    eventName = "BOSS_KILL",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
-  encounterEnd = {
-    eventName = "ENCOUNTER_END",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
-  questFinished = {
-    eventName = "QUEST_FINISHED",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
-  lootItemRollWin = {
-    eventName = "LOOT_ITEM_ROLL_WON",
-    register = registerEvent,
-    unregister = unregisterEvent,
-    triggerFunc = defaultTriggerFunc,
-  },
+  bossKill = setupBlizzardEvent("BOSS_KILL"),
+  encounterEnd = setupBlizzardEvent("ENCOUNTER_END"),
+  questFinished = setupBlizzardEvent("QUEST_FINISHED"),
+  lootItemRollWin = setupBlizzardEvent("LOOT_ITEM_ROLL_WON"),
   every5Minutes = {
     on = true,
     register = function(self)
