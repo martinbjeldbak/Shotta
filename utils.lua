@@ -8,6 +8,8 @@ local function printToChat(message)
 end
 ns.PrintToChat = printToChat
 
+---@param message string
+---@return nil
 local function debug(message)
   --@alpha@
   ns.PrintToChat(message)

@@ -1,6 +1,22 @@
 -- Inspiration for this file: https://wowpedia.fandom.com/wiki/Localizing_an_addon
 local _, ns = ...
 
+
+--- Returns folder name of current client, used to identify where screenshots
+--- are saved. See https://wowpedia.fandom.com/wiki/WOW_PROJECT_ID
+---@return string ProjectKind
+local function folderName()
+  if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+    return "retail"
+  elseif WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+    return "classic"
+  elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    return "classic_era"
+  end
+
+  return "unknown"
+end
+
 -- Localization table
 ns.T = {}
 ns.T["checkboxText.channelChat"] = "On message in channel"
@@ -21,23 +37,12 @@ ns.T["checkboxText.encounterEnd"] = "At end of an instanced encounter, such as a
 ns.T["checkboxText.questFinished"] = "Upon completion of a quest"
 ns.T["checkboxText.lootItemRollWin"] = "Upon winning a loot roll"
 ns.T["events"] = "Events"
-ns.T["saveLocationHelpText.base"] = "Screenshots are saved to the default location for your operating system"
-ns.T["saveLocationHelpText." .. WOW_PROJECT_MAINLINE] = ns.T["saveLocationHelpText.base"] .. [[
+ns.T["saveLocationHelpText"] = format([[
+Screenshots are saved to the default location for your operating system
 
 
-Windows:  C:\Program Files (x86)\World of Warcraft\_retail_\Screenshots
-MacOS:     \World of Warcraft\_retail_\Screenshots]]
-ns.T["saveLocationHelpText." .. WOW_PROJECT_WRATH_CLASSIC] = ns.T["saveLocationHelpText.base"] .. [[
-
-
-Windows:  C:\Program Files (x86)\World of Warcraft\_classic_\Screenshots
-MacOS:     \World of Warcraft\_classic_\Screenshots]]
-ns.T["saveLocationHelpText." .. WOW_PROJECT_CLASSIC] = ns.T["saveLocationHelpText.base"] .. [[
-
-
-Windows:  C:\Program Files (x86)\World of Warcraft\_classic_era_\Screenshots
-MacOS:     \World of Warcraft\_classic_era_\Screenshots]]
-
+Windows:  C:\Program Files (x86)\World of Warcraft\_%s_\Screenshots
+MacOS:     \World of Warcraft\_%s_\Screenshots]], folderName(), folderName())
 setmetatable(ns.T, {
   __index = function(_, key)
     return format("FIXME: missing localization for '%s'", key)

@@ -126,7 +126,7 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
   t.helpText:SetFont("", 10)
   t.helpText:SetJustifyH("LEFT")
   t.helpText:SetPoint("TOP", t, "TOP", 0, footerOffset);
-  t.helpText:SetText(ns.T["saveLocationHelpText." .. WOW_PROJECT_ID ])
+  t.helpText:SetText(ns.T["saveLocationHelpText"])
 
   t.love = title:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
   t.love:SetPoint("TOP", t, "TOP", 0, footerOffset-100);
