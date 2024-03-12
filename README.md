@@ -35,8 +35,8 @@ On Windows (assuming WoW is installed to C drive):
 
 On MacOS:
 
-- `\World of Warcraft\_retail_Screenshots`
-- `\World of Warcraft\_classic_era_Screenshots`
+- `\World of Warcraft\_retail_\Screenshots`
+- `\World of Warcraft\_classic_era_\Screenshots`
 
 ## Installing
 
