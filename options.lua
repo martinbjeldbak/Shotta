@@ -120,7 +120,7 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
 
 
   --- Footer
-  local footerOffset = -450
+  local footerOffset = -400
   local t = CreateFrame("Frame", nil, frame.panel)
   t:SetPoint("TOPLEFT", header, "TOPLEFT")
   t:SetPoint("TOPRIGHT", header, "TOPRIGHT")
@@ -131,9 +131,9 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
   t.helpText:SetPoint("TOP", t, "TOP", 0, footerOffset);
   t.helpText:SetText(ns.T["saveLocationHelpText." .. WOW_PROJECT_ID ])
 
-  -- t.love = title:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-  -- t.love:SetPoint("TOP", t, "TOP", 0, -500);
-  -- t.love:SetText("Made with love in Melbourne, Australia")
+  t.love = title:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+  t.love:SetPoint("TOP", t, "TOP", 0, footerOffset-100);
+  t.love:SetText("Made with love in Melbourne, Australia")
 
 
 
