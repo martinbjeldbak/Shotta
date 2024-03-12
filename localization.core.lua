@@ -4,7 +4,7 @@ local _, ns = ...
 
 --- Returns folder name of current client, used to identify where screenshots
 --- are saved. See https://wowpedia.fandom.com/wiki/WOW_PROJECT_ID
----@return string ProjectKind
+---@return string ProjectKind folder used by the current game client
 local function folderName()
   if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
     return "retail"
