@@ -67,7 +67,7 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
   header.label:SetPoint("TOP")
   header.label:SetPoint("BOTTOM")
   header.label:SetJustifyH("CENTER")
-  header.label:SetText("Events")
+  header.label:SetText(ns.T["events"])
   header.left = header:CreateTexture(nil, "BACKGROUND")
   header.left:SetHeight(8)
   header.left:SetPoint("LEFT", 10, 0)
@@ -115,6 +115,27 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
 
     cb:SetChecked(enabled)
   end
+
+
+
+
+  --- Footer
+  local footerOffset = -450
+  local t = CreateFrame("Frame", nil, frame.panel)
+  t:SetPoint("TOPLEFT", header, "TOPLEFT")
+  t:SetPoint("TOPRIGHT", header, "TOPRIGHT")
+  t:SetHeight(30)
+  t.helpText = title:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  t.helpText:SetFont("", 10)
+  t.helpText:SetJustifyH("LEFT")
+  t.helpText:SetPoint("TOP", t, "TOP", 0, footerOffset);
+  t.helpText:SetText(ns.T["saveLocationHelpText." .. WOW_PROJECT_ID ])
+
+  -- t.love = title:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+  -- t.love:SetPoint("TOP", t, "TOP", 0, -500);
+  -- t.love:SetText("Made with love in Melbourne, Australia")
+
+
 
   InterfaceOptions_AddCategory(frame.panel)
 end

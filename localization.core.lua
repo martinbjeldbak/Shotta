@@ -20,6 +20,23 @@ ns.T["checkboxText.bossKill"] = "On boss kill, including raids"
 ns.T["checkboxText.encounterEnd"] = "At end of an instanced encounter, such as a dungeon or raid encounter"
 ns.T["checkboxText.questFinished"] = "Upon completion of a quest"
 ns.T["checkboxText.lootItemRollWin"] = "Upon winning a loot roll"
+ns.T["events"] = "Events"
+ns.T["saveLocationHelpText.base"] = "Screenshots are saved to the default location for your operating system"
+ns.T["saveLocationHelpText." .. WOW_PROJECT_MAINLINE] = ns.T["saveLocationHelpText.base"] .. [[
+
+
+Windows:  C:\Program Files (x86)\World of Warcraft\_retail_\Screenshots
+MacOS:     \World of Warcraft\_retail_\Screenshots]]
+ns.T["saveLocationHelpText." .. WOW_PROJECT_WRATH_CLASSIC] = ns.T["saveLocationHelpText.base"] .. [[
+
+
+Windows:  C:\Program Files (x86)\World of Warcraft\_classic_\Screenshots
+MacOS:     \World of Warcraft\_classic_\Screenshots]]
+ns.T["saveLocationHelpText." .. WOW_PROJECT_CLASSIC] = ns.T["saveLocationHelpText.base"] .. [[
+
+
+Windows:  C:\Program Files (x86)\World of Warcraft\_classic_era_\Screenshots
+MacOS:     \World of Warcraft\_classic_era_\Screenshots]]
 
 setmetatable(ns.T, {
   __index = function(_, key)
