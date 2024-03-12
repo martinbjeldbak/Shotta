@@ -9,7 +9,7 @@ end
 ns.PrintToChat = printToChat
 
 local function debug(message)
-  --@debug--
+  --@debug@
   ns.PrintToChat(message)
   --@end-debug@
 end
