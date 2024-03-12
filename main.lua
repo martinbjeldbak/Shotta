@@ -187,9 +187,6 @@ local function AddonLoadedEventHandler(self, event, addOnName)
   local db = ns.FetchOrCreateDatabase(DB_DEFAULTS)
 
   local version = Shotta.VERSION
-  if version == "@project-version@" then
-    version = "dev"
-  end
 
   ns.InitializeOptions(self, db, triggers, screenshotFrame,
     Shotta.ADDON_NAME, version)
