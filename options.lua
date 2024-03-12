@@ -130,7 +130,7 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
 
   t.love = title:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
   t.love:SetPoint("TOP", t, "TOP", 0, footerOffset-100);
-  t.love:SetText("Made with love in Melbourne, Australia")
+  t.love:SetText("For Nandar. Made with love in Melbourne, Australia")
 
 
 
