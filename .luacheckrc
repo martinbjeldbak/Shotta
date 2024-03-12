@@ -15,6 +15,7 @@ read_globals = {
   "C_Timer",
   "InterfaceOptionsFrame_OpenToCategory",
   "InterfaceOptionsFrame_Show",
+  "WOW_PROJECT_ID",
   "WOW_PROJECT_MAINLINE",
   "WOW_PROJECT_WRATH_CLASSIC",
   "WOW_PROJECT_CLASSIC",
