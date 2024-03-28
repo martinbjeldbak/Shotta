@@ -60,7 +60,16 @@ end
 
 ---@type { [triggerId]: Trigger }
 local triggers = {
-  login = setupBlizzardEvent("PLAYER_LOGIN"),
+  login = {
+    eventName = "PLAYER_LOGIN",
+    register = registerEvent,
+    unregister = unregisterEvent,
+    triggerFunc = function()
+      C_Timer.After(5, function()
+        TakeScreenshot()
+      end)
+    end
+  },
   channelChat = setupBlizzardEvent("CHAT_MSG_CHANNEL"),
   levelUp = {
     eventName = "PLAYER_LEVEL_UP",
@@ -76,9 +85,9 @@ local triggers = {
   readyCheck = setupBlizzardEvent("READY_CHECK"),
   zoneChanged = setupBlizzardEvent("ZONE_CHANGED"),
   zoneChangedNewArea = setupBlizzardEvent("ZONE_CHANGED_NEW_AREA"),
-  --@alpha@
+--@alpha@
   movementStart = setupBlizzardEvent("PLAYER_STARTED_MOVING"),
-  --@end-alpha@
+--@end-alpha@
   auctionWindowShow = setupBlizzardEvent("AUCTION_HOUSE_SHOW"),
   groupFormed = setupBlizzardEvent("GROUP_FORMED"),
   tradeAccepted = {
