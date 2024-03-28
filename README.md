@@ -106,8 +106,13 @@ to the cloned repository directory following the guide here:
 <https://wowpedia.fandom.com/wiki/Symlinking_AddOn_folders>, this will make it
 so that you only need to reload the UI with `/reload` to see your changes.
 
+### Setup
+
+Download LibDBIcon-1.0 from link in [`.pkgmeta`](.pkgmeta) to `Libs\` folder.
+
 ### TODO
 
+- [ ] Ability to hide/show minimap icon
 - [ ] More translation strings, see `localization.core.lua`
 - [ ] UI Button: Reset state to default
 - [ ] Settings are global: make profile or chracter-specific bindings
@@ -120,7 +125,7 @@ so that you only need to reload the UI with `/reload` to see your changes.
 
 not sure if any of these are possible
 
-- [ ] Boss/Rare/elite kills
+- [x] Boss/Rare/elite kills
 - [x] Every 5/10 minutes
 - [ ] When joining a party (with a friend)
 - [ ] When close to a friend

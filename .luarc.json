@@ -10,6 +10,12 @@
     "format",
     "CreateFrame",
     "C_Timer",
-    "InterfaceOptionsFrame_Show"
+    "InterfaceOptionsFrame_Show",
+    "HideUIPanel",
+    "SettingsPanel",
+    "InterfaceOptionsFrame_OpenToCategory",
+    "IsShiftKeyDown",
+        "IsControlKeyDown",
+        "UIParent"
   ]
 }

@@ -13,6 +13,14 @@ local function TakeScreenshot(text)
   Screenshot()
 end
 
+local function TakeUILessScreenshot(text)
+  UIParent:Hide();
+
+  TakeScreenshot(text)
+
+  C_Timer.After(.01, function() UIParent:Show(); end)
+end
+
 local function everyXSecond(seconds, callback)
   C_Timer.After(seconds, function()
     local continue = callback()
@@ -185,14 +193,20 @@ end
 
 local shottaLDB = LibStub("LibDataBroker-1.1"):NewDataObject(Shotta.ADDON_NAME, {
   type = "data source",
-  text = "Shotta!",
-  icon = "Interface\\Icons\\INV_Chest_Cloth_17",
+  text = Shotta.ADDON_NAME,
+  icon = 237290,
   OnClick = function()
-    if SettingsPanel:IsShown() then
-      HideUIPanel(SettingsPanel)
+    if IsShiftKeyDown() then
+      if SettingsPanel:IsShown() then
+        HideUIPanel(SettingsPanel)
+      else
+        HideUIPanel(SettingsPanel)
+        InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
+      end
+    elseif IsControlKeyDown() then
+      TakeScreenshot()
     else
-      HideUIPanel(SettingsPanel)
-      InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
+      TakeUILessScreenshot()
     end
   end,
   OnTooltipShow = function(tooltip)
@@ -200,7 +214,10 @@ local shottaLDB = LibStub("LibDataBroker-1.1"):NewDataObject(Shotta.ADDON_NAME, 
 
     tooltip:AddLine(Shotta.ADDON_NAME)
     tooltip:AddLine(" ")
-    tooltip:AddLine("Open settings")
+    tooltip:AddLine("Click to take a UI-less screenshot")
+    tooltip:AddLine("Control-click to take a screenshot")
+    tooltip:AddLine(" ")
+    tooltip:AddLine("Shift-click to open settings")
   end,
 })
 local icon = LibStub("LibDBIcon-1.0")
