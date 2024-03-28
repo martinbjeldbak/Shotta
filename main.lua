@@ -183,7 +183,7 @@ function screenshotFrame:registerUnregisterEvent(trigger, enabled)
   end
 end
 
-local shottaLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Shotta", {
+local shottaLDB = LibStub("LibDataBroker-1.1"):NewDataObject(Shotta.ADDON_NAME, {
   type = "data source",
   text = "Shotta!",
   icon = "Interface\\Icons\\INV_Chest_Cloth_17",
