@@ -195,6 +195,13 @@ local shottaLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Shotta", {
       InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
     end
   end,
+  OnTooltipShow = function(tooltip)
+    if not tooltip or not tooltip.AddLine then return end
+
+    tooltip:AddLine(Shotta.ADDON_NAME)
+    tooltip:AddLine(" ")
+    tooltip:AddLine("Open settings")
+  end,
 })
 local icon = LibStub("LibDBIcon-1.0")
 
@@ -216,7 +223,7 @@ local function AddonLoadedEventHandler(self, event, addOnName)
   ns.InitializeOptions(self, db, triggers, screenshotFrame,
     Shotta.ADDON_NAME, version)
 
-  icon:Register("Shotta", shottaLDB, db.profile.minimap)
+  icon:Register(Shotta.ADDON_NAME, shottaLDB, db.profile.minimap)
 
   --- Persist DB as SavedVariable since we've been using it as a local
   ShottaDB = db
