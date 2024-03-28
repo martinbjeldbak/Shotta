@@ -19,4 +19,7 @@ read_globals = {
   "WOW_PROJECT_MAINLINE",
   "WOW_PROJECT_WRATH_CLASSIC",
   "WOW_PROJECT_CLASSIC",
+  "LibStub",
+  "SettingsPanel",
+  "HideUIPanel",
 }
