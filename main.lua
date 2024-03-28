@@ -85,9 +85,9 @@ local triggers = {
   readyCheck = setupBlizzardEvent("READY_CHECK"),
   zoneChanged = setupBlizzardEvent("ZONE_CHANGED"),
   zoneChangedNewArea = setupBlizzardEvent("ZONE_CHANGED_NEW_AREA"),
---@alpha@
+  --@alpha@
   movementStart = setupBlizzardEvent("PLAYER_STARTED_MOVING"),
---@end-alpha@
+  --@end-alpha@
   auctionWindowShow = setupBlizzardEvent("AUCTION_HOUSE_SHOW"),
   groupFormed = setupBlizzardEvent("GROUP_FORMED"),
   tradeAccepted = {
@@ -146,7 +146,8 @@ local DB_DEFAULTS = {
     login = { enabled = true, },
     levelUp = { enabled = true, },
     encounterEnd = { enabled = true, },
-  }
+  },
+  profile = { minimap = { hide = false } },
 }
 
 local screenshotFrame = CreateFrame("Frame")
@@ -182,6 +183,21 @@ function screenshotFrame:registerUnregisterEvent(trigger, enabled)
   end
 end
 
+local shottaLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Shotta", {
+  type = "data source",
+  text = "Shotta!",
+  icon = "Interface\\Icons\\INV_Chest_Cloth_17",
+  OnClick = function()
+    if SettingsPanel:IsShown() then
+      HideUIPanel(SettingsPanel)
+    else
+      HideUIPanel(SettingsPanel)
+      InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
+    end
+  end,
+})
+local icon = LibStub("LibDBIcon-1.0")
+
 local function AddonLoadedEventHandler(self, event, addOnName)
   if addOnName ~= Shotta.ADDON_NAME then
     return
@@ -199,6 +215,8 @@ local function AddonLoadedEventHandler(self, event, addOnName)
 
   ns.InitializeOptions(self, db, triggers, screenshotFrame,
     Shotta.ADDON_NAME, version)
+
+  icon:Register("Shotta", shottaLDB, db.profile.minimap)
 
   --- Persist DB as SavedVariable since we've been using it as a local
   ShottaDB = db

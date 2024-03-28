@@ -36,6 +36,18 @@ local function fetchOrCreateDatabase(defaults)
     end
   end
 
+  for k, v in pairs(defaults.profile) do
+    if db.profile[k] == nil then
+      db.profile[k] = v
+    end
+  end
+
+  for k, v in pairs(defaults.profile.minimap) do
+    if db.profile.minimap[k] == nil then
+      db.profile.minimap[k] = v
+    end
+  end
+
   return db
 end
 
