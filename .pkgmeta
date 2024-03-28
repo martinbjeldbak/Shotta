@@ -1,4 +1,5 @@
 enable-toc-creation: yes
+enable-nolib-creation: yes
 ignore:
   - README.md
 externals:
