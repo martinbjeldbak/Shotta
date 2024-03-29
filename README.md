@@ -113,6 +113,8 @@ Download LibDBIcon-1.0 from link in [`.pkgmeta`](.pkgmeta) to `Libs\` folder.
 ### TODO
 
 - [ ] Ability to hide/show minimap icon
+- [ ] Ability to take 2 screenshots for every event: 1 with UI, 1 without
+- [ ] Setting to take screenshots with or without UI
 - [ ] More translation strings, see `localization.core.lua`
 - [ ] UI Button: Reset state to default
 - [ ] Settings are global: make profile or chracter-specific bindings
@@ -127,6 +129,7 @@ not sure if any of these are possible
 
 - [x] Boss/Rare/elite kills
 - [x] Every 5/10 minutes
+- [ ] On death
 - [ ] When joining a party (with a friend)
 - [ ] When close to a friend
 - [ ] When emoting with a friend/target
