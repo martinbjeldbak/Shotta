@@ -22,4 +22,7 @@ read_globals = {
   "LibStub",
   "SettingsPanel",
   "HideUIPanel",
+  "UIParent",
+  "IsShiftKeyDown",
+  "IsControlKeyDown",
 }
