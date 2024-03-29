@@ -15,7 +15,7 @@
     "SettingsPanel",
     "InterfaceOptionsFrame_OpenToCategory",
     "IsShiftKeyDown",
-        "IsControlKeyDown",
-        "UIParent"
+    "IsControlKeyDown",
+    "UIParent"
   ]
 }
