@@ -142,6 +142,8 @@ local triggers = {
       self.on = false
     end,
   },
+  onDeath = setupBlizzardEvent("PLAYER_DEAD"),
+  
 }
 
 ---@class Event
