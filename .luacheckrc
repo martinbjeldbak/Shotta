@@ -26,3 +26,7 @@ read_globals = {
   "IsShiftKeyDown",
   "IsControlKeyDown",
 }
+
+exclude_files = {
+  "Libs"
+}
