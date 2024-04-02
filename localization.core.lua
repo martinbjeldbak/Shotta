@@ -43,6 +43,7 @@ Screenshots are saved to the default location for your operating system
 
 Windows:  C:\Program Files (x86)\World of Warcraft\_%s_\Screenshots
 MacOS:     \World of Warcraft\_%s_\Screenshots]], folderName(), folderName())
+
 setmetatable(ns.T, {
   __index = function(_, key)
     return format("FIXME: missing localization for '%s'", key)
