@@ -106,10 +106,6 @@ to the cloned repository directory following the guide here:
 <https://wowpedia.fandom.com/wiki/Symlinking_AddOn_folders>, this will make it
 so that you only need to reload the UI with `/reload` to see your changes.
 
-### Setup
-
-Download LibDBIcon-1.0 from link in [`.pkgmeta`](.pkgmeta) to `Libs\` folder.
-
 ### TODO
 
 - [ ] Ability to hide/show minimap icon
