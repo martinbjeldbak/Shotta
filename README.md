@@ -118,6 +118,7 @@ so that you only need to reload the UI with `/reload` to see your changes.
 - [x] Add slash command to open up options (if possible?)
 - [x] ~~Consider using [AceDB](https://www.wowace.com/projects/ace3)~~ too complicated, extra dependency
 - [ ] Make event success printing an option. Currently always printing to chat
+- [ ] Create a better options frame - Could be 2 rows of events
 
 ### Event ideas
 
@@ -125,11 +126,11 @@ not sure if any of these are possible
 
 - [x] Boss/Rare/elite kills
 - [x] Every 5/10 minutes
-- [ ] On death
+- [x] On death
 - [ ] When joining a party (with a friend)
 - [ ] When close to a friend
 - [ ] When emoting with a friend/target
-- [ ] When emoting at all
+- [x] When emoting at all
 - [ ] Low health
 - [x] Trade windows
 - [ ] More customizable every x minutes with [slider](https://wowpedia.fandom.com/wiki/API_Slider_SetStepsPerPage)
