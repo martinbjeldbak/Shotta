@@ -119,6 +119,7 @@ so that you only need to reload the UI with `/reload` to see your changes.
 - [x] ~~Consider using [AceDB](https://www.wowace.com/projects/ace3)~~ too complicated, extra dependency
 - [ ] Make event success printing an option. Currently always printing to chat
 - [ ] Create a better options frame - Could be 2 rows of events
+- [ ] If simpler: Implement the settings UI (+ more) using [Ace3](https://www.curseforge.com/wow/addons/ace3)
 
 ### Event ideas
 
