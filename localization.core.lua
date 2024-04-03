@@ -38,6 +38,7 @@ ns.T["checkboxText.bossKill"] = "On boss kill, including raids"
 ns.T["checkboxText.encounterEnd"] = "At end of an instanced encounter, such as a dungeon or raid encounter"
 ns.T["checkboxText.questFinished"] = "Upon completion of a quest"
 ns.T["checkboxText.lootItemRollWin"] = "Upon winning a loot roll"
+ns.T["checkboxText.profile.hideMiniMap"] = "Hide minimap icon"
 ns.T["events"] = "Events"
 ns.T["saveLocationHelpText"] = format([[
 Screenshots are saved to the default location for your operating system

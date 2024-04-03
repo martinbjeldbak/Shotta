@@ -248,8 +248,7 @@ local function AddonLoadedEventHandler(self, event, addOnName)
 
   local version = Shotta.VERSION
 
-  ns.InitializeOptions(self, db, triggers, screenshotFrame,
-    Shotta.ADDON_NAME, version)
+  ns.InitializeOptions(self, db, triggers, screenshotFrame, Shotta.ADDON_NAME, version, icon)
 
   icon:Register(Shotta.ADDON_NAME, shottaLDB, db.profile.minimap)
 
