@@ -142,6 +142,17 @@ local triggers = {
       self.on = false
     end,
   },
+  onDeath = setupBlizzardEvent("PLAYER_DEAD"),
+  chatAllEmotesWithToken = {
+    eventName = "CHAT_MSG_TEXT_EMOTE",
+    register = registerEvent,
+    unregister = unregisterEvent,
+    triggerFunc = function()
+      C_Timer.After(0.5, function()
+        TakeScreenshot()
+      end)
+    end
+  },
 }
 
 ---@class Event
