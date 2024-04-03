@@ -47,7 +47,7 @@ end
 ---@param screenshotFrame any
 ---@param addonName string
 ---@param version string
-local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName, version)
+local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName, version, icon)
   frame.panel = CreateFrame("Frame")
   frame.panel.name = addonName
 
@@ -59,7 +59,24 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
   title.frameTitle:SetPoint("TOP", title, "TOP", 0, -20);
   title.frameTitle:SetText(addonName .. " " .. version)
 
-  local header = CreateFrame("Frame", nil, title)
+  local general = CreateFrame("Frame", nil, title)
+  local hideButton = CreateFrame("CheckButton", nil, title, "InterfaceOptionsCheckButtonTemplate")
+  hideButton:SetPoint("TOPLEFT", 20, -40)
+  hideButton.Text:SetText(ns.T["checkboxText.profile.hideMiniMap"])
+  hideButton:HookScript("OnClick", function()
+    local isChecked = hideButton:GetChecked()
+
+    db.profile.minimap.hide = isChecked
+
+    if isChecked then
+      icon:Hide(Shotta.ADDON_NAME)
+    else
+      icon:Show(Shotta.ADDON_NAME)
+    end
+  end)
+  hideButton:SetChecked(db.profile.minimap.hide)
+
+  local header = CreateFrame("Frame", nil, general)
   header:SetHeight(18)
   header:SetPoint("TOPLEFT", title, "BOTTOMLEFT")
   header:SetPoint("TOPRIGHT", title, "BOTTOMRIGHT")
@@ -147,8 +164,6 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
   t.love = title:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
   t.love:SetPoint("TOP", t, "TOP", 0, footerOffset-100);
   t.love:SetText("For Nandar. Made with love in Melbourne, Australia")
-
-
 
   InterfaceOptions_AddCategory(frame.panel)
 end
