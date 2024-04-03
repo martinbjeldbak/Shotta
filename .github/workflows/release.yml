@@ -17,6 +17,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Clear Libs folder. It will be created from scratch
+        run: |
+          rm -rf Libs/
+
       - name: Package and release
         uses: BigWigsMods/packager@master
         env:
