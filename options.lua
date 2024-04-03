@@ -101,7 +101,7 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
 
   -- Create checkboxes for all events we should listen to
   local totalCheckboxes = 0
-  for k, _ in pairsByKeys(triggers, compareByCheckboxText) do
+  for _ in pairsByKeys(triggers, compareByCheckboxText) do
   totalCheckboxes = totalCheckboxes + 1
   end
 
@@ -111,11 +111,11 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
   local spacing = 5 -- Spacing between checkboxes
 
   local currentRow = 0
-  local currentColumn = 0
+  local currentCol = 0
 
   for k, _ in pairsByKeys(triggers, compareByCheckboxText) do
     local cb = CreateFrame("CheckButton", nil, header, "InterfaceOptionsCheckButtonTemplate")
-    cb:SetPoint("TOPLEFT", 20 + currentColumn * (checkboxWidth + spacing), -20 - currentRow * (checkboxHeight + spacing))
+    cb:SetPoint("TOPLEFT", 20 + currentCol * (checkboxWidth + spacing), -20 - currentRow * (checkboxHeight + spacing))
     cb.Text:SetText(ns.T["checkboxText." .. k])
     cb:HookScript("OnClick", function()
       local isChecked = cb:GetChecked()
@@ -141,10 +141,10 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
 
     cb:SetChecked(enabled)
 
-    currentColumn = currentColumn + 1
+    currentCol = currentCol + 1
 
-    if currentColumn >= columns then
-      currentColumn = 0
+    if currentCol >= columns then
+      currentCol = 0
       currentRow = currentRow + 1
     end
   end
