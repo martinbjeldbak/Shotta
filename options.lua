@@ -132,7 +132,6 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
     end
   end
 
-
   --- Footer
   local footerOffset = -400
   local t = CreateFrame("Frame", nil, frame.panel)
