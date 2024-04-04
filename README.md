@@ -78,7 +78,7 @@ Once installed, there will be an addon loaded message in the chat, see
 ![Addon loaded](./.previews/screenshot-taken.png)
 
 You can then open the menu and start configuring the events you want to
-screenshot by typing `/ss` or `/shotta` in the chat
+screenshot by typing `/sh` or `/shotta` in the chat
 
 ![Addon menu](./.previews/menu.png)
 
@@ -118,7 +118,7 @@ so that you only need to reload the UI with `/reload` to see your changes.
 - [x] Add slash command to open up options (if possible?)
 - [x] ~~Consider using [AceDB](https://www.wowace.com/projects/ace3)~~ too complicated, extra dependency
 - [ ] Make event success printing an option. Currently always printing to chat
-- [ ] Create a better options frame - Could be 2 rows of events
+- [x] Create a better options frame - Could be 2 columns of events in case of too many events
 - [ ] If simpler: Implement the settings UI (+ more) using [Ace3](https://www.curseforge.com/wow/addons/ace3)
 
 ### Event ideas

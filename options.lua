@@ -100,11 +100,22 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
   header.left:SetPoint("RIGHT", header.label, "LEFT", -5, 0)
 
   -- Create checkboxes for all events we should listen to
-  local offset = -20
+  local totalCheckboxes = 0
+  for _ in pairsByKeys(triggers, compareByCheckboxText) do
+  totalCheckboxes = totalCheckboxes + 1
+  end
+
+  local columns = 2
+  local checkboxWidth = 330 -- Adjust based on your checkbox size
+  local checkboxHeight = 20 -- Adjust based on your checkbox size
+  local spacing = 5 -- Spacing between checkboxes
+
+  local currentRow = 0
+  local currentCol = 0
 
   for k, _ in pairsByKeys(triggers, compareByCheckboxText) do
     local cb = CreateFrame("CheckButton", nil, header, "InterfaceOptionsCheckButtonTemplate")
-    cb:SetPoint("TOPLEFT", 20, offset)
+    cb:SetPoint("TOPLEFT", 20 + currentCol * (checkboxWidth + spacing), -20 - currentRow * (checkboxHeight + spacing))
     cb.Text:SetText(ns.T["checkboxText." .. k])
     cb:HookScript("OnClick", function()
       local isChecked = cb:GetChecked()
@@ -123,14 +134,19 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
       ns.Debug(format("%s is now %s", k, EnabledHumanized(isChecked)))
     end)
 
-    offset = offset - 20
-
     local enabled = false
     if db.screenshottableEvents[k] then
       enabled = db.screenshottableEvents[k].enabled
     end
 
     cb:SetChecked(enabled)
+
+    currentCol = currentCol + 1
+
+    if currentCol >= columns then
+      currentCol = 0
+      currentRow = currentRow + 1
+    end
   end
 
   --- Footer
