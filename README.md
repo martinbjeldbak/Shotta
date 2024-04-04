@@ -10,6 +10,10 @@ Azeroth so you can cherish them forever.
 > [!IMPORTANT]
 > This has only been tested in WoW Classic, but it should work in all client versions
 
+## Shotta Discord
+Head over to our Shotta Discord server https://discord.gg/MHqGRpZxbB. 
+Come share your best screenshots, tell us about your suggestions, or just chat!
+
 ## Features
 
 Ever wished you had more pictures of your adventures throughout Azeroth and
@@ -22,6 +26,7 @@ Shotta will automatically take screenshots
 - when you're alone
 - when you're with your friends
 - when you down a boss
+- and much more!
 
 It runs with zero dependencies and minimal code. I'm always adding new events as I come up with them and would love your feedback for what you'd like to see.
 
@@ -101,10 +106,10 @@ First of all, thanks for helping contribute! There are many ways you can help co
 - code contributions
 - translation strings for each supported language
 
-If you wish to run this addon locally, I highly recommend setting up a symlink
-to the cloned repository directory following the guide here:
-<https://wowpedia.fandom.com/wiki/Symlinking_AddOn_folders>, this will make it
-so that you only need to reload the UI with `/reload` to see your changes.
+> If you wish to run this addon locally, I highly recommend setting up a symlink
+> to the cloned repository directory following the guide here:
+> <https://wowpedia.fandom.com/wiki/Symlinking_AddOn_folders>, this will make it
+> so that you only need to reload the UI with `/reload` to see your changes.
 
 ### TODO
 
