@@ -11,7 +11,8 @@ Azeroth so you can cherish them forever.
 > This has only been tested in WoW Classic, but it should work in all client versions
 
 ## Shotta Discord
-Head over to our Shotta Discord server https://discord.gg/MHqGRpZxbB. 
+
+Head over to our [Shotta Discord server](https://discord.gg/MHqGRpZxbB)!
 Come share your best screenshots, tell us about your suggestions, or just chat!
 
 ## Features
