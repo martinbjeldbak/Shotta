@@ -28,3 +28,11 @@ jobs:
           CF_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
           WOWI_API_TOKEN: ${{ secrets.WOW_INTERFACE_API_KEY }}
           WAGO_API_TOKEN: ${{ secrets.WAGO_API_KEY }}
+
+      - name: Shotta Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: |
+            'A new **Shotta release [${{ github.event.release.tag_name }}](https://github.com/martinbjeldbak/Shotta/releases/tag/${{ github.event.release.tag_name }})** is live! @Updates'
