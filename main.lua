@@ -110,7 +110,7 @@ local triggers = {
   },
   bossKill = setupBlizzardEvent("BOSS_KILL"),
   encounterEnd = setupBlizzardEvent("ENCOUNTER_END"),
-  questFinished = setupBlizzardEvent("QUEST_FINISHED"),
+  questFinished = setupBlizzardEvent("QUEST_COMPLETE"),
   lootItemRollWin = setupBlizzardEvent("LOOT_ITEM_ROLL_WON"),
   every5Minutes = {
     registered = true,
