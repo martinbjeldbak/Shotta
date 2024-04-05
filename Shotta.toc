@@ -9,6 +9,7 @@
 ## X-WoWI-ID: 26687
 ## X-Wago-ID: 96E7gaGg
 
+Libs\LibStub\LibStub.lua
 Libs\LibDBIcon-1.0\embeds.xml
 localization.core.lua
 utils.lua
