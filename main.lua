@@ -50,7 +50,7 @@ end
 ---@field eventName string|nil Name of Blizzard event, or nil if custom event
 ---@field register (fun(self, frame): nil)
 ---@field unregister (fun(self, frame): nil)
----@field triggerFunc (fun(...): nil)|nil Function to excute if not to take a screenshot straight away
+---@field triggerFunc (fun(...): nil)|nil Function to execute if not to take a screenshot straight away
 ---@field id? string sometimes added when top level triggerId not available, see blizzardTriggerMap
 
 
