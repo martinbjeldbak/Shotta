@@ -305,7 +305,6 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
 
   -- Show the first tab by default
   SwitchTab(1)
-  StaticPopup_Show ("EXAMPLE_HELLOWORLD")
   
   InterfaceOptions_AddCategory(frame.panel)
 end
