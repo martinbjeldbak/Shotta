@@ -1,14 +1,15 @@
-## Interface: 100205
+## Interface: 100206
 ## Interface-Classic: 11501
 ## Title: Shotta
 ## Notes: Take screenshots on events throughout adventures in Azeroth and beyond
-## Author: martinbjeldbak <https://martinbjeldbak.com>
+## Author: martinbjeldbak <https://martinbjeldbak.com>, thomasbjeldbak <https://thomasbjeldbak.com/>
 ## Version: @project-version@
 ## SavedVariables: ShottaDB
 ## X-Curse-Project-ID: 972182
 ## X-WoWI-ID: 26687
 ## X-Wago-ID: 96E7gaGg
 
+Libs\LibStub\LibStub.lua
 Libs\LibDBIcon-1.0\embeds.xml
 localization.core.lua
 utils.lua
