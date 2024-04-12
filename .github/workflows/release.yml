@@ -34,4 +34,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'A new Shotta **release [${{ github.event.release.tag_name }}](https://github.com/martinbjeldbak/Shotta/releases/tag/${{ github.event.release.tag_name }})** is live! @Updates'
+          args: 'A new Shotta **release [${{ github.ref_name }}](https://github.com/martinbjeldbak/Shotta/releases/tag/${{ github.ref_name }})** is live! <@&1225515623094947850>'
