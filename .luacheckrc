@@ -4,6 +4,7 @@ globals = {
     "SLASH_SHOTTA1",
     "SLASH_SHOTTA2",
     "SlashCmdList",
+    "StaticPopupDialogs",
 }
 
 read_globals = {
@@ -26,7 +27,6 @@ read_globals = {
     "IsShiftKeyDown",
     "IsControlKeyDown",
     "LibStub",
-    "StaticPopupDialogs",
     "StaticPopup_Show"
 }
 
