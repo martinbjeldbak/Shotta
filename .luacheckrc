@@ -26,6 +26,8 @@ read_globals = {
     "IsShiftKeyDown",
     "IsControlKeyDown",
     "LibStub",
+    "StaticPopupDialogs",
+    "StaticPopup_Show"
 }
 
 exclude_files = {

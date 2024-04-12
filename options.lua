@@ -64,7 +64,7 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
   tab1Button:SetPoint("LEFT", tabFrame, "LEFT", 0, -20)
   tab1Button:SetText(ns.T["events"])
   tab1Button:SetWidth(140)
-  
+
   -- Create the second tab button
   local tab2Button = CreateFrame("Button", nil, tabFrame, "GameMenuButtonTemplate")
   tab2Button:SetPoint("LEFT", tab1Button, "CENTER", 80, 0)
@@ -132,16 +132,16 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
       tab3Content:Show()
     end
   end
-  
+
   -- Hook up the tab buttons to switch tabs
   tab1Button:SetScript("OnClick", function() SwitchTab(1) end)
   tab2Button:SetScript("OnClick", function() SwitchTab(2) end)
   tab3Button:SetScript("OnClick", function() SwitchTab(3) end)
-  
+
   -- Initialize the first tab with content
   -- You can add your existing options initialization code here
   -- For example, to add a checkbox to tab1Content:
-  
+
   -- Event tab
   local eventTab = CreateFrame("Frame", nil, tab1Content)
   eventTab:SetHeight(18)
@@ -165,28 +165,28 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
   eventTab.right:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
   eventTab.right:SetTexCoord(0.81, 0.94, 0.5, 1)
   eventTab.left:SetPoint("RIGHT", eventTab.label, "LEFT", -5, 0)
-  
+
   -- Create checkboxes for all events we should listen to
   local totalCheckboxes = 0
   for _ in pairsByKeys(triggers, compareByCheckboxText) do
     totalCheckboxes = totalCheckboxes + 1
   end
-  
+
   local columns = 2
   local checkboxWidth = 330 -- Adjust based on your checkbox size
   local checkboxHeight = 20 -- Adjust based on your checkbox size
   local spacing = 5 -- Spacing between checkboxes
-  
+
   local currentRow = 0
   local currentCol = 0
-  
+
   for k, _ in pairsByKeys(triggers, compareByCheckboxText) do
     local cb = CreateFrame("CheckButton", nil, tab1Content, "InterfaceOptionsCheckButtonTemplate")
     cb:SetPoint("TOPLEFT", 20 + currentCol * (checkboxWidth + spacing), -20 - currentRow * (checkboxHeight + spacing))
     cb.Text:SetText(ns.T["checkboxText." .. k])
     cb:HookScript("OnClick", function()
       local isChecked = cb:GetChecked()
-      
+
       if isChecked then
         if db.screenshottableEvents[k] == nil then
           db.screenshottableEvents[k] = {}
@@ -195,27 +195,27 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
       else
         db.screenshottableEvents[k].enabled = nil
       end
-      
+
       screenshotFrame:registerUnregisterEvent(k, isChecked)
-      
+
       ns.Debug(format("%s is now %s", k, EnabledHumanized(isChecked)))
     end)
-    
+
     local enabled = false
     if db.screenshottableEvents[k] then
       enabled = db.screenshottableEvents[k].enabled
     end
-    
+
     cb:SetChecked(enabled)
-    
+
     currentCol = currentCol + 1
-    
+
     if currentCol >= columns then
       currentCol = 0
         currentRow = currentRow + 1
       end
   end
-  
+
   -- Initialize the second tab with content
   -- Add your options for the second tab here
   local settingsName = CreateFrame("Frame", nil, tab2Content)
@@ -257,7 +257,7 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
     end
   end)
   hideButton:SetChecked(db.profile.minimap.hide)
-  
+
   -- Initialize the third tab with content
   -- Add your options for the third tab here
 
@@ -297,7 +297,7 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
   t.helpText:SetJustifyH("LEFT")
   t.helpText:SetPoint("TOP", tab3Content, "TOP", 0, footerOffset);
   t.helpText:SetText(ns.T["saveLocationHelpText"])
-  
+
   -- Love text
   t.love = tab3Content:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
   t.love:SetPoint("TOP", tab3Content, "TOP", 0, footerOffset-100);
@@ -305,7 +305,7 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
 
   -- Show the first tab by default
   SwitchTab(1)
-  
+
   InterfaceOptions_AddCategory(frame.panel)
 end
 
