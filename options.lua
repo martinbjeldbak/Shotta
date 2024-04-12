@@ -51,58 +51,125 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
   frame.panel = CreateFrame("Frame")
   frame.panel.name = addonName
 
-  local title = CreateFrame("Frame", nil, frame.panel)
-  title:SetPoint("TOPLEFT", frame.panel, "TOPLEFT")
-  title:SetPoint("TOPRIGHT", frame.panel, "TOPRIGHT")
-  title:SetHeight(70)
-  title.frameTitle = title:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-  title.frameTitle:SetPoint("TOP", title, "TOP", 0, -20);
-  title.frameTitle:SetText(addonName .. " " .. version)
+  local tabFrame = CreateFrame("Frame", nil, frame.panel)
+  tabFrame:SetPoint("TOPLEFT", frame.panel, "TOPLEFT")
+  tabFrame:SetPoint("TOPRIGHT", frame.panel, "TOPRIGHT")
+  tabFrame:SetHeight(70)
+  tabFrame.frameTitle = tabFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  tabFrame.frameTitle:SetPoint("TOP", tabFrame, "TOP", 0, -15);
+  tabFrame.frameTitle:SetText(addonName .. " " .. version)
 
-  local general = CreateFrame("Frame", nil, title)
-  local hideButton = CreateFrame("CheckButton", nil, title, "InterfaceOptionsCheckButtonTemplate")
-  hideButton:SetPoint("TOPLEFT", 20, -40)
-  hideButton.Text:SetText(ns.T["checkboxText.profile.hideMiniMap"])
-  hideButton:HookScript("OnClick", function()
-    local isChecked = hideButton:GetChecked()
+  -- Create the first tab button
+  local tab1Button = CreateFrame("Button", nil, tabFrame, "GameMenuButtonTemplate")
+  tab1Button:SetPoint("LEFT", tabFrame, "LEFT", 0, -20)
+  tab1Button:SetText(ns.T["events"])
+  tab1Button:SetWidth(140)
 
-    db.profile.minimap.hide = isChecked
+  -- Create the second tab button
+  local tab2Button = CreateFrame("Button", nil, tabFrame, "GameMenuButtonTemplate")
+  tab2Button:SetPoint("LEFT", tab1Button, "CENTER", 80, 0)
+  tab2Button:SetText(ns.T["settings"])
+  tab2Button:SetWidth(140)
 
-    if isChecked then
-      icon:Hide(Shotta.ADDON_NAME)
-    else
-      icon:Show(Shotta.ADDON_NAME)
+  -- Create the third tab button
+  local tab3Button = CreateFrame("Button", nil, tabFrame, "GameMenuButtonTemplate")
+  tab3Button:SetPoint("LEFT", tab1Button, "RIGHT", 160, 0)
+  tab3Button:SetText(ns.T["about"])
+  tab3Button:SetWidth(140)
+
+  local function ShowDiscordPopup()
+    StaticPopupDialogs["Shotta_Link"] = {
+        text = "Press Ctrl+C to copy the URL to your clipboard",
+        hasEditBox = 1,
+        button1 = _G.OKAY,
+        OnShow = function(self)
+            local box = self.editBox
+            box:SetWidth(275)
+            box:SetText("https://discord.gg/MHqGRpZxbB")
+            box:HighlightText()
+            box:SetFocus()
+        end,
+        EditBoxOnEscapePressed = function(self) self:GetParent():Hide() end,
+        timeout = 0,
+        whileDead = 1,
+        hideOnEscape = 1
+    }
+    StaticPopup_Show("Shotta_Link")
+  end
+
+  local discordButton = CreateFrame("Button", nil, tabFrame, "GameMenuButtonTemplate")
+  discordButton:SetPoint("LEFT", tab3Button, "RIGHT", 85, 40)
+  discordButton:SetText("Join our Discord!")
+  discordButton:SetWidth(125)
+  discordButton:SetScript("OnClick", ShowDiscordPopup)
+
+  -- Create the tab content frames
+  local tab1Content = CreateFrame("Frame", nil, frame.panel)
+  tab1Content:SetPoint("TOPLEFT", tabFrame, "BOTTOMLEFT", 0, -10)
+  tab1Content:SetPoint("BOTTOMRIGHT", frame.panel, "BOTTOMRIGHT", 0, 0)
+  tab1Content:Hide() -- Hide initially
+
+  local tab2Content = CreateFrame("Frame", nil, frame.panel)
+  tab2Content:SetPoint("TOPLEFT", tabFrame, "BOTTOMLEFT", 0, -10)
+  tab2Content:SetPoint("BOTTOMRIGHT", frame.panel, "BOTTOMRIGHT", 0, 0)
+  tab2Content:Hide() -- Hide initially
+
+  local tab3Content = CreateFrame("Frame", nil, frame.panel)
+  tab3Content:SetPoint("TOPLEFT", tabFrame, "BOTTOMLEFT", 0, -10)
+  tab3Content:SetPoint("BOTTOMRIGHT", frame.panel, "BOTTOMRIGHT", 0, 0)
+  tab3Content:Hide() -- Hide initially
+
+  -- Function to switch tabs
+  local function SwitchTab(tab)
+    tab1Content:Hide()
+    tab2Content:Hide()
+    tab3Content:Hide()
+    if tab == 1 then
+      tab1Content:Show()
+    elseif tab == 2 then
+      tab2Content:Show()
+    elseif tab == 3 then
+      tab3Content:Show()
     end
-  end)
-  hideButton:SetChecked(db.profile.minimap.hide)
+  end
 
-  local header = CreateFrame("Frame", nil, general)
-  header:SetHeight(18)
-  header:SetPoint("TOPLEFT", title, "BOTTOMLEFT")
-  header:SetPoint("TOPRIGHT", title, "BOTTOMRIGHT")
-  header.label = header:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-  header.label:SetPoint("TOP")
-  header.label:SetPoint("BOTTOM")
-  header.label:SetJustifyH("CENTER")
-  header.label:SetText(ns.T["events"])
-  header.left = header:CreateTexture(nil, "BACKGROUND")
-  header.left:SetHeight(8)
-  header.left:SetPoint("LEFT", 10, 0)
-  header.left:SetPoint("RIGHT", header.label, "LEFT", -5, 0)
-  header.left:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
-  header.left:SetTexCoord(0.81, 0.94, 0.5, 1)
-  header.right = header:CreateTexture(nil, "BACKGROUND")
-  header.right:SetHeight(8)
-  header.right:SetPoint("RIGHT", -10, 0)
-  header.right:SetPoint("LEFT", header.label, "RIGHT", 5, 0)
-  header.right:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
-  header.right:SetTexCoord(0.81, 0.94, 0.5, 1)
-  header.left:SetPoint("RIGHT", header.label, "LEFT", -5, 0)
+  -- Hook up the tab buttons to switch tabs
+  tab1Button:SetScript("OnClick", function() SwitchTab(1) end)
+  tab2Button:SetScript("OnClick", function() SwitchTab(2) end)
+  tab3Button:SetScript("OnClick", function() SwitchTab(3) end)
+
+  -- Initialize the first tab with content
+  -- You can add your existing options initialization code here
+  -- For example, to add a checkbox to tab1Content:
+
+  -- Event tab
+  local eventTab = CreateFrame("Frame", nil, tab1Content)
+  eventTab:SetHeight(18)
+  eventTab:SetPoint("TOPLEFT", tabFrame, "BOTTOMLEFT")
+  eventTab:SetPoint("TOPRIGHT", tabFrame, "BOTTOMRIGHT")
+  eventTab.label = eventTab:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+  eventTab.label:SetPoint("TOP")
+  eventTab.label:SetPoint("BOTTOM")
+  eventTab.label:SetJustifyH("CENTER")
+  eventTab.label:SetText(ns.T["events"])
+  eventTab.left = eventTab:CreateTexture(nil, "BACKGROUND")
+  eventTab.left:SetHeight(8)
+  eventTab.left:SetPoint("LEFT", 10, 0)
+  eventTab.left:SetPoint("RIGHT", eventTab.label, "LEFT", -5, 0)
+  eventTab.left:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
+  eventTab.left:SetTexCoord(0.81, 0.94, 0.5, 1)
+  eventTab.right = eventTab:CreateTexture(nil, "BACKGROUND")
+  eventTab.right:SetHeight(8)
+  eventTab.right:SetPoint("RIGHT", -10, 0)
+  eventTab.right:SetPoint("LEFT", eventTab.label, "RIGHT", 5, 0)
+  eventTab.right:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
+  eventTab.right:SetTexCoord(0.81, 0.94, 0.5, 1)
+  eventTab.left:SetPoint("RIGHT", eventTab.label, "LEFT", -5, 0)
 
   -- Create checkboxes for all events we should listen to
   local totalCheckboxes = 0
   for _ in pairsByKeys(triggers, compareByCheckboxText) do
-  totalCheckboxes = totalCheckboxes + 1
+    totalCheckboxes = totalCheckboxes + 1
   end
 
   local columns = 2
@@ -114,7 +181,7 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
   local currentCol = 0
 
   for k, _ in pairsByKeys(triggers, compareByCheckboxText) do
-    local cb = CreateFrame("CheckButton", nil, header, "InterfaceOptionsCheckButtonTemplate")
+    local cb = CreateFrame("CheckButton", nil, tab1Content, "InterfaceOptionsCheckButtonTemplate")
     cb:SetPoint("TOPLEFT", 20 + currentCol * (checkboxWidth + spacing), -20 - currentRow * (checkboxHeight + spacing))
     cb.Text:SetText(ns.T["checkboxText." .. k])
     cb:HookScript("OnClick", function()
@@ -145,25 +212,99 @@ local function InitializeOptions(frame, db, triggers, screenshotFrame, addonName
 
     if currentCol >= columns then
       currentCol = 0
-      currentRow = currentRow + 1
-    end
+        currentRow = currentRow + 1
+      end
   end
 
-  --- Footer
-  local footerOffset = -400
-  local t = CreateFrame("Frame", nil, frame.panel)
-  t:SetPoint("TOPLEFT", header, "TOPLEFT")
-  t:SetPoint("TOPRIGHT", header, "TOPRIGHT")
+  -- Initialize the second tab with content
+  -- Add your options for the second tab here
+  local settingsName = CreateFrame("Frame", nil, tab2Content)
+  settingsName:SetHeight(18)
+  settingsName:SetPoint("TOPLEFT", tabFrame, "BOTTOMLEFT")
+  settingsName:SetPoint("TOPRIGHT", tabFrame, "BOTTOMRIGHT")
+  settingsName.label = settingsName:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+  settingsName.label:SetPoint("TOP")
+  settingsName.label:SetPoint("BOTTOM")
+  settingsName.label:SetJustifyH("CENTER")
+  settingsName.label:SetText(ns.T["settings"])
+  settingsName.left = settingsName:CreateTexture(nil, "BACKGROUND")
+  settingsName.left:SetHeight(8)
+  settingsName.left:SetPoint("LEFT", 10, 0)
+  settingsName.left:SetPoint("RIGHT", settingsName.label, "LEFT", -5, 0)
+  settingsName.left:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
+  settingsName.left:SetTexCoord(0.81, 0.94, 0.5, 1)
+  settingsName.right = settingsName:CreateTexture(nil, "BACKGROUND")
+  settingsName.right:SetHeight(8)
+  settingsName.right:SetPoint("RIGHT", -10, 0)
+  settingsName.right:SetPoint("LEFT", settingsName.label, "RIGHT", 5, 0)
+  settingsName.right:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
+  settingsName.right:SetTexCoord(0.81, 0.94, 0.5, 1)
+  settingsName.left:SetPoint("RIGHT", settingsName.label, "LEFT", -5, 0)
+
+  -- Hide map icon button
+  local hideButton = CreateFrame("CheckButton", nil, tab2Content, "InterfaceOptionsCheckButtonTemplate")
+  hideButton:SetPoint("TOPLEFT", tab2Content, "TOPLEFT", 20, -20)
+  hideButton.Text:SetText(ns.T["checkboxText.profile.hideMiniMap"])
+  hideButton:HookScript("OnClick", function()
+    local isChecked = hideButton:GetChecked()
+
+    db.profile.minimap.hide = isChecked
+
+    if isChecked then
+      icon:Hide(Shotta.ADDON_NAME)
+    else
+      icon:Show(Shotta.ADDON_NAME)
+    end
+  end)
+  hideButton:SetChecked(db.profile.minimap.hide)
+
+  -- Initialize the third tab with content
+  -- Add your options for the third tab here
+
+  -- Footer
+  local aboutName = CreateFrame("Frame", nil, tab3Content)
+  aboutName:SetHeight(18)
+  aboutName:SetPoint("TOPLEFT", tabFrame, "BOTTOMLEFT")
+  aboutName:SetPoint("TOPRIGHT", tabFrame, "BOTTOMRIGHT")
+  aboutName.label = aboutName:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+  aboutName.label:SetPoint("TOP")
+  aboutName.label:SetPoint("BOTTOM")
+  aboutName.label:SetJustifyH("CENTER")
+  aboutName.label:SetText(ns.T["about"])
+  aboutName.left = aboutName:CreateTexture(nil, "BACKGROUND")
+  aboutName.left:SetHeight(8)
+  aboutName.left:SetPoint("LEFT", 10, 0)
+  aboutName.left:SetPoint("RIGHT", aboutName.label, "LEFT", -5, 0)
+  aboutName.left:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
+  aboutName.left:SetTexCoord(0.81, 0.94, 0.5, 1)
+  aboutName.right = aboutName:CreateTexture(nil, "BACKGROUND")
+  aboutName.right:SetHeight(8)
+  aboutName.right:SetPoint("RIGHT", -10, 0)
+  aboutName.right:SetPoint("LEFT", aboutName.label, "RIGHT", 5, 0)
+  aboutName.right:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
+  aboutName.right:SetTexCoord(0.81, 0.94, 0.5, 1)
+  aboutName.left:SetPoint("RIGHT", aboutName.label, "LEFT", -5, 0)
+
+  local t = CreateFrame("Frame", nil, tab3Content, "BackdropTemplate")
+  local footerOffset = -30
+  t:SetPoint("TOPLEFT", tab3Content, "TOPLEFT")
+  t:SetPoint("TOPRIGHT", tab3Content, "TOPRIGHT")
   t:SetHeight(30)
-  t.helpText = title:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+
+  -- Help text
+  t.helpText = tab3Content:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
   t.helpText:SetFont("", 10)
   t.helpText:SetJustifyH("LEFT")
-  t.helpText:SetPoint("TOP", t, "TOP", 0, footerOffset);
+  t.helpText:SetPoint("TOP", tab3Content, "TOP", 0, footerOffset);
   t.helpText:SetText(ns.T["saveLocationHelpText"])
 
-  t.love = title:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-  t.love:SetPoint("TOP", t, "TOP", 0, footerOffset-100);
+  -- Love text
+  t.love = tab3Content:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+  t.love:SetPoint("TOP", tab3Content, "TOP", 0, footerOffset-100);
   t.love:SetText("For Nandar. Made with love in Melbourne, Australia")
+
+  -- Show the first tab by default
+  SwitchTab(1)
 
   InterfaceOptions_AddCategory(frame.panel)
 end
