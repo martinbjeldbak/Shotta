@@ -37,6 +37,7 @@ ns.T["checkboxText.chatAllEmotesWithToken"] = "On all emotes with an emote token
 ns.T["checkboxText.bossKill"] = "On boss kill, including raids"
 ns.T["checkboxText.encounterEnd"] = "At end of a dungeon or raid encounter"
 ns.T["checkboxText.questFinished"] = "Upon completion of a quest"
+ns.T["checkboxText.hearthstoneBound"] = "When binding your hearthstone"
 ns.T["checkboxText.lootItemRollWin"] = "Upon winning a loot roll"
 ns.T["checkboxText.profile.hideMiniMap"] = "Hide minimap icon"
 ns.T["events"] = "Events"

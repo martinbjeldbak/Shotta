@@ -93,6 +93,7 @@ local triggers = {
   readyCheck = setupBlizzardEvent("READY_CHECK"),
   zoneChanged = setupBlizzardEvent("ZONE_CHANGED"),
   zoneChangedNewArea = setupBlizzardEvent("ZONE_CHANGED_NEW_AREA"),
+  hearthstoneBound = setupBlizzardEvent("HEARTHSTONE_BOUND"),
   --@alpha@
   movementStart = setupBlizzardEvent("PLAYER_STARTED_MOVING"),
   --@end-alpha@
