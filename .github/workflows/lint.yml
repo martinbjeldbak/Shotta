@@ -26,6 +26,7 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_LUA: false
+          VALIDATE_JSCPD: false # can't find out how to ignore Libs/
 
   luacheck:
     runs-on: ubuntu-latest
