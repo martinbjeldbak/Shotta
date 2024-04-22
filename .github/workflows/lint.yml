@@ -26,7 +26,7 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_LUA: false
-          FILTER_REGEX_EXCLUDE: .*Libs/.*
+          FILTER_REGEX_EXCLUDE: ".*(/Libs/).*"
 
   luacheck:
     runs-on: ubuntu-latest
