@@ -4,6 +4,7 @@
 ## Notes: Take screenshots on events throughout adventures in Azeroth and beyond
 ## Author: martinbjeldbak <https://martinbjeldbak.com>, thomasbjeldbak <https://thomasbjeldbak.com/>
 ## Version: @project-version@
+## IconTexture: Interface\AddOns\Shotta\icons\logo
 ## SavedVariables: ShottaDB
 ## X-Curse-Project-ID: 972182
 ## X-WoWI-ID: 26687
