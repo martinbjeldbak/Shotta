@@ -113,6 +113,7 @@ local triggers = {
   encounterEnd = setupBlizzardEvent("ENCOUNTER_END"),
   questFinished = setupBlizzardEvent("QUEST_COMPLETE"),
   lootItemRollWin = setupBlizzardEvent("LOOT_ITEM_ROLL_WON"),
+  achievementEarned = setupBlizzardEvent("ACHIEVEMENT_EARNED"),
   every5Minutes = {
     registered = true,
     register = function(self)
