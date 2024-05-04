@@ -1,21 +1,22 @@
 {
-  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
-  "runtime.version": "Lua 5.1",
-  "workspace.library": [
-    "../wow-ui-source/Interface/"
-  ],
-  "diagnostics.globals": [
-    "Shotta",
-    "Screenshot",
-    "format",
-    "CreateFrame",
-    "C_Timer",
-    "InterfaceOptionsFrame_Show",
-    "HideUIPanel",
-    "SettingsPanel",
-    "InterfaceOptionsFrame_OpenToCategory",
-    "IsShiftKeyDown",
-    "IsControlKeyDown",
-    "UIParent"
-  ]
+    "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+    "runtime.version": "Lua 5.1",
+    "workspace.library": [
+        "../wow-ui-source/Interface/"
+    ],
+    "diagnostics.globals": [
+        "Shotta",
+        "Screenshot",
+        "format",
+        "CreateFrame",
+        "C_Timer",
+        "InterfaceOptionsFrame_Show",
+        "HideUIPanel",
+        "SettingsPanel",
+        "InterfaceOptionsFrame_OpenToCategory",
+        "IsShiftKeyDown",
+        "IsControlKeyDown",
+        "UIParent",
+        "LibStub"
+    ]
 }
