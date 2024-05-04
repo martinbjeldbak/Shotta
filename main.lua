@@ -34,6 +34,9 @@ local function everyXSecond(seconds, callback)
 	end)
 end
 
+--- Triggers the callback function every `minutes` minutes
+--- @param minutes integer
+--- @param callback function
 local function everyXMinute(minutes, callback)
 	everyXSecond(minutes * 60, callback)
 end
