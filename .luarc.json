@@ -17,6 +17,7 @@
         "IsShiftKeyDown",
         "IsControlKeyDown",
         "UIParent",
-        "LibStub"
+        "LibStub",
+        "WOW_PROJECT_WRATH_CLASSIC"
     ]
 }

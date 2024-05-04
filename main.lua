@@ -141,7 +141,6 @@ local triggers = {
 	encounterEnd = setupBlizzardEvent("ENCOUNTER_END"),
 	questFinished = setupBlizzardEvent("QUEST_COMPLETE"),
 	lootItemRollWin = setupBlizzardEvent("LOOT_ITEM_ROLL_WON"),
-	achievementEarned = setupBlizzardEvent("ACHIEVEMENT_EARNED"),
 	every5Minutes = setupTimedTrigger(5),
 	every10Minutes = setupTimedTrigger(10),
 	every30Minutes = setupTimedTrigger(30),
@@ -157,6 +156,10 @@ local triggers = {
 		end,
 	},
 }
+
+if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC) then
+	triggers["achievementEarned"] = setupBlizzardEvent("ACHIEVEMENT_EARNED")
+end
 
 ---@class Event
 ---@field enabled boolean|nil Whether the user has enabled this event
