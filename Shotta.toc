@@ -1,5 +1,6 @@
 ## Interface: 100206
 ## Interface-Classic: 11501
+## Interface-Wrath: 30403
 ## Title: Shotta
 ## Notes: Take screenshots on events throughout adventures in Azeroth and beyond
 ## Author: martinbjeldbak <https://martinbjeldbak.com>, thomasbjeldbak <https://thomasbjeldbak.com/>
