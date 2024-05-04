@@ -44,6 +44,24 @@ local function unregisterEvent(self, frame)
   frame:UnregisterEvent(self.eventName)
 end
 
+local function setupTimedTrigger(minutes)
+  return {
+    registered = true,
+    register = function(self)
+      self.registered = true
+      everyXMinute(minutes, function()
+        if self.registered then
+          TakeScreenshot()
+        end
+        return self.registered
+      end)
+    end,
+    unregister = function(self)
+      self.registered = false
+    end,
+  }
+end
+
 ---@alias triggerId string Key use to define the event that Shotta can listen to. Unique.
 
 ---@class Trigger
@@ -114,51 +132,9 @@ local triggers = {
   questFinished = setupBlizzardEvent("QUEST_COMPLETE"),
   lootItemRollWin = setupBlizzardEvent("LOOT_ITEM_ROLL_WON"),
   achievementEarned = setupBlizzardEvent("ACHIEVEMENT_EARNED"),
-  every5Minutes = {
-    registered = true,
-    register = function(self)
-      self.registered = true
-      everyXMinute(5, function()
-        if self.registered then
-          TakeScreenshot()
-        end
-        return self.registered
-      end)
-    end,
-    unregister = function(self)
-      self.registered = false
-    end,
-  },
-  every10Minutes = {
-    registered = true,
-    register = function(self)
-      self.registered = true
-      everyXMinute(10, function()
-        if self.registered then
-          TakeScreenshot()
-        end
-        return self.registered
-      end)
-    end,
-    unregister = function(self)
-      self.on = false
-    end,
-  },
-  every30Minutes = {
-    registered = true,
-    register = function(self)
-      self.registered = true
-      everyXMinute(30, function()
-        if self.registered then
-          TakeScreenshot()
-        end
-        return self.registered
-      end)
-    end,
-    unregister = function(self)
-      self.on = false
-    end,
-  },
+  every5Minutes = setupTimedTrigger(5),
+  every10Minutes = setupTimedTrigger(10),
+  every30Minutes = setupTimedTrigger(30),
   onDeath = setupBlizzardEvent("PLAYER_DEAD"),
   chatAllEmotesWithToken = {
     eventName = "CHAT_MSG_TEXT_EMOTE",
