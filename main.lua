@@ -144,6 +144,21 @@ local triggers = {
       self.on = false
     end,
   },
+  every30Minutes = {
+    registered = true,
+    register = function(self)
+      self.registered = true
+      everyXMinute(30, function()
+        if self.registered then
+          TakeScreenshot()
+        end
+        return self.registered
+      end)
+    end,
+    unregister = function(self)
+      self.on = false
+    end,
+  },
   onDeath = setupBlizzardEvent("PLAYER_DEAD"),
   chatAllEmotesWithToken = {
     eventName = "CHAT_MSG_TEXT_EMOTE",
