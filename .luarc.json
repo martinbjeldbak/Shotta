@@ -18,6 +18,7 @@
         "IsControlKeyDown",
         "UIParent",
         "LibStub",
-        "WOW_PROJECT_WRATH_CLASSIC"
+        "WOW_PROJECT_WRATH_CLASSIC",
+        "GetLocale"
     ]
 }
