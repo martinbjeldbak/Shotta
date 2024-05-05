@@ -291,5 +291,4 @@ SlashCmdList["SHOTTA"] = function()
 	InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
 	-- Call this twice to ensure the correct category is selected
 	InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
-	InterfaceOptionsFrame_Show()
 end
