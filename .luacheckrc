@@ -29,6 +29,7 @@ read_globals = {
 	"LibStub",
 	"StaticPopup_Show",
 	"WOW_PROJECT_WRATH_CLASSIC",
+	"GetLocale",
 }
 
 exclude_files = {
