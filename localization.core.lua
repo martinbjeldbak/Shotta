@@ -1,20 +1,19 @@
 -- Inspiration for this file: https://wowpedia.fandom.com/wiki/Localizing_an_addon
 local _, ns = ...
 
-
 --- Returns folder name of current client, used to identify where screenshots
 --- are saved. See https://wowpedia.fandom.com/wiki/WOW_PROJECT_ID
 ---@return string ProjectKind folder used by the current game client
 local function folderName()
-  if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-    return "retail"
-  elseif WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
-    return "classic"
-  elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
-    return "classic_era"
-  end
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		return "retail"
+	elseif WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+		return "classic"
+	elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+		return "classic_era"
+	end
 
-  return "unknown"
+	return "unknown"
 end
 
 -- Localization table
@@ -45,15 +44,22 @@ ns.T["checkboxText.achievementEarned"] = "Upon earning an achievement"
 ns.T["events"] = "Events"
 ns.T["settings"] = "Settings"
 ns.T["about"] = "About"
-ns.T["saveLocationHelpText"] = format([[
+ns.T["saveLocationHelpText"] = format(
+	[[
 Screenshots are saved to the default location for your operating system
 
 
 Windows:  C:\Program Files (x86)\World of Warcraft\_%s_\Screenshots
-MacOS:     \World of Warcraft\_%s_\Screenshots]], folderName(), folderName())
+MacOS:     \World of Warcraft\_%s_\Screenshots]],
+	folderName(),
+	folderName()
+)
+ns.T["minimap.click"] = "Click to take a UI-less screenshot"
+ns.T["minimap.ctrlClick"] = "Control-click to take a screenshot"
+ns.T["minimap.shiftClick"] = "Shift-click to open settings"
 
 setmetatable(ns.T, {
-  __index = function(_, key)
-    return format("FIXME: missing localization for '%s'", key)
-  end
+	__index = function(_, key)
+		return format("FIXME: missing localization for '%s'", key)
+	end,
 })

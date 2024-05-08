@@ -238,10 +238,10 @@ local shottaLDB = LibStub("LibDataBroker-1.1"):NewDataObject(Shotta.ADDON_NAME, 
 
 		tooltip:AddLine(Shotta.ADDON_NAME)
 		tooltip:AddLine(" ")
-		tooltip:AddLine("Click to take a UI-less screenshot")
-		tooltip:AddLine("Control-click to take a screenshot")
+		tooltip:AddLine(ns.T["minimap.click"])
+		tooltip:AddLine(ns.T["minimap.ctrlClick"])
 		tooltip:AddLine(" ")
-		tooltip:AddLine("Shift-click to open settings")
+		tooltip:AddLine(ns.T["minimap.shiftClick"])
 	end,
 })
 local icon = LibStub("LibDBIcon-1.0")
