@@ -80,15 +80,20 @@ end
 ---@field triggerFunc (fun(...): nil)|nil Function to execute if not to take a screenshot straight away
 ---@field id? string sometimes added when top level triggerId not available, see blizzardTriggerMap
 
+---Creates a Trigger table given an in-game triggered event
+---@param eventName string of the Blizzard event, one of https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_list)
+---@return Trigger Trigger table implmementing required functions for event
 local function setupBlizzardEvent(eventName)
 	return {
 		eventName = eventName,
 		register = registerEvent,
 		unregister = unregisterEvent,
 		triggerFunc = function(self)
+			--@alpha@
 			ns.PrintToChat(
 				format('Got event "%s", taking screenshot!', ns.T[format("checkboxText.%s", self.id)]:lower())
 			)
+			--@end-alpha@
 			TakeScreenshot()
 		end,
 	}
