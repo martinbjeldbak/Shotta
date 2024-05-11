@@ -30,6 +30,8 @@ read_globals = {
 	"StaticPopup_Show",
 	"WOW_PROJECT_WRATH_CLASSIC",
 	"GetLocale",
+	"RequestTimePlayed",
+	"ChatFrame1Tab",
 }
 
 exclude_files = {

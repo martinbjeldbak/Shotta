@@ -19,6 +19,8 @@
         "UIParent",
         "LibStub",
         "WOW_PROJECT_WRATH_CLASSIC",
-        "GetLocale"
+        "GetLocale",
+        "RequestTimePlayed",
+        "ChatFrame1Tab"
     ]
 }

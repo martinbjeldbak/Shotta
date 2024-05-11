@@ -20,7 +20,10 @@ end
 ns.T = {}
 ns.T["checkboxText.channelChat"] = "On message in channel"
 ns.T["checkboxText.movementStart"] = "On start moving (for easier debugging)"
+ns.T["checkboxText.movementStart.modifiers.test"] = "Test modifier"
 ns.T["checkboxText.levelUp"] = "On level up"
+ns.T["checkboxText.levelUp.modifiers.showPlayed"] = "Print /played in chat"
+ns.T["checkboxText.levelUp.modifiers.showMainChat"] = "Show main chat window"
 ns.T["checkboxText.zoneChangedNewArea"] = "When entering a new zone or area"
 ns.T["checkboxText.zoneChanged"] = "When entering a different zone, building, etc."
 ns.T["checkboxText.login"] = "On login"

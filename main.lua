@@ -89,11 +89,11 @@ local function setupBlizzardEvent(eventName)
 		register = registerEvent,
 		unregister = unregisterEvent,
 		triggerFunc = function(self)
-			--@alpha@
+			--@debug@
 			ns.PrintToChat(
 				format('Got event "%s", taking screenshot!', ns.T[format("checkboxText.%s", self.id)]:lower())
 			)
-			--@end-alpha@
+			--@end-debug@
 			TakeScreenshot()
 		end,
 	}
@@ -116,20 +116,38 @@ local triggers = {
 		eventName = "PLAYER_LEVEL_UP",
 		register = registerEvent,
 		unregister = unregisterEvent,
-		triggerFunc = function()
+		triggerFunc = function(_)
+			if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat.enabled then
+				ChatFrame1Tab:Click()
+			end
+			if Shotta.db.screenshottableEvents.levelUp.modifiers.showPlayed.enabled then
+				RequestTimePlayed() -- print /played to chat
+			end
+
 			C_Timer.After(0.5, function()
 				TakeScreenshot()
 			end)
 		end,
+		modifiers = { "showPlayed", "showMainChat" },
 	},
 	mailboxOpened = setupBlizzardEvent("MAIL_SHOW"),
 	readyCheck = setupBlizzardEvent("READY_CHECK"),
 	zoneChanged = setupBlizzardEvent("ZONE_CHANGED"),
 	zoneChangedNewArea = setupBlizzardEvent("ZONE_CHANGED_NEW_AREA"),
 	hearthstoneBound = setupBlizzardEvent("HEARTHSTONE_BOUND"),
-	--@alpha@
-	movementStart = setupBlizzardEvent("PLAYER_STARTED_MOVING"),
-	--@end-alpha@
+	--@debug@
+	movementStart = {
+		eventName = "PLAYER_STARTED_MOVING",
+		register = registerEvent,
+		unregister = unregisterEvent,
+		triggerFunc = function(self)
+			ns.PrintToChat(
+				format('Got event "%s", should be taking screenshot!', ns.T[format("checkboxText.%s", self.id)]:lower())
+			)
+			-- TakeScreenshot()
+		end,
+	},
+	--@end-debug@
 	auctionWindowShow = setupBlizzardEvent("AUCTION_HOUSE_SHOW"),
 	groupFormed = setupBlizzardEvent("GROUP_FORMED"),
 	tradeAccepted = {
@@ -144,7 +162,7 @@ local triggers = {
 	},
 	bossKill = setupBlizzardEvent("BOSS_KILL"),
 	encounterEnd = setupBlizzardEvent("ENCOUNTER_END"),
-	questFinished = setupBlizzardEvent("QUEST_COMPLETE"),
+	questFinished = setupBlizzardEvent("QUEST_TURNED_IN"),
 	lootItemRollWin = setupBlizzardEvent("LOOT_ITEM_ROLL_WON"),
 	every5Minutes = setupTimedTrigger(5),
 	every10Minutes = setupTimedTrigger(10),
@@ -219,12 +237,8 @@ local shottaLDB = LibStub("LibDataBroker-1.1"):NewDataObject(Shotta.ADDON_NAME, 
 	icon = 237290,
 	OnClick = function()
 		if IsShiftKeyDown() then
-			if SettingsPanel:IsShown() then
-				HideUIPanel(SettingsPanel)
-			else
-				HideUIPanel(SettingsPanel)
-				InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
-			end
+			HideUIPanel(SettingsPanel)
+			InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
 		elseif IsControlKeyDown() then
 			TakeScreenshot()
 		else
@@ -256,26 +270,26 @@ local function AddonLoadedEventHandler(self, event, addOnName)
 		return
 	end
 
-	---@type ShottaDatabase
-	local db = ns.FetchOrCreateDatabase(DB_DEFAULTS)
-
 	local version = Shotta.VERSION
 
-	ns.InitializeOptions(self, db, triggers, screenshotFrame, Shotta.ADDON_NAME, version, icon)
+	---@type ShottaDatabase
+	Shotta.db = ns.FetchOrCreateDatabase(DB_DEFAULTS)
 
-	icon:Register(Shotta.ADDON_NAME, shottaLDB, db.profile.minimap)
+	ns.InitializeOptions(self, triggers, screenshotFrame, Shotta.ADDON_NAME, version, icon)
+
+	icon:Register(Shotta.ADDON_NAME, shottaLDB, Shotta.db.profile.minimap)
 
 	--- Persist DB as SavedVariable since we've been using it as a local
-	ShottaDB = db
+	ShottaDB = Shotta.db
 
 	screenshotFrame.blizzardTrigger = makeBlizzardTriggerMap(triggers)
 
 	for trigger, _ in pairs(triggers) do
 		local enabled = false
 
-		if db.screenshottableEvents[trigger] then
+		if Shotta.db.screenshottableEvents[trigger] then
 			---@type boolean enabled should always be there after this if check
-			enabled = db.screenshottableEvents[trigger].enabled
+			enabled = Shotta.db.screenshottableEvents[trigger].enabled
 		end
 
 		screenshotFrame:registerUnregisterEvent(trigger, enabled)

@@ -13,7 +13,7 @@
 
 
 #@do-not-package@
-Libs\DevTool\DevTool.lua
+# Libs\DevTool\DevTool.lua
 #@end-do-not-package@
 
 Libs\LibStub\LibStub.lua
