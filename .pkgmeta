@@ -14,3 +14,6 @@ externals:
   Libs/LibDBIcon-1.0:
     url: https://repos.curseforge.com/wow/libdbicon-1-0/trunk
     type: svn
+
+tools-used:
+    - DevTool
