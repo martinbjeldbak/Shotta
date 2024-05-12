@@ -77,7 +77,7 @@ end
 ---@field eventName string|nil Name of Blizzard event, or nil if custom event
 ---@field register (fun(self, frame): nil)
 ---@field unregister (fun(self, frame): nil)
----@field triggerFunc (fun(...): nil)|nil Function to execute if not to take a screenshot straight away
+---@field triggerFunc (fun(self: Trigger, shottaFrame: ShottaFrame, ...): nil)|nil Function to execute if not to take a screenshot straight away
 ---@field id? string sometimes added when top level triggerId not available, see blizzardTriggerMap
 
 ---Creates a Trigger table given an in-game triggered event
@@ -89,14 +89,21 @@ local function setupBlizzardEvent(eventName)
 		register = registerEvent,
 		unregister = unregisterEvent,
 		triggerFunc = function(self)
-			--@debug@
-			ns.PrintToChat(
-				format('Got event "%s", taking screenshot!', ns.T[format("checkboxText.%s", self.id)]:lower())
-			)
-			--@end-debug@
+			ns.Debug(format('Got event "%s", taking screenshot!', ns.T[format("checkboxText.%s", self.id)]:lower()))
 			TakeScreenshot()
 		end,
 	}
+end
+
+local function printTimePlayedToChat(prefix, totalMinutes)
+	local systemMessageSettings = ChatTypeInfo["SYSTEM"]
+	local days, hours, minutes, seconds = ns.MinutesToDaysHoursMinutesSeconds(totalMinutes)
+	DEFAULT_CHAT_FRAME:AddMessage(
+		format("%s: %s days, %s hours, %s minutes, %s seconds", prefix, days, hours, minutes, seconds),
+		systemMessageSettings.r,
+		systemMessageSettings.g,
+		systemMessageSettings.b
+	)
 end
 
 ---@type { [triggerId]: Trigger }
@@ -116,12 +123,14 @@ local triggers = {
 		eventName = "PLAYER_LEVEL_UP",
 		register = registerEvent,
 		unregister = unregisterEvent,
-		triggerFunc = function(_)
+		triggerFunc = function(_, screenshotFrame)
 			if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat.enabled then
 				ChatFrame1Tab:Click()
 			end
 			if Shotta.db.screenshottableEvents.levelUp.modifiers.showPlayed.enabled then
-				RequestTimePlayed() -- print /played to chat
+				screenshotFrame.waitingForTimePlayed = true
+				RequestTimePlayed() -- trigger "TIME_PLAYED_MSG" event
+				return
 			end
 
 			C_Timer.After(0.5, function()
@@ -140,10 +149,12 @@ local triggers = {
 		eventName = "PLAYER_STARTED_MOVING",
 		register = registerEvent,
 		unregister = unregisterEvent,
-		triggerFunc = function(self)
+		triggerFunc = function(self, screenshotFrame)
+			screenshotFrame.waitingForTimePlayed = true
 			ns.PrintToChat(
 				format('Got event "%s", should be taking screenshot!', ns.T[format("checkboxText.%s", self.id)]:lower())
 			)
+			-- Comment back to really take a screenshot
 			-- TakeScreenshot()
 		end,
 	},
@@ -184,6 +195,25 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) or (WOW_PROJECT_ID == WOW_PROJECT_WR
 	triggers["achievementEarned"] = setupBlizzardEvent("ACHIEVEMENT_EARNED")
 end
 
+---@type { [triggerId]: Trigger }
+local hiddenTriggers = {
+	timePlayed = {
+		eventName = "TIME_PLAYED_MSG",
+		register = registerEvent,
+		unregister = unregisterEvent,
+		triggerFunc = function(self, screenshotFrame, totalTimePlayed, timePlayedThisLevel)
+			ns.Debug("TIME_PLAYED_MSG triggered")
+
+			if screenshotFrame.waitingForTimePlayed then
+				printTimePlayedToChat("Total time played", totalTimePlayed)
+				printTimePlayedToChat("Time played this level", timePlayedThisLevel)
+				TakeScreenshot()
+				screenshotFrame.waitingForTimePlayed = false
+			end
+		end,
+	},
+}
+
 ---@class Event
 ---@field enabled boolean|nil Whether the user has enabled this event
 
@@ -198,9 +228,13 @@ local DB_DEFAULTS = {
 	profile = { minimap = { hide = false } },
 }
 
+---@class ShottaFrame contains state of addon, created from Blizzard's CreateFrame() function
+---@field SetScript fun(self: ShottaFrame, callbackName: string, callback: fun(self: ShottaFrame, event: string, ...))
+---@field blizzardTrigger {[string]: Trigger}
+---@field waitingForTimePlayed boolean
 local screenshotFrame = CreateFrame("Frame")
-screenshotFrame:SetScript("OnEvent", function(_, event, ...)
-	screenshotFrame.blizzardTrigger[event]:triggerFunc(...)
+screenshotFrame:SetScript("OnEvent", function(self, event, ...)
+	screenshotFrame.blizzardTrigger[event]:triggerFunc(self, ...)
 end)
 
 ---@param ts Trigger[]
@@ -221,7 +255,7 @@ end
 ---Conditionally register or unregister event based on enabled
 ---@param trigger string
 ---@param enabled boolean
-function screenshotFrame:registerUnregisterEvent(trigger, enabled)
+function screenshotFrame:registerUnregisterEvent(triggers, trigger, enabled)
 	local event = triggers[trigger]
 
 	if enabled then
@@ -264,7 +298,6 @@ local function AddonLoadedEventHandler(self, event, addOnName)
 	if addOnName ~= Shotta.ADDON_NAME then
 		return
 	end
-
 	if event ~= "ADDON_LOADED" then
 		ns.PrintToChat(format("Got unsupported event %s, should be ADDON_LOADED", event))
 		return
@@ -292,7 +325,12 @@ local function AddonLoadedEventHandler(self, event, addOnName)
 			enabled = Shotta.db.screenshottableEvents[trigger].enabled
 		end
 
-		screenshotFrame:registerUnregisterEvent(trigger, enabled)
+		screenshotFrame:registerUnregisterEvent(triggers, trigger, enabled)
+	end
+
+	for _, trigger in pairs(hiddenTriggers) do
+		screenshotFrame.blizzardTrigger["TIME_PLAYED_MSG"] = hiddenTriggers.timePlayed
+		trigger:register(screenshotFrame)
 	end
 
 	self:UnregisterEvent(event)

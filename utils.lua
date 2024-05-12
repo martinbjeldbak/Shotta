@@ -12,7 +12,7 @@ ns.PrintToChat = printToChat
 ---@return nil
 local function debug(message)
 	--@debug@
-	ns.PrintToChat(message)
+	ns.PrintToChat("DEBUG: " .. message)
 	--@end-debug@
 end
 ns.Debug = debug
@@ -66,3 +66,30 @@ local function fetchOrCreateDatabase(defaults)
 end
 
 ns.FetchOrCreateDatabase = fetchOrCreateDatabase
+
+---Divide x by y with remainder
+---@param x number
+---@param y number
+---@return integer
+---@return integer
+local function floorDivision(x, y)
+	if y == 0 then
+		return 0, 0
+	end
+	return math.floor(x / y), math.floor(math.fmod(x, y))
+end
+
+---comment
+---@param minutes number
+---@return integer days
+---@return integer hours
+---@return integer minutes
+---@return integer seconds
+local function minutesToDaysHoursMinutesSeconds(totalMinutes)
+	local days, x = floorDivision(totalMinutes, 86400)
+	local hours, x = floorDivision(x, 3600)
+	local minutes, seconds = floorDivision(x, 60)
+
+	return days, hours, minutes, seconds
+end
+ns.MinutesToDaysHoursMinutesSeconds = minutesToDaysHoursMinutesSeconds
