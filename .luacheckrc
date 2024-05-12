@@ -36,6 +36,7 @@ read_globals = {
 	"ChatFrame1Tab",
 	"ChatTypeInfo",
 	"DEFAULT_CHAT_FRAME",
+	"DevTool",
 }
 
 exclude_files = {
