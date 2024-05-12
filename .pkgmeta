@@ -16,6 +16,6 @@ externals:
     type: svn
 
 tools-used:
-  - BugGrabber
-  - BugSack
-  - DevTool
+  - devtool
+  - bugsack
+  - bug-grabber
