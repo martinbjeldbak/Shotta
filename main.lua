@@ -273,8 +273,8 @@ end
 ---Conditionally register or unregister event based on enabled
 ---@param trigger string
 ---@param enabled boolean
-function screenshotFrame:registerUnregisterEvent(ts, trigger, enabled)
-	local event = ts[trigger]
+function screenshotFrame:registerUnregisterEvent(trigger, enabled)
+	local event = triggers[trigger]
 
 	if enabled then
 		event:register(self)
@@ -343,7 +343,7 @@ local function AddonLoadedEventHandler(self, event, addOnName)
 			enabled = Shotta.db.screenshottableEvents[trigger].enabled
 		end
 
-		screenshotFrame:registerUnregisterEvent(triggers, trigger, enabled)
+		screenshotFrame:registerUnregisterEvent(trigger, enabled)
 	end
 
 	for _, trigger in pairs(hiddenTriggers) do

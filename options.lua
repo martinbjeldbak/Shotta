@@ -248,6 +248,12 @@ local function InitializeOptions(frame, triggers, screenshotFrame, version, icon
 				ns.Debug(format("%s is now %s", m, EnabledHumanized(isChecked)))
 			end)
 			local modifierEnabled = false
+
+			if Shotta.db.screenshottableEvents[k].modifiers == nil then
+				Shotta.db.screenshottableEvents[k].modifiers = {}
+			end
+
+
 			if Shotta.db.screenshottableEvents[k].modifiers[m] then
 				modifierEnabled = Shotta.db.screenshottableEvents[k].modifiers[m].enabled
 			end
