@@ -60,6 +60,8 @@ MacOS:     \World of Warcraft\_%s_\Screenshots]],
 ns.T["minimap.click"] = "Click to take a UI-less screenshot"
 ns.T["minimap.ctrlClick"] = "Control-click to take a screenshot"
 ns.T["minimap.shiftClick"] = "Shift-click to open settings"
+ns.T["totalTimePlayedFormat"] = "Total time played: %s days, %s hours, %s minutes, %s seconds"
+ns.T["timePlayedThisLevelFormat"] = "Time played this level: %s days, %s hours, %s minutes, %s seconds"
 
 setmetatable(ns.T, {
 	__index = function(_, key)

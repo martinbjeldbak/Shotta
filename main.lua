@@ -95,11 +95,11 @@ local function setupBlizzardEvent(eventName)
 	}
 end
 
-local function printTimePlayedToChat(prefix, totalMinutes)
+local function printTimePlayedToChat(formatString, totalMinutes)
 	local systemMessageSettings = ChatTypeInfo["SYSTEM"]
 	local days, hours, minutes, seconds = ns.MinutesToDaysHoursMinutesSeconds(totalMinutes)
 	DEFAULT_CHAT_FRAME:AddMessage(
-		format("%s: %s days, %s hours, %s minutes, %s seconds", prefix, days, hours, minutes, seconds),
+		format(formatString, days, hours, minutes, seconds),
 		systemMessageSettings.r,
 		systemMessageSettings.g,
 		systemMessageSettings.b
@@ -201,14 +201,20 @@ local hiddenTriggers = {
 		eventName = "TIME_PLAYED_MSG",
 		register = registerEvent,
 		unregister = unregisterEvent,
-		triggerFunc = function(self, screenshotFrame, totalTimePlayed, timePlayedThisLevel)
+		---Executed when the event is triggered
+		---@param _ Trigger
+		---@param screenshotFrame ShottaFrame contains state for the application
+		---@param totalTimePlayed integer in minutes
+		---@param timePlayedThisLevel integer in minutes
+		triggerFunc = function(_, screenshotFrame, totalTimePlayed, timePlayedThisLevel)
 			ns.Debug("TIME_PLAYED_MSG triggered")
 
 			if screenshotFrame.waitingForTimePlayed then
-				printTimePlayedToChat("Total time played", totalTimePlayed)
-				printTimePlayedToChat("Time played this level", timePlayedThisLevel)
-				TakeScreenshot()
 				screenshotFrame.waitingForTimePlayed = false
+
+				printTimePlayedToChat(ns.T["totalTimePlayedFormat"], totalTimePlayed)
+				printTimePlayedToChat(ns.T["timePlayedThisLevelFormat"], timePlayedThisLevel)
+				TakeScreenshot()
 			end
 		end,
 	},
