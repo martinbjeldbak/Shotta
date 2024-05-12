@@ -95,6 +95,9 @@ local function setupBlizzardEvent(eventName)
 	}
 end
 
+---Prints an identical message to chat as if player typed "/played"
+---@param formatString string Lozalised format string, takes 4 args
+---@param totalMinutes number retrieved as args from event TIME_PLAYED_MSG
 local function printTimePlayedToChat(formatString, totalMinutes)
 	local systemMessageSettings = ChatTypeInfo["SYSTEM"]
 	local days, hours, minutes, seconds = ns.MinutesToDaysHoursMinutesSeconds(totalMinutes)
