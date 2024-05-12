@@ -59,8 +59,6 @@ MacOS:     \World of Warcraft\_%s_\Screenshots]],
 ns.T["minimap.click"] = "Click to take a UI-less screenshot"
 ns.T["minimap.ctrlClick"] = "Control-click to take a screenshot"
 ns.T["minimap.shiftClick"] = "Shift-click to open settings"
-ns.T["totalTimePlayedFormat"] = "Total time played: %s days, %s hours, %s minutes, %s seconds"
-ns.T["timePlayedThisLevelFormat"] = "Time played this level: %s days, %s hours, %s minutes, %s seconds"
 ns.T["pressCtrlC"] = "Press Ctrl+C to copy the URL to your clipboard"
 ns.T["joinDiscord"] = "Join our Discord!"
 

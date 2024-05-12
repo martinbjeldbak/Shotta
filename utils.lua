@@ -65,30 +65,3 @@ local function fetchOrCreateDatabase(defaults)
 	return db
 end
 ns.FetchOrCreateDatabase = fetchOrCreateDatabase
-
----Divide x by y with remainder
----@param x number
----@param y number
----@return integer
----@return integer
-local function floorDivision(x, y)
-	if y == 0 then
-		return 0, 0
-	end
-	return math.floor(x / y), math.floor(math.fmod(x, y))
-end
-
----Converts minutes to number of days, hours, minutes, and seconds
----@param totalMinutes number
----@return integer days
----@return integer hours
----@return integer minutes
----@return integer seconds
-local function minutesToDaysHoursMinutesSeconds(totalMinutes)
-	local days, remainingMinutes = floorDivision(totalMinutes, 86400)
-	local hours, x = floorDivision(remainingMinutes, 3600)
-	local minutes, seconds = floorDivision(x, 60)
-
-	return days, hours, minutes, seconds
-end
-ns.MinutesToDaysHoursMinutesSeconds = minutesToDaysHoursMinutesSeconds

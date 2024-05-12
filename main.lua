@@ -95,20 +95,6 @@ local function setupBlizzardEvent(eventName)
 	}
 end
 
----Prints an identical message to chat as if player typed "/played"
----@param formatString string Lozalised format string, takes 4 args
----@param totalMinutes number retrieved as args from event TIME_PLAYED_MSG
-local function printTimePlayedToChat(formatString, totalMinutes)
-	local systemMessageSettings = ChatTypeInfo["SYSTEM"]
-	local days, hours, minutes, seconds = ns.MinutesToDaysHoursMinutesSeconds(totalMinutes)
-	DEFAULT_CHAT_FRAME:AddMessage(
-		format(formatString, days, hours, minutes, seconds),
-		systemMessageSettings.r,
-		systemMessageSettings.g,
-		systemMessageSettings.b
-	)
-end
-
 ---@type { [triggerId]: Trigger }
 local triggers = {
 	login = {
@@ -127,9 +113,12 @@ local triggers = {
 		register = registerEvent,
 		unregister = unregisterEvent,
 		triggerFunc = function(_, screenshotFrame)
-			if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat.enabled then
-				ChatFrame1Tab:Click()
+			if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat then
+				if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat.enabled then
+					ChatFrame1Tab:Click()
+				end
 			end
+
 			if Shotta.db.screenshottableEvents.levelUp.modifiers.showPlayed.enabled then
 				screenshotFrame.waitingForTimePlayed = true
 				RequestTimePlayed() -- trigger "TIME_PLAYED_MSG" event
@@ -216,16 +205,12 @@ local hiddenTriggers = {
 		---Executed when the event is triggered
 		---@param _ Trigger
 		---@param screenshotFrame ShottaFrame contains state for the application
-		---@param totalTimePlayed integer in minutes
-		---@param timePlayedThisLevel integer in minutes
-		triggerFunc = function(_, screenshotFrame, totalTimePlayed, timePlayedThisLevel)
+		triggerFunc = function(_, screenshotFrame)
 			ns.Debug("TIME_PLAYED_MSG triggered")
 
 			if screenshotFrame.waitingForTimePlayed then
 				screenshotFrame.waitingForTimePlayed = false
 
-				printTimePlayedToChat(ns.T["totalTimePlayedFormat"], totalTimePlayed)
-				printTimePlayedToChat(ns.T["timePlayedThisLevelFormat"], timePlayedThisLevel)
 				TakeScreenshot()
 			end
 		end,
