@@ -195,7 +195,16 @@ local triggers = {
 }
 
 if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC) then
-	triggers["achievementEarned"] = setupBlizzardEvent("ACHIEVEMENT_EARNED")
+	triggers["achievementEarned"] = {
+		eventName = "ACHIEVEMENT_EARNED",
+		register = registerEvent,
+		unregister = unregisterEvent,
+		triggerFunc = function()
+			C_Timer.After(0.5, function()
+				TakeScreenshot()
+			end)
+		end,
+	}
 end
 
 ---@type { [triggerId]: Trigger }
