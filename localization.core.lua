@@ -20,7 +20,6 @@ end
 ns.T = {}
 ns.T["checkboxText.channelChat"] = "On message in channel"
 ns.T["checkboxText.movementStart"] = "On start moving (for easier debugging)"
-ns.T["checkboxText.movementStart.modifiers.test"] = "Test modifier"
 ns.T["checkboxText.levelUp"] = "On level up"
 ns.T["checkboxText.levelUp.modifiers.showPlayed"] = "Print /played in chat"
 ns.T["checkboxText.levelUp.modifiers.showMainChat"] = "Show main chat window"
@@ -62,6 +61,8 @@ ns.T["minimap.ctrlClick"] = "Control-click to take a screenshot"
 ns.T["minimap.shiftClick"] = "Shift-click to open settings"
 ns.T["totalTimePlayedFormat"] = "Total time played: %s days, %s hours, %s minutes, %s seconds"
 ns.T["timePlayedThisLevelFormat"] = "Time played this level: %s days, %s hours, %s minutes, %s seconds"
+ns.T["pressCtrlC"] = "Press Ctrl+C to copy the URL to your clipboard"
+ns.T["joinDiscord"] = "Join our Discord!"
 
 setmetatable(ns.T, {
 	__index = function(_, key)

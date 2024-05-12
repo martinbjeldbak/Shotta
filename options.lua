@@ -79,7 +79,7 @@ local function InitializeOptions(frame, triggers, screenshotFrame, version, icon
 
 	local function ShowDiscordPopup()
 		StaticPopupDialogs["Shotta_Link"] = {
-			text = "Press Ctrl+C to copy the URL to your clipboard",
+			text = ns.T["pressCtrlC"],
 			hasEditBox = 1,
 			button1 = _G.OKAY,
 			OnShow = function(self)
@@ -101,7 +101,7 @@ local function InitializeOptions(frame, triggers, screenshotFrame, version, icon
 
 	local discordButton = CreateFrame("Button", nil, tabFrame, "GameMenuButtonTemplate")
 	discordButton:SetPoint("LEFT", tab3Button, "RIGHT", 85, 40)
-	discordButton:SetText("Join our Discord!")
+	discordButton:SetText(ns.T["joinDiscord"])
 	discordButton:SetWidth(125)
 	discordButton:SetScript("OnClick", ShowDiscordPopup)
 
