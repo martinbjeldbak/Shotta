@@ -7,7 +7,7 @@ globals = {
 	"StaticPopupDialogs",
 }
 
-max_line_length = "150"
+max_line_length = 150
 
 read_globals = {
 	"Screenshot",
