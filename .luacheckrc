@@ -7,6 +7,8 @@ globals = {
 	"StaticPopupDialogs",
 }
 
+max_line_length = "150"
+
 read_globals = {
 	"Screenshot",
 	"format",
@@ -32,6 +34,8 @@ read_globals = {
 	"GetLocale",
 	"RequestTimePlayed",
 	"ChatFrame1Tab",
+	"ChatTypeInfo",
+	"DEFAULT_CHAT_FRAME",
 }
 
 exclude_files = {

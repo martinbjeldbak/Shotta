@@ -20,14 +20,14 @@ ns.Debug = debug
 ---Support improved debugging with DevTool, see https://github.com/brittyazel/DevTool?tab=readme-ov-file#example-of-a-very-common-use-case
 ---@param data any
 ---@param strName string
-function AddToDevToolInspector(data, strName)
+local function addToDevToolInspector(data, strName)
 	--@debug--
 	if DevTool then
 		DevTool:AddData(data, strName)
 	end
 	--@end-debug--
 end
-ns.AddToDevToolInspector = AddToDevToolInspector
+ns.AddToDevToolInspector = addToDevToolInspector
 
 --- Creates or gets the SavedVariable for this addon
 ---@param defaults any
@@ -60,11 +60,10 @@ local function fetchOrCreateDatabase(defaults)
 		end
 	end
 
-	AddToDevToolInspector(db, "fetchedDatabase")
+	addToDevToolInspector(db, "fetchedDatabase")
 
 	return db
 end
-
 ns.FetchOrCreateDatabase = fetchOrCreateDatabase
 
 ---Divide x by y with remainder
@@ -79,15 +78,15 @@ local function floorDivision(x, y)
 	return math.floor(x / y), math.floor(math.fmod(x, y))
 end
 
----comment
----@param minutes number
+---Converts minutes to number of days, hours, minutes, and seconds
+---@param totalMinutes number
 ---@return integer days
 ---@return integer hours
 ---@return integer minutes
 ---@return integer seconds
 local function minutesToDaysHoursMinutesSeconds(totalMinutes)
-	local days, x = floorDivision(totalMinutes, 86400)
-	local hours, x = floorDivision(x, 3600)
+	local days, remainingMinutes = floorDivision(totalMinutes, 86400)
+	local hours, x = floorDivision(remainingMinutes, 3600)
 	local minutes, seconds = floorDivision(x, 60)
 
 	return days, hours, minutes, seconds

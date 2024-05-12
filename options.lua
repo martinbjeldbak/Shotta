@@ -188,10 +188,7 @@ local function InitializeOptions(frame, triggers, screenshotFrame, version, icon
 	local currentRow = 0
 	local currentCol = 0
 
-	ns.AddToDevToolInspector(triggers, "triggers")
 	for k, v in pairsByKeys(triggers, compareByCheckboxText) do
-		ns.AddToDevToolInspector(k, "k")
-		ns.AddToDevToolInspector(v, "v")
 		local cb = CreateFrame("CheckButton", nil, tab1Content, "InterfaceOptionsCheckButtonTemplate")
 		cb:SetPoint(
 			"TOPLEFT",
@@ -223,7 +220,6 @@ local function InitializeOptions(frame, triggers, screenshotFrame, version, icon
 		cb:SetChecked(enabled)
 
 		for _, m in pairs(v.modifiers or {}) do
-			ns.AddToDevToolInspector(m, "modifier")
 			local modifierCb = CreateFrame("CheckButton", nil, tab1Content, "InterfaceOptionsCheckButtonTemplate")
 			currentRow = currentRow + 1
 			modifierCb:SetPoint(
@@ -237,7 +233,6 @@ local function InitializeOptions(frame, triggers, screenshotFrame, version, icon
 				local isChecked = modifierCb:GetChecked()
 
 				if isChecked then
-					ns.AddToDevToolInspector(Shotta.db.screenshottableEvents[k].modifiers, "before")
 					if Shotta.db.screenshottableEvents[k].modifiers == nil then
 						Shotta.db.screenshottableEvents[k].modifiers = {}
 					end

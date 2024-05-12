@@ -273,8 +273,8 @@ end
 ---Conditionally register or unregister event based on enabled
 ---@param trigger string
 ---@param enabled boolean
-function screenshotFrame:registerUnregisterEvent(triggers, trigger, enabled)
-	local event = triggers[trigger]
+function screenshotFrame:registerUnregisterEvent(ts, trigger, enabled)
+	local event = ts[trigger]
 
 	if enabled then
 		event:register(self)
