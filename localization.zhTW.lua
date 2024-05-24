@@ -32,6 +32,8 @@ if GetLocale() == "zhTW" then
 
 Windows:  C:\Program Files (x86)\World of Warcraft\_%s_\Screenshots
 MacOS:     \World of Warcraft\_%s_\Screenshots]]
+	folderName(),
+	folderName()
 	ns.T["minimap.click"] = "點擊截取一張無介面的截圖"
 	ns.T["minimap.ctrlClick"] = "Control + 點擊截圖"
 	ns.T["minimap.shiftClick"] = "Shift + 點擊打開設定選項"
