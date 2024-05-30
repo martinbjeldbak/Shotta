@@ -28,5 +28,15 @@ if GetLocale() == "zhTW" then
 	ns.T["events"] = "事件"
 	ns.T["settings"] = "設定"
 	ns.T["about"] = "關於"
-	ns.T["saveLocationHelpText"] = "截圖儲存在你的作業系統中預設的路徑"
+	ns.T["saveLocationHelpText"] = [[截圖儲存在你的作業系統中預設的路徑
+
+Windows:  C:\Program Files (x86)\World of Warcraft\_%s_\Screenshots
+MacOS:     \World of Warcraft\_%s_\Screenshots]]
+	folderName(),
+	folderName()
+	ns.T["minimap.click"] = "點擊截取一張無介面的截圖"
+	ns.T["minimap.ctrlClick"] = "Control + 點擊截圖"
+	ns.T["minimap.shiftClick"] = "Shift + 點擊打開設定選項"
+	ns.T["pressCtrlC"] = "Ctrl+C 複製網址"
+	ns.T["joinDiscord"] = "加入 Discord!"
 end
