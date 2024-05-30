@@ -8,7 +8,7 @@ if GetLocale() == "zhCN" then
 	ns.T["checkboxText.zoneChangedNewArea"] = "进入新的区域或地区"
 	ns.T["checkboxText.zoneChanged"] = "进入不同的区域或建筑"
 	ns.T["checkboxText.login"] = "登录时"
-	ns.T["checkboxText.readyCheck"] = "准备确认"
+	ns.T["checkboxText.readyCheck"] = "就位确认"
 	ns.T["checkboxText.mailboxOpened"] = "打开邮箱"
 	ns.T["checkboxText.auctionWindowShow"] = "拍卖行窗口打开"
 	ns.T["checkboxText.groupFormed"] = "加入或创建小队时"
