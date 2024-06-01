@@ -1,0 +1,2 @@
+std = "lua51+wow"
+exclude = ["Libs/*"]
