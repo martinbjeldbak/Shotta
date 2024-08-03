@@ -31,9 +31,7 @@ if GetLocale() == "zhCN" then
 	ns.T["saveLocationHelpText"] = [[截图将保存到操作系统的默认位置
 
 Windows:  C:\Program Files (x86)\World of Warcraft\_%s_\Screenshots
-MacOS:     \World of Warcraft\_%s_\Screenshots]],
-	folderName(),
-	folderName()
+MacOS:     \World of Warcraft\_%s_\Screenshots]]
 	ns.T["minimap.click"] = "点击截取一张无界面截图"
 	ns.T["minimap.ctrlClick"] = "Control + 点击截图"
 	ns.T["minimap.shiftClick"] = "Shift + 点击打开设置"
