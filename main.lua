@@ -1,13 +1,25 @@
-local _, ns = ...
+-- local _, ns = ...
 
-Shotta = {}
-Shotta.ADDON_NAME = "Shotta"
-Shotta.VERSION = "@project-version@"
-Shotta.COLOR = "245DC6FF"
+-- Shotta = {}
+-- Shotta.ADDON_NAME = "Shotta"
+-- Shotta.VERSION = "@project-version@"
+-- Shotta.COLOR = "245DC6FF"
+
+local Shottav2 = LibStub("AceAddon-3.0"):NewAddon("Shotta", "AceEvent-3.0", "AceConsole-3.0")
+
+Shottav2:RegisterChatCommand("shotta", "ChatCommand")
+
+function Shottav2:ChatCommand(input)
+	if not input or input:trim() == "" then
+		LibStub("AceConfigDialog-3.0"):Open("Shotta profiles")
+	else
+		LibStub("AceConfigCmd-3.0").HandleCommand(Shottav2, "shotta", "Shotta", input)
+	end
+end
 
 local function TakeScreenshot(text)
 	if text ~= nil then
-		ns.PrintToChat(text)
+		Shottav2:Print(text)
 	end
 
 	Screenshot()
@@ -21,6 +33,108 @@ local function TakeUILessScreenshot(text)
 	C_Timer.After(0.01, function()
 		UIParent:Show()
 	end)
+end
+
+local shottaLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Shotta", {
+	type = "data source",
+	text = "Shotta",
+	icon = 237290,
+	OnClick = function()
+		if IsShiftKeyDown() then
+			HideUIPanel(SettingsPanel)
+			Settings.OpenToCategory("Shotta")
+		elseif IsControlKeyDown() then
+			TakeScreenshot()
+		else
+			TakeUILessScreenshot()
+		end
+	end,
+	OnTooltipShow = function(tooltip)
+		if not tooltip or not tooltip.AddLine then
+			return
+		end
+		local L = LibStub("AceLocale-3.0"):GetLocale("Shotta")
+
+		tooltip:AddLine("Shotta")
+		tooltip:AddLine(" ")
+		tooltip:AddLine(L["minimap.click"])
+		tooltip:AddLine(L["minimap.ctrlClick"])
+		tooltip:AddLine(" ")
+		tooltip:AddLine(L["minimap.shiftClick"])
+	end,
+})
+
+---@class ShottaDatabase
+---@field screenshottableEvents { [triggerId]: Event }
+local defaults = {
+	profile = {
+		minimap = {
+			hide = false,
+		},
+		screenshottableEvents = {
+			["**"] = {
+				enabled = true, -- enable all new events by default
+			},
+		},
+	},
+}
+
+myOptionsTable = {
+	type = "group",
+	args = {
+		enable = {
+			name = "Enable",
+			desc = "Enables / disables the addon",
+			type = "toggle",
+			set = function(info, val)
+				Shottav2.enabled = val
+			end,
+			get = function(info)
+				return Shottav2.enabled
+			end,
+		},
+		moreoptions = {
+			name = "More Options",
+			type = "group",
+			args = {
+				-- more options go here
+			},
+		},
+	},
+}
+
+function Shottav2:OnInitialize()
+	-- do init tasks here, like loading the Saved Variables,
+	-- or setting up slash commands.
+	--
+	self.db = LibStub("AceDB-3.0"):New("ShottaDBv2", defaults)
+
+	LibStub("LibDBIcon-1.0"):Register("Shotta", shottaLDB, self.db.profile.minimap)
+
+	self.profileOptions = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
+
+	local acreg = LibStub("AceConfigRegistry-3.0")
+	acreg:RegisterOptionsTable("Shotta config", myOptionsTable)
+	acreg:RegisterOptionsTable("Shotta profiles", self.profileOptions)
+
+	local acdia = LibStub("AceConfigDialog-3.0")
+	acdia:AddToBlizOptions("Shotta config", "Shotta")
+	acdia:AddToBlizOptions("Shotta profiles", "Profiles", "Shotta")
+
+	Shottav2:Print("loaded!")
+end
+
+function Shottav2:OnEnable()
+	-- Do more initialization here, that really enables the use of your addon.
+	-- Register Events, Hook functions, Create Frames, Get information from
+	-- the game that wasn't available in OnInitialize
+	--
+end
+
+function Shottav2:OnDisable()
+	-- Unhook, Unregister Events, Hide frames that you created.
+	-- You would probably only use an OnDisable if you want to
+	-- build a "standby" mode, or be able to toggle modules on/off.
 end
 
 local function everyXSecond(seconds, callback)
@@ -220,17 +334,6 @@ local hiddenTriggers = {
 ---@class Event
 ---@field enabled boolean|nil Whether the user has enabled this event
 
----@class ShottaDatabase
----@field screenshottableEvents { [triggerId]: Event }
-local DB_DEFAULTS = {
-	screenshottableEvents = {
-		login = { enabled = true },
-		levelUp = { enabled = true },
-		encounterEnd = { enabled = true },
-	},
-	profile = { minimap = { hide = false } },
-}
-
 ---@class ShottaFrame contains state of addon, created from Blizzard's CreateFrame() function
 ---@field SetScript fun(self: ShottaFrame, callbackName: string, callback: fun(self: ShottaFrame, event: string, ...))
 ---@field blizzardTrigger {[string]: Trigger}
@@ -268,87 +371,55 @@ function screenshotFrame:registerUnregisterEvent(trigger, enabled)
 	end
 end
 
-local shottaLDB = LibStub("LibDataBroker-1.1"):NewDataObject(Shotta.ADDON_NAME, {
-	type = "data source",
-	text = Shotta.ADDON_NAME,
-	icon = 237290,
-	OnClick = function()
-		if IsShiftKeyDown() then
-			HideUIPanel(SettingsPanel)
-			InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
-		elseif IsControlKeyDown() then
-			TakeScreenshot()
-		else
-			TakeUILessScreenshot()
-		end
-	end,
-	OnTooltipShow = function(tooltip)
-		if not tooltip or not tooltip.AddLine then
-			return
-		end
-
-		tooltip:AddLine(Shotta.ADDON_NAME)
-		tooltip:AddLine(" ")
-		tooltip:AddLine(ns.T["minimap.click"])
-		tooltip:AddLine(ns.T["minimap.ctrlClick"])
-		tooltip:AddLine(" ")
-		tooltip:AddLine(ns.T["minimap.shiftClick"])
-	end,
-})
-local icon = LibStub("LibDBIcon-1.0")
-
-local function AddonLoadedEventHandler(self, event, addOnName)
-	if addOnName ~= Shotta.ADDON_NAME then
-		return
-	end
-	if event ~= "ADDON_LOADED" then
-		ns.PrintToChat(format("Got unsupported event %s, should be ADDON_LOADED", event))
-		return
-	end
-
-	local version = Shotta.VERSION
-
-	---@type ShottaDatabase
-	Shotta.db = ns.FetchOrCreateDatabase(DB_DEFAULTS)
-
-	ns.InitializeOptions(self, triggers, screenshotFrame, Shotta.ADDON_NAME, version, icon)
-
-	icon:Register(Shotta.ADDON_NAME, shottaLDB, Shotta.db.profile.minimap)
-
-	--- Persist DB as SavedVariable since we've been using it as a local
-	ShottaDB = Shotta.db
-
-	screenshotFrame.blizzardTrigger = makeBlizzardTriggerMap(triggers)
-
-	for trigger, _ in pairs(triggers) do
-		local enabled = false
-
-		if Shotta.db.screenshottableEvents[trigger] then
-			---@type boolean enabled should always be there after this if check
-			enabled = Shotta.db.screenshottableEvents[trigger].enabled
-		end
-
-		screenshotFrame:registerUnregisterEvent(trigger, enabled)
-	end
-
-	for _, trigger in pairs(hiddenTriggers) do
-		screenshotFrame.blizzardTrigger["TIME_PLAYED_MSG"] = hiddenTriggers.timePlayed
-		trigger:register(screenshotFrame)
-	end
-
-	self:UnregisterEvent(event)
-
-	ns.PrintToChat(version .. " loaded. Use /shotta or /sh to open the options menu.")
-end
-
-local EventFrame = CreateFrame("Frame")
-EventFrame:RegisterEvent("ADDON_LOADED")
-EventFrame:SetScript("OnEvent", AddonLoadedEventHandler)
-
-SLASH_SHOTTA1, SLASH_SHOTTA2 = "/shotta", "/sh"
-
-SlashCmdList["SHOTTA"] = function()
-	InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
-	-- Call this twice to ensure the correct category is selected
-	InterfaceOptionsFrame_OpenToCategory(Shotta.ADDON_NAME)
-end
+-- local function AddonLoadedEventHandler(self, event, addOnName)
+-- 	if addOnName ~= Shotta.ADDON_NAME then
+-- 		return
+-- 	end
+-- 	if event ~= "ADDON_LOADED" then
+-- 		ns.PrintToChat(format("Got unsupported event %s, should be ADDON_LOADED", event))
+-- 		return
+-- 	end
+--
+-- 	---@type ShottaDatabase
+-- 	Shotta.db = ns.FetchOrCreateDatabase(DB_DEFAULTS)
+--
+-- 	ns.InitializeOptions(self, triggers, screenshotFrame, icon)
+--
+-- 	icon:Register(Shotta.ADDON_NAME, shottaLDB, Shotta.db.profile.minimap)
+--
+-- 	--- Persist DB as SavedVariable since we've been using it as a local
+-- 	ShottaDB = Shotta.db
+--
+-- 	screenshotFrame.blizzardTrigger = makeBlizzardTriggerMap(triggers)
+--
+-- 	for trigger, _ in pairs(triggers) do
+-- 		local enabled = false
+--
+-- 		if Shotta.db.screenshottableEvents[trigger] then
+-- 			---@type boolean enabled should always be there after this if check
+-- 			enabled = Shotta.db.screenshottableEvents[trigger].enabled
+-- 		end
+--
+-- 		screenshotFrame:registerUnregisterEvent(trigger, enabled)
+-- 	end
+--
+-- 	for _, trigger in pairs(hiddenTriggers) do
+-- 		screenshotFrame.blizzardTrigger["TIME_PLAYED_MSG"] = hiddenTriggers.timePlayed
+-- 		trigger:register(screenshotFrame)
+-- 	end
+--
+-- 	self:UnregisterEvent(event)
+--
+-- 	ns.PrintToChat(Shotta.VERSION .. " loaded. Use /shotta or /sh to open the options menu.")
+-- end
+--
+-- local EventFrame = CreateFrame("Frame")
+-- EventFrame:RegisterEvent("ADDON_LOADED")
+-- EventFrame:SetScript("OnEvent", AddonLoadedEventHandler)
+--
+-- SLASH_SHOTTA1, SLASH_SHOTTA2 = "/shotta", "/sh"
+--
+-- SlashCmdList["SHOTTA"] = function()
+-- 	-- Call this twice to ensure the correct category is selected
+-- 	Settings.OpenToCategory(Shotta.ADDON_NAME .. " " .. Shotta.VERSION)
+-- end

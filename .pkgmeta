@@ -14,8 +14,11 @@ externals:
   Libs/LibDBIcon-1.0:
     url: https://repos.curseforge.com/wow/libdbicon-1-0/trunk
     type: svn
+  Libs/AceConfig-3.0
+    url: https://repos.curseforge.com/wow/ace3/trunk/AceConfig-3.0
+    type: svn
 
 tools-used:
-  - devtool
+  - devtooll
   - bugsack
   - bug-grabber
