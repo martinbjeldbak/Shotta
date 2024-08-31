@@ -5,21 +5,21 @@
 -- Shotta.VERSION = "@project-version@"
 -- Shotta.COLOR = "245DC6FF"
 
-local Shottav2 = LibStub("AceAddon-3.0"):NewAddon("Shotta", "AceEvent-3.0", "AceConsole-3.0")
+local Shotta = LibStub("AceAddon-3.0"):NewAddon("Shotta", "AceEvent-3.0", "AceConsole-3.0")
 
-Shottav2:RegisterChatCommand("shotta", "ChatCommand")
+Shotta:RegisterChatCommand("shotta", "ChatCommand")
 
-function Shottav2:ChatCommand(input)
+function Shotta:ChatCommand(input)
 	if not input or input:trim() == "" then
 		LibStub("AceConfigDialog-3.0"):Open("Shotta profiles")
 	else
-		LibStub("AceConfigCmd-3.0").HandleCommand(Shottav2, "shotta", "Shotta", input)
+		LibStub("AceConfigCmd-3.0").HandleCommand(Shotta, "shotta", "Shotta", input)
 	end
 end
 
 local function TakeScreenshot(text)
 	if text ~= nil then
-		Shottav2:Print(text)
+		Shotta:Print(text)
 	end
 
 	Screenshot()
@@ -87,10 +87,10 @@ myOptionsTable = {
 			desc = "Enables / disables the addon",
 			type = "toggle",
 			set = function(info, val)
-				Shottav2.enabled = val
+				Shotta.enabled = val
 			end,
 			get = function(info)
-				return Shottav2.enabled
+				return Shotta.enabled
 			end,
 		},
 		moreoptions = {
@@ -103,7 +103,7 @@ myOptionsTable = {
 	},
 }
 
-function Shottav2:OnInitialize()
+function Shotta:OnInitialize()
 	-- do init tasks here, like loading the Saved Variables,
 	-- or setting up slash commands.
 	--
@@ -121,17 +121,17 @@ function Shottav2:OnInitialize()
 	acdia:AddToBlizOptions("Shotta config", "Shotta")
 	acdia:AddToBlizOptions("Shotta profiles", "Profiles", "Shotta")
 
-	Shottav2:Print("loaded!")
+	Shotta:Print("loaded!")
 end
 
-function Shottav2:OnEnable()
+function Shotta:OnEnable()
 	-- Do more initialization here, that really enables the use of your addon.
 	-- Register Events, Hook functions, Create Frames, Get information from
 	-- the game that wasn't available in OnInitialize
 	--
 end
 
-function Shottav2:OnDisable()
+function Shotta:OnDisable()
 	-- Unhook, Unregister Events, Hide frames that you created.
 	-- You would probably only use an OnDisable if you want to
 	-- build a "standby" mode, or be able to toggle modules on/off.
