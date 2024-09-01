@@ -26,6 +26,4 @@ Libs\AceConfig-3.0\AceConfig-3.0.lua
 localization.enUS.lua
 localization.zhTW.lua
 localization.zhCN.lua
-utils.lua
 main.lua
-options.lua
