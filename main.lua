@@ -109,6 +109,9 @@ function Shotta:OnInitialize()
 	--
 	self.db = LibStub("AceDB-3.0"):New("ShottaDBv2", defaults)
 
+	self.ADDON_NAME = "Shotta"
+	self.VERSION = "@project-version@"
+
 	LibStub("LibDBIcon-1.0"):Register("Shotta", shottaLDB, self.db.profile.minimap)
 
 	self.profileOptions = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
@@ -417,9 +420,9 @@ end
 -- EventFrame:RegisterEvent("ADDON_LOADED")
 -- EventFrame:SetScript("OnEvent", AddonLoadedEventHandler)
 --
--- SLASH_SHOTTA1, SLASH_SHOTTA2 = "/shotta", "/sh"
+SLASH_SHOTTA1, SLASH_SHOTTA2 = "/shotta", "/sh"
 --
--- SlashCmdList["SHOTTA"] = function()
--- 	-- Call this twice to ensure the correct category is selected
--- 	Settings.OpenToCategory(Shotta.ADDON_NAME .. " " .. Shotta.VERSION)
--- end
+SlashCmdList["SHOTTA"] = function()
+	-- Call this twice to ensure the correct category is selected
+	Settings.OpenToCategory(Shotta.ADDON_NAME)
+end
