@@ -71,15 +71,19 @@ local defaults = {
 			hide = false,
 		},
 		screenshottableEvents = {
-			["**"] = {
-				enabled = false, -- disable all new events by default, except for...
-			},
-			login = true, -- enable this by default
+			["**"] = false,
+			PLAYER_LOGIN = true, -- enable this by default
 		},
 	},
 }
 
-local function setupBlizzardEvent()
+---@class AceOptions
+---@field name string|function The name of the option
+---@field type integer
+
+---Hello world
+---@return AceOptions table for AceOptions to display a Blizzard-triggered event
+local function setupBlizzardEventv2()
 	return {
 		name = function(info)
 			return L["checkboxText." .. info[1]]
@@ -98,6 +102,20 @@ local function setupBlizzardEvent()
 	}
 end
 
+triggerFunctions = {
+	PLAYER_STARTED_MOVING = function()
+		Shotta:Print("Got overridden event, taking screenshot")
+	end,
+	PLAYER_LOGIN = function()
+		--@alpha@
+		Shotta:Print("Got event player login: taking screenshot")
+		--@end-alpha@
+		C_Timer.After(5, function()
+			TakeScreenshot()
+		end)
+	end,
+}
+
 options = {
 	type = "group",
 	args = {
@@ -112,72 +130,70 @@ options = {
 				return Shotta.enabled
 			end,
 		},
-		PLAYER_LOGIN = setupBlizzardEvent(),
-		CHAT_MSG_CHANNEL = setupBlizzardEvent(),
-		PLAYER_LEVEL_UP = setupBlizzardEvent(),
-		MAIL_SHOW = setupBlizzardEvent(),
-		READY_CHECK = setupBlizzardEvent(),
-		ZONE_CHANGED = setupBlizzardEvent(),
-		ZONE_CHANGED_NEW_AREA = setupBlizzardEvent(),
-		HEARTHSTONE_BOUND = setupBlizzardEvent(),
-		PLAYER_STARTED_MOVING = setupBlizzardEvent(),
+		PLAYER_LOGIN = setupBlizzardEventv2(),
+		CHAT_MSG_CHANNEL = setupBlizzardEventv2(),
+		PLAYER_LEVEL_UP = setupBlizzardEventv2(),
+		MAIL_SHOW = setupBlizzardEventv2(),
+		READY_CHECK = setupBlizzardEventv2(),
+		ZONE_CHANGED = setupBlizzardEventv2(),
+		ZONE_CHANGED_NEW_AREA = setupBlizzardEventv2(),
+		HEARTHSTONE_BOUND = setupBlizzardEventv2(),
+		--@debug@
+		PLAYER_STARTED_MOVING = setupBlizzardEventv2(),
+		--@end-debug@
+		AUCTION_HOUSE_SHOW = setupBlizzardEventv2(),
 	},
 }
 
 ---comment
 ---@param val boolean
----@param blizzardEevent string
-function Shotta:conditionallyRegisterEvent(val, blizzardEevent)
+---@param blizzardEvent string
+function Shotta:conditionallyRegisterEvent(val, blizzardEvent)
+	local handler = triggerFunctions[blizzardEvent]
+	if not handler then
+		handler = "DefaultBlizzardHandler"
+	end
+
 	if val then
 		--@alpha@
-		Shotta:Print("Registering event " .. blizzardEevent)
+		Shotta:Print("Registering event " .. blizzardEvent)
 		--@end-alpha@
-		self:RegisterEvent(blizzardEevent)
+		self:RegisterEvent(blizzardEvent, handler)
 	else
 		--@alpha@
-		Shotta:Print("Unregistering event " .. blizzardEevent)
+		Shotta:Print("Unregistering event " .. blizzardEvent)
 		--@end-alpha@
-		self:UnregisterEvent(blizzardEevent)
+		self:UnregisterEvent(blizzardEvent)
 	end
 end
 
-function Shotta:PLAYER_LOGIN()
+function Shotta:DefaultBlizzardHandler(eventName)
 	--@alpha@
-	Shotta:Print("Got event player login: taking screenshot")
+	Shotta:Print("Default handler: got enabled Blizzard event " .. eventName .. ", taking screenshot.")
 	--@end-alpha@
-	C_Timer.After(5, function()
-		TakeScreenshot()
-	end)
-end
-
-function Shotta:PLAYER_LEVEL_UP()
-	-- TODO: implement these modifiers
-	-- if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat then
-	-- 	if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat.enabled then
-	-- 		ChatFrame1Tab:Click()
-	-- 	end
-	-- end
-
-	-- if Shotta.db.screenshottableEvents.levelUp.modifiers.showPlayed.enabled then
-	-- 	screenshotFrame.waitingForTimePlayed = true
-	-- 	RequestTimePlayed() -- trigger "TIME_PLAYED_MSG" event
-	-- 	return
-	-- end
-
-	C_Timer.After(0.5, function()
-		TakeScreenshot()
-	end)
-end
-
-function Shotta:CHAT_MSG_CHANNEL()
-	Shotta:Print("Got event player message")
 	TakeScreenshot()
 end
 
+-- function Shotta:PLAYER_LEVEL_UP()
+-- 	-- TODO: implement these modifiers
+-- 	-- if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat then
+-- 	-- 	if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat.enabled then
+-- 	-- 		ChatFrame1Tab:Click()
+-- 	-- 	end
+-- 	-- end
+
+-- 	-- if Shotta.db.screenshottableEvents.levelUp.modifiers.showPlayed.enabled then
+-- 	-- 	screenshotFrame.waitingForTimePlayed = true
+-- 	-- 	RequestTimePlayed() -- trigger "TIME_PLAYED_MSG" event
+-- 	-- 	return
+-- 	-- end
+
+-- 	C_Timer.After(0.5, function()
+-- 		TakeScreenshot()
+-- 	end)
+-- end
+
 function Shotta:OnInitialize()
-	-- do init tasks here, like loading the Saved Variables,
-	-- or setting up slash commands.
-	--
 	self.db = LibStub("AceDB-3.0"):New("ShottaDBv2", defaults)
 
 	LibStub("LibDBIcon-1.0"):Register("Shotta", shottaLDB, self.db.profile.minimap)
@@ -194,7 +210,7 @@ function Shotta:OnInitialize()
 
 	for event, enabled in pairs(self.db.profile.screenshottableEvents) do
 		if enabled then
-			Shotta:RegisterEvent("PLAYER_LOGIN")
+			Shotta:conditionallyRegisterEvent(true, event)
 		end
 	end
 
@@ -274,17 +290,17 @@ end
 ---Creates a Trigger table given an in-game triggered event
 ---@param eventName string of the Blizzard event, one of https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_list)
 ---@return Trigger Trigger table implmementing required functions for event
--- local function setupBlizzardEvent(eventName)
--- 	return {
--- 		eventName = eventName,
--- 		register = registerEvent,
--- 		unregister = unregisterEvent,
--- 		triggerFunc = function(self)
--- 			ns.Debug(format('Got event "%s", taking screenshot!', ns.T[format("checkboxText.%s", self.id)]:lower()))
--- 			TakeScreenshot()
--- 		end,
--- 	}
--- end
+local function setupBlizzardEvent(eventName)
+	return {
+		eventName = eventName,
+		register = registerEvent,
+		unregister = unregisterEvent,
+		triggerFunc = function(self)
+			ns.Debug(format('Got event "%s", taking screenshot!', ns.T[format("checkboxText.%s", self.id)]:lower()))
+			TakeScreenshot()
+		end,
+	}
+end
 
 ---@type { [triggerId]: Trigger }
 local triggers = {
