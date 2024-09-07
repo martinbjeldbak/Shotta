@@ -10,7 +10,7 @@
 ## X-Wago-ID: 96E7gaGg
 
 
-Libs\embeds.xml
+embeds.xml
 
 localization.enUS.lua
 localization.zhTW.lua
