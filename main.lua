@@ -57,7 +57,7 @@ local function TakeScreenshot(text)
 	Screenshot()
 end
 
-function TakeUILessScreenshot(text)
+local function TakeUILessScreenshot(text)
 	UIParent:Hide()
 
 	TakeScreenshot(text)
@@ -137,11 +137,11 @@ function Shotta:blizzardEventAceOption()
 	}
 end
 
-function Shotta:PLAYER_STARTED_MOVING()
+function Shotta.PLAYER_STARTED_MOVING()
 	Shotta:Print("Got overridden event, taking screenshot")
 end
 
-function Shotta:PLAYER_LOGIN()
+function Shotta.PLAYER_LOGIN()
 	--@alpha@
 	Shotta:Print("Got event player login: taking screenshot")
 	--@end-alpha@
@@ -149,19 +149,19 @@ function Shotta:PLAYER_LOGIN()
 		TakeScreenshot()
 	end)
 end
-function Shotta:CHAT_MSG_TEXT_EMOTE()
+function Shotta.CHAT_MSG_TEXT_EMOTE()
 	C_Timer.After(0.5, function()
 		TakeScreenshot()
 	end)
 end
-function Shotta:TRADE_ACCEPT_UPDATE(playerAccepted)
+function Shotta.TRADE_ACCEPT_UPDATE(playerAccepted)
 	-- TODO: TEST ME
 	if playerAccepted == 1 then
 		TakeScreenshot()
 	end
 end
 
-function Shotta:PLAYER_LEVEL_UP()
+function Shotta.PLAYER_LEVEL_UP()
 	-- 	-- TODO: implement these modifiers
 	-- 	-- if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat then
 	-- 	-- 	if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat.enabled then
@@ -193,7 +193,7 @@ function Shotta:getConfig()
 					hideMinimap = {
 						name = localizedCheckboxName,
 						type = "toggle",
-						set = function(info, val)
+						set = function(_, val)
 							self.db.profile.minimap.hide = val
 							if val then
 								LibStub("LibDBIcon-1.0"):Hide("Shotta")
@@ -201,7 +201,7 @@ function Shotta:getConfig()
 								LibStub("LibDBIcon-1.0"):Show("Shotta")
 							end
 						end,
-						get = function(info)
+						get = function(_)
 							return self.db.profile.minimap.hide
 						end,
 					},
@@ -256,7 +256,7 @@ function Shotta:getConfig()
 	return config
 end
 
-function Shotta:RepeatingScreenshotTimer()
+function Shotta.RepeatingScreenshotTimer()
 	Shotta:Print("Timed trigger fired, taking screenshot!")
 
 	TakeScreenshot()
@@ -279,7 +279,7 @@ function Shotta:conditionallyRegisterBlizzardEvent(newValue, blizzardEvent)
 	end
 end
 
-function Shotta:DefaultBlizzardHandler(eventName)
+function Shotta.DefaultBlizzardHandler(eventName)
 	--@alpha@
 	Shotta:Print("Default handler: got enabled Blizzard event " .. eventName .. ", taking screenshot.")
 	--@end-alpha@
@@ -337,7 +337,7 @@ local aboutOptions = {
 			type = "input",
 			order = 6,
 			width = "double",
-			get = function(info)
+			get = function(_)
 				return Shotta.DISCORD_LINK
 			end,
 		},
@@ -346,7 +346,7 @@ local aboutOptions = {
 			type = "input",
 			order = 7,
 			width = "double",
-			get = function(info)
+			get = function(_)
 				return Shotta.GITHUB_LINK
 			end,
 		},
@@ -362,19 +362,19 @@ local aboutOptions = {
 
 ---comment
 ---@param minutes integer how many minutes to repeat the timer for
----@param order integer order in the Ace3 options table to have, see docs https://legacy.curseforge.com/wow/addons/ace3/pages/ace-config-3-0-options-tables
+---@param order integer order in the Ace3 options table to have, see docs
 ---@return table
 function Shotta:setupTimerEvent(minutes, order)
 	return {
 		name = localizedCheckboxName,
 		type = "toggle",
 		order = order,
-		set = function(info, val)
+		set = function(_, val)
 			self.db.profile.events.timer[minutes] = val
 
 			self:conditionallyEnableTimer(val, minutes)
 		end,
-		get = function(info)
+		get = function(_)
 			return self.db.profile.events.timer[minutes]
 		end,
 	}
