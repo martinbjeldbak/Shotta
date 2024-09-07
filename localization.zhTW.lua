@@ -27,8 +27,6 @@ T["checkboxText.HEARTHSTONE_BOUND"] = "綁定爐石"
 T["checkboxText.LOOT_ITEM_ROLL_WON"] = "贏得拾取骰子"
 T["checkboxText.hideMinimap"] = "隱藏小地圖圖示"
 T["checkboxText.ACHIEVEMENT_EARNED"] = "獲得成就"
-T["events"] = "事件"
-T["settings"] = "設定"
 T["about"] = "關於"
 T["saveLocationHelpText"] = [[截圖儲存在你的作業系統中預設的路徑
 
