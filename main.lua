@@ -1,5 +1,5 @@
 ---@class Shotta
-local Shotta = LibStub("AceAddon-3.0"):NewAddon("Shotta", "AceConsole-3.0", "AceEvent-3.0")
+local Shotta = LibStub("AceAddon-3.0"):NewAddon("Shotta", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 
 Shotta:RegisterChatCommand("shotta", "OpenToCategory")
 Shotta:RegisterChatCommand("sh", "OpenToCategory")
@@ -16,6 +16,13 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Shotta", Shotta.TRANSLATE_FAIL_SIL
 
 function Shotta:OpenToCategory()
 	Settings.OpenToCategory(self.ADDON_NAME)
+end
+
+---Converts minutes to seconds
+---@param min number how many minutes should be converted to seconds
+---@return number minutes in seconds
+local function minutes(min)
+	return min * 60
 end
 
 ---Makes client take a screenshot. Simply wraps the WoW global method.
@@ -71,15 +78,15 @@ local defaults = {
 		minimap = {
 			hide = false,
 		},
-		blizzardEvents = {
+		events = {
 			["**"] = false,
-			PLAYER_LOGIN = true, -- enable this by default
-			PLAYER_LEVEL_UP = true,
-			LOOT_ITEM_ROLL_WON = true,
-			BOSS_KILL = true,
-		},
-		timedEvents = {
-			["**"] = false,
+			blizzard = {
+				PLAYER_LOGIN = true, -- enable this by default
+				PLAYER_LEVEL_UP = true,
+				LOOT_ITEM_ROLL_WON = true,
+				BOSS_KILL = true,
+			},
+			timer = {},
 		},
 	},
 }
@@ -98,12 +105,12 @@ function Shotta:blizzardEventAceOption()
 		type = "toggle",
 		set = function(info, val)
 			local triggerName = info[1]
-			self.db.profile.blizzardEvents[triggerName] = val
+			self.db.profile.events.blizzard[triggerName] = val
 			self:conditionallyRegisterBlizzardEvent(val, triggerName)
 		end,
 		get = function(info)
 			local triggerName = info[1]
-			return self.db.profile.blizzardEvents[triggerName]
+			return self.db.profile.events.blizzard[triggerName]
 		end,
 	}
 end
@@ -114,7 +121,6 @@ end
 
 function Shotta:PLAYER_LOGIN()
 	--@alpha@
-	DevTool:AddData(Shotta, "My local var")
 	Shotta:Print("Got event player login: taking screenshot")
 	--@end-alpha@
 	C_Timer.After(5, function()
@@ -147,21 +153,10 @@ function Shotta:PLAYER_LEVEL_UP()
 	end)
 end
 
-function Shotta:options()
+function Shotta:getConfig()
 	return {
 		type = "group",
 		args = {
-			-- enable = {
-			-- 	name = "Enable",
-			-- 	desc = "Enables / disables the addon",
-			-- 	type = "toggle",
-			-- 	set = function(info, val)
-			-- 		Shotta.enabled = val
-			-- 	end,
-			-- 	get = function(info)
-			-- 		return Shotta.enabled
-			-- 	end,
-			-- },
 			PLAYER_LOGIN = self:blizzardEventAceOption(),
 			CHAT_MSG_CHANNEL = self:blizzardEventAceOption(),
 			PLAYER_LEVEL_UP = self:blizzardEventAceOption(),
@@ -180,19 +175,73 @@ function Shotta:options()
 			ENCOUNTER_END = self:blizzardEventAceOption(),
 			QUEST_TURNED_IN = self:blizzardEventAceOption(),
 			LOOT_ITEM_ROLL_WON = self:blizzardEventAceOption(),
+			PLAYER_DEAD = self:blizzardEventAceOption(),
+			-- Timer-based events
 			every_5_minutes = {
-				name = "Every 5 minutes",
-				-- desc = "Enables / disables the addon",
+				name = function(info)
+					return L["checkboxText." .. info[1]]
+				end,
 				type = "toggle",
 				set = function(info, val)
-					Shotta.db.profile.timedEvents.every_5_minutes = val
+					self.db.profile.events.timer.every_5_minutes = val
+
+					if val then
+						self.screenshotFifthMinuteTimer =
+							self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", minutes(5))
+					else
+						self:CancelTimer(self.screenshotFifthMinuteTimer)
+					end
 				end,
 				get = function(info)
-					return Shotta.db.profile.timedEvents.every_5_minutes
+					return self.db.profile.events.timer.every_5_minutes
+				end,
+			},
+			every_10_minutes = {
+				name = function(info)
+					return L["checkboxText." .. info[1]]
+				end,
+				type = "toggle",
+				set = function(info, val)
+					self.db.profile.events.timer.every_10_minutes = val
+
+					if val then
+						self.screenshotTenMinuteTimer =
+							self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", minutes(10))
+					else
+						self:CancelTimer(self.screenshotTenMinuteTimer)
+					end
+				end,
+				get = function(info)
+					return self.db.profile.events.timer.every_10_minutes
+				end,
+			},
+			every_30_minutes = {
+				name = function(info)
+					return L["checkboxText." .. info[1]]
+				end,
+				type = "toggle",
+				set = function(info, val)
+					self.db.profile.events.timer.every_30_minutes = val
+
+					if val then
+						self.screenshotThirtyMinuteTimer =
+							self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", minutes(30))
+					else
+						self:CancelTimer(self.screenshotThirtyMinuteTimer)
+					end
+				end,
+				get = function(info)
+					return self.db.profile.events.timer.every_30_minutes
 				end,
 			},
 		},
 	}
+end
+
+function Shotta:RepeatingScreenshotTimer()
+	Shotta:Print("Timed trigger fired, taking screenshot!")
+
+	TakeScreenshot()
 end
 
 ---Either register o unregister a blizzard-based Event
@@ -230,18 +279,12 @@ function Shotta:OnInitialize()
 	local profileOptions = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 
 	local acreg = LibStub("AceConfigRegistry-3.0")
-	acreg:RegisterOptionsTable("Shotta config", self:options())
+	acreg:RegisterOptionsTable("Shotta", self:getConfig())
 	acreg:RegisterOptionsTable("Shotta profiles", profileOptions)
 
 	local acdia = LibStub("AceConfigDialog-3.0")
-	acdia:AddToBlizOptions("Shotta config", "Shotta")
+	acdia:AddToBlizOptions("Shotta", "Shotta")
 	acdia:AddToBlizOptions("Shotta profiles", "Profiles", "Shotta")
-
-	for event, enabled in pairs(self.db.profile.blizzardEvents) do
-		if enabled then
-			self:conditionallyRegisterBlizzardEvent(true, event)
-		end
-	end
 
 	Shotta:Print(self.VERSION .. " loaded!")
 end
@@ -251,63 +294,38 @@ function Shotta:OnEnable()
 	-- Register Events, Hook functions, Create Frames, Get information from
 	-- the game that wasn't available in OnInitialize
 	--
+	for event, enabled in pairs(self.db.profile.events.blizzard) do
+		-- if enabled then
+		-- 	self:conditionallyRegisterBlizzardEvent(true, event)
+		-- end
+		if enabled then
+			local info = { event }
+			self:getConfig().args[event].set(info, true)
+		end
+	end
+
+	for timedEvent, enabled in pairs(self.db.profile.events.timer) do
+		if enabled then
+			local info = { timedEvent }
+			self:getConfig().args[timedEvent].set(info, true)
+		end
+	end
 end
 
 function Shotta:OnDisable()
 	-- Unhook, Unregister Events, Hide frames that you created.
 	-- You would probably only use an OnDisable if you want to
 	-- build a "standby" mode, or be able to toggle modules on/off.
-end
 
-local function everyXSecond(seconds, callback)
-	C_Timer.After(seconds, function()
-		local continue = callback()
-		if not continue then
-			return
+	-- Unregister all events
+	for event, enabled in pairs(self.db.profile.events.blizzard) do
+		if enabled then
+			self:conditionallyRegisterBlizzardEvent(false, event)
 		end
+	end
 
-		everyXSecond(seconds, callback)
-	end)
+	self:CancelAllTimers()
 end
-
---- Triggers the callback function every `minutes` minutes
---- @param minutes integer
---- @param callback function
-local function everyXMinute(minutes, callback)
-	everyXSecond(minutes * 60, callback)
-end
-
-local function registerEvent(self, frame)
-	frame:RegisterEvent(self.eventName)
-end
-
-local function unregisterEvent(self, frame)
-	frame:UnregisterEvent(self.eventName)
-end
-
---- @param minutes integer
---- @return Trigger
-local function setupTimedTrigger(minutes)
-	return {
-		registered = true,
-		register = function(self)
-			self.registered = true
-			everyXMinute(minutes, function()
-				if self.registered then
-					ns.PrintToChat(format("Timer for %s minutes triggered, taking screenshot!", minutes))
-
-					TakeScreenshot()
-				end
-				return self.registered
-			end)
-		end,
-		unregister = function(self)
-			self.registered = false
-		end,
-	}
-end
-
----@alias triggerId string Key use to define the event that Shotta can listen to. Unique.
 
 ---@class Trigger
 ---@field eventName string|nil Name of Blizzard event, or nil if custom event
@@ -403,9 +421,9 @@ local triggers = {
 	encounterEnd = setupBlizzardEvent("ENCOUNTER_END"),
 	questFinished = setupBlizzardEvent("QUEST_TURNED_IN"),
 	lootItemRollWin = setupBlizzardEvent("LOOT_ITEM_ROLL_WON"),
-	every5Minutes = setupTimedTrigger(5),
-	every10Minutes = setupTimedTrigger(10),
-	every30Minutes = setupTimedTrigger(30),
+	-- every5Minutes = setupTimedTrigger(5),
+	-- every10Minutes = setupTimedTrigger(10),
+	-- every30Minutes = setupTimedTrigger(30),
 	onDeath = setupBlizzardEvent("PLAYER_DEAD"),
 	chatAllEmotesWithToken = {
 		eventName = "CHAT_MSG_TEXT_EMOTE",
