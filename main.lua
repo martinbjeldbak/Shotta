@@ -18,7 +18,7 @@ function Shotta:OpenToCategory()
 	Settings.OpenToCategory(self.ADDON_NAME)
 end
 
-local function localisedName(info)
+local function localizedCheckboxName(info)
 	return L["checkboxText." .. info[#info]]
 end
 
@@ -102,7 +102,7 @@ local defaults = {
 ---@return AceOptions table for AceOptions to display a Blizzard-triggered event
 function Shotta:blizzardEventAceOption()
 	return {
-		name = localisedName,
+		name = localizedCheckboxName,
 		type = "toggle",
 		width = "full",
 		set = function(info, val)
@@ -166,13 +166,13 @@ function Shotta:getConfig()
 		type = "group",
 		args = {
 			general_options = {
-				name = localisedName,
+				name = localizedCheckboxName,
 				type = "group",
 				order = 0,
 				inline = true,
 				args = {
 					hideMinimap = {
-						name = localisedName,
+						name = localizedCheckboxName,
 						type = "toggle",
 						set = function(info, val)
 							self.db.profile.minimap.hide = val
@@ -189,7 +189,7 @@ function Shotta:getConfig()
 				},
 			},
 			blizzard_events = {
-				name = localisedName,
+				name = localizedCheckboxName,
 				type = "group",
 				order = 2,
 				inline = true,
@@ -217,14 +217,14 @@ function Shotta:getConfig()
 				},
 			},
 			timer_events = {
-				name = localisedName,
+				name = localizedCheckboxName,
 				type = "group",
 				inline = true,
 				order = 1,
 				args = {
 					-- Timer-based events
 					every_5_minutes = {
-						name = localisedName,
+						name = localizedCheckboxName,
 						type = "toggle",
 						order = 0,
 						set = function(info, val)
@@ -242,7 +242,7 @@ function Shotta:getConfig()
 						end,
 					},
 					every_10_minutes = {
-						name = localisedName,
+						name = localizedCheckboxName,
 						order = 1,
 						type = "toggle",
 						set = function(info, val)
@@ -260,7 +260,7 @@ function Shotta:getConfig()
 						end,
 					},
 					every_30_minutes = {
-						name = localisedName,
+						name = localizedCheckboxName,
 						type = "toggle",
 						order = 2,
 						set = function(info, val)
