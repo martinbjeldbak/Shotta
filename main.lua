@@ -99,16 +99,17 @@ local defaults = {
 function Shotta:blizzardEventAceOption()
 	return {
 		name = function(info)
-			return L["checkboxText." .. info[1]]
+			return L["checkboxText." .. info[#info]]
 		end,
 		type = "toggle",
+		width = "full",
 		set = function(info, val)
-			local triggerName = info[1]
+			local triggerName = info[#info]
 			self.db.profile.events.blizzard[triggerName] = val
 			self:conditionallyRegisterBlizzardEvent(val, triggerName)
 		end,
 		get = function(info)
-			local triggerName = info[1]
+			local triggerName = info[#info]
 			return self.db.profile.events.blizzard[triggerName]
 		end,
 	}
@@ -161,89 +162,117 @@ function Shotta:getConfig()
 	local config = {
 		type = "group",
 		args = {
-			PLAYER_LOGIN = self:blizzardEventAceOption(),
-			CHAT_MSG_CHANNEL = self:blizzardEventAceOption(),
-			PLAYER_LEVEL_UP = self:blizzardEventAceOption(),
-			MAIL_SHOW = self:blizzardEventAceOption(),
-			READY_CHECK = self:blizzardEventAceOption(),
-			ZONE_CHANGED = self:blizzardEventAceOption(),
-			ZONE_CHANGED_NEW_AREA = self:blizzardEventAceOption(),
-			HEARTHSTONE_BOUND = self:blizzardEventAceOption(),
-			--@debug@
-			PLAYER_STARTED_MOVING = self:blizzardEventAceOption(),
-			--@end-debug@
-			AUCTION_HOUSE_SHOW = self:blizzardEventAceOption(),
-			GROUP_FORMED = self:blizzardEventAceOption(),
-			TRADE_ACCEPT_UPDATE = self:blizzardEventAceOption(),
-			BOSS_KILL = self:blizzardEventAceOption(),
-			ENCOUNTER_END = self:blizzardEventAceOption(),
-			QUEST_TURNED_IN = self:blizzardEventAceOption(),
-			LOOT_ITEM_ROLL_WON = self:blizzardEventAceOption(),
-			PLAYER_DEAD = self:blizzardEventAceOption(),
-			CHAT_MSG_TEXT_EMOTE = self:blizzardEventAceOption(),
-			-- Timer-based events
-			every_5_minutes = {
-				name = function(info)
-					return L["checkboxText." .. info[1]]
-				end,
-				type = "toggle",
-				set = function(info, val)
-					self.db.profile.events.timer.every_5_minutes = val
-
-					if val then
-						self.screenshotFifthMinuteTimer =
-							self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", minutes(5))
-					else
-						self:CancelTimer(self.screenshotFifthMinuteTimer)
-					end
-				end,
-				get = function(info)
-					return self.db.profile.events.timer.every_5_minutes
-				end,
+			general_options = {
+				name = "General Options",
+				type = "group",
+				inline = true,
+				args = {
+					hideMinimap = {
+						name = "Hide Minimap Icon",
+						type = "toggle",
+					},
+				},
 			},
-			every_10_minutes = {
-				name = function(info)
-					return L["checkboxText." .. info[1]]
-				end,
-				type = "toggle",
-				set = function(info, val)
-					self.db.profile.events.timer.every_10_minutes = val
-
-					if val then
-						self.screenshotTenMinuteTimer =
-							self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", minutes(10))
-					else
-						self:CancelTimer(self.screenshotTenMinuteTimer)
-					end
-				end,
-				get = function(info)
-					return self.db.profile.events.timer.every_10_minutes
-				end,
+			blizzard_events = {
+				name = "In-game Events",
+				type = "group",
+				inline = true,
+				args = {
+					PLAYER_LOGIN = self:blizzardEventAceOption(),
+					CHAT_MSG_CHANNEL = self:blizzardEventAceOption(),
+					PLAYER_LEVEL_UP = self:blizzardEventAceOption(),
+					MAIL_SHOW = self:blizzardEventAceOption(),
+					READY_CHECK = self:blizzardEventAceOption(),
+					ZONE_CHANGED = self:blizzardEventAceOption(),
+					ZONE_CHANGED_NEW_AREA = self:blizzardEventAceOption(),
+					HEARTHSTONE_BOUND = self:blizzardEventAceOption(),
+					--@debug@
+					PLAYER_STARTED_MOVING = self:blizzardEventAceOption(),
+					--@end-debug@
+					AUCTION_HOUSE_SHOW = self:blizzardEventAceOption(),
+					GROUP_FORMED = self:blizzardEventAceOption(),
+					TRADE_ACCEPT_UPDATE = self:blizzardEventAceOption(),
+					BOSS_KILL = self:blizzardEventAceOption(),
+					ENCOUNTER_END = self:blizzardEventAceOption(),
+					QUEST_TURNED_IN = self:blizzardEventAceOption(),
+					LOOT_ITEM_ROLL_WON = self:blizzardEventAceOption(),
+					PLAYER_DEAD = self:blizzardEventAceOption(),
+					CHAT_MSG_TEXT_EMOTE = self:blizzardEventAceOption(),
+				},
 			},
-			every_30_minutes = {
-				name = function(info)
-					return L["checkboxText." .. info[1]]
-				end,
-				type = "toggle",
-				set = function(info, val)
-					self.db.profile.events.timer.every_30_minutes = val
+			timer_events = {
+				name = "Timer Events",
+				type = "group",
+				inline = true,
+				args = {
+					-- Timer-based events
+					every_5_minutes = {
+						name = function(info)
+							return L["checkboxText." .. info[#info]]
+						end,
+						type = "toggle",
+						order = 0,
+						set = function(info, val)
+							self.db.profile.events.timer.every_5_minutes = val
 
-					if val then
-						self.screenshotThirtyMinuteTimer =
-							self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", minutes(30))
-					else
-						self:CancelTimer(self.screenshotThirtyMinuteTimer)
-					end
-				end,
-				get = function(info)
-					return self.db.profile.events.timer.every_30_minutes
-				end,
+							if val then
+								self.screenshotFifthMinuteTimer =
+									self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", minutes(5))
+							else
+								self:CancelTimer(self.screenshotFifthMinuteTimer)
+							end
+						end,
+						get = function(info)
+							return self.db.profile.events.timer.every_5_minutes
+						end,
+					},
+					every_10_minutes = {
+						name = function(info)
+							return L["checkboxText." .. info[#info]]
+						end,
+						order = 1,
+						type = "toggle",
+						set = function(info, val)
+							self.db.profile.events.timer.every_10_minutes = val
+
+							if val then
+								self.screenshotTenMinuteTimer =
+									self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", minutes(10))
+							else
+								self:CancelTimer(self.screenshotTenMinuteTimer)
+							end
+						end,
+						get = function(info)
+							return self.db.profile.events.timer.every_10_minutes
+						end,
+					},
+					every_30_minutes = {
+						name = function(info)
+							return L["checkboxText." .. info[#info]]
+						end,
+						type = "toggle",
+						order = 2,
+						set = function(info, val)
+							self.db.profile.events.timer.every_30_minutes = val
+
+							if val then
+								self.screenshotThirtyMinuteTimer =
+									self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", minutes(30))
+							else
+								self:CancelTimer(self.screenshotThirtyMinuteTimer)
+							end
+						end,
+						get = function(info)
+							return self.db.profile.events.timer.every_30_minutes
+						end,
+					},
+				},
 			},
 		},
 	}
 
 	if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC) then
-		config.args.ACHIEVEMENT_EARNED = self:blizzardEventAceOption()
+		config.args.blizzard_events.args.ACHIEVEMENT_EARNED = self:blizzardEventAceOption()
 	end
 
 	return config
@@ -306,17 +335,17 @@ function Shotta:OnEnable()
 	-- the game that wasn't available in OnInitialize
 	--
 	for event, enabled in pairs(self.db.profile.events.blizzard) do
-		if enabled then
-			local info = { event }
-			self:getConfig().args[event].set(info, true)
-		end
+		-- if enabled then
+		-- 	local info = { event }
+		-- 	self:getConfig().args[event].set(info, true)
+		-- end
 	end
 
 	for event, enabled in pairs(self.db.profile.events.timer) do
-		if enabled then
-			local info = { event }
-			self:getConfig().args[event].set(info, true)
-		end
+		-- if enabled then
+		-- 	local info = { event }
+		-- 	self:getConfig().args[event].set(info, true)
+		-- end
 	end
 end
 

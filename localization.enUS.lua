@@ -1,6 +1,3 @@
--- Inspiration for this file: https://wowpedia.fandom.com/wiki/Localizing_an_addon
--- local _, ns = ...
-
 local T = LibStub("AceLocale-3.0"):NewLocale("Shotta", "enUS", true)
 
 T["checkboxText.CHAT_MSG_CHANNEL"] = "On message in channel"
