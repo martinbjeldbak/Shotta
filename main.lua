@@ -18,6 +18,10 @@ function Shotta:OpenToCategory()
 	Settings.OpenToCategory(self.ADDON_NAME)
 end
 
+local function localisedName(info)
+	return L["checkboxText." .. info[#info]]
+end
+
 ---Converts minutes to seconds
 ---@param min number how many minutes should be converted to seconds
 ---@return number minutes in seconds
@@ -98,9 +102,7 @@ local defaults = {
 ---@return AceOptions table for AceOptions to display a Blizzard-triggered event
 function Shotta:blizzardEventAceOption()
 	return {
-		name = function(info)
-			return L["checkboxText." .. info[#info]]
-		end,
+		name = localisedName,
 		type = "toggle",
 		width = "full",
 		set = function(info, val)
@@ -114,6 +116,7 @@ function Shotta:blizzardEventAceOption()
 		end,
 	}
 end
+
 
 function Shotta:PLAYER_STARTED_MOVING()
 	Shotta:Print("Got overridden event, taking screenshot")
@@ -163,19 +166,32 @@ function Shotta:getConfig()
 		type = "group",
 		args = {
 			general_options = {
-				name = "General Options",
+				name = localisedName,
 				type = "group",
+				order = 0,
 				inline = true,
 				args = {
 					hideMinimap = {
-						name = "Hide Minimap Icon",
+						name = localisedName,
 						type = "toggle",
+						set = function(info, val)
+							self.db.profile.minimap.hide = val
+							if val then
+								LibStub("LibDBIcon-1.0"):Hide("Shotta")
+							else
+								LibStub("LibDBIcon-1.0"):Show("Shotta")
+							end
+						end,
+						get = function(info)
+							return self.db.profile.minimap.hide
+						end,
 					},
 				},
 			},
 			blizzard_events = {
-				name = "In-game Events",
+				name = localisedName,
 				type = "group",
+				order = 2,
 				inline = true,
 				args = {
 					PLAYER_LOGIN = self:blizzardEventAceOption(),
@@ -201,15 +217,14 @@ function Shotta:getConfig()
 				},
 			},
 			timer_events = {
-				name = "Timer Events",
+				name = localisedName,
 				type = "group",
 				inline = true,
+				order = 1,
 				args = {
 					-- Timer-based events
 					every_5_minutes = {
-						name = function(info)
-							return L["checkboxText." .. info[#info]]
-						end,
+						name = localisedName,
 						type = "toggle",
 						order = 0,
 						set = function(info, val)
@@ -227,9 +242,7 @@ function Shotta:getConfig()
 						end,
 					},
 					every_10_minutes = {
-						name = function(info)
-							return L["checkboxText." .. info[#info]]
-						end,
+						name = localisedName,
 						order = 1,
 						type = "toggle",
 						set = function(info, val)
@@ -247,9 +260,7 @@ function Shotta:getConfig()
 						end,
 					},
 					every_30_minutes = {
-						name = function(info)
-							return L["checkboxText." .. info[#info]]
-						end,
+						name = localisedName,
 						type = "toggle",
 						order = 2,
 						set = function(info, val)

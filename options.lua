@@ -318,7 +318,7 @@ local function InitializeOptions(_, triggers, screenshotFrame, icon)
 	-- 	-- -- Hide map icon button
 	-- 	-- local hideButton = CreateFrame("CheckButton", nil, tab2Content, "InterfaceOptionsCheckButtonTemplate")
 	-- 	-- hideButton:SetPoint("TOPLEFT", tab2Content, "TOPLEFT", 20, -20)
-	-- 	-- hideButton.Text:SetText(ns.T["checkboxText.profile.hideMiniMap"])
+	-- 	-- hideButton.Text:SetText(ns.T["checkboxText.hideMinimap"])
 	-- 	-- hideButton:HookScript("OnClick", function()
 	-- 	-- 	local isChecked = hideButton:GetChecked()
 	-- 	--
