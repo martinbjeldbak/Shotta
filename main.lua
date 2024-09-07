@@ -1,4 +1,5 @@
 ---@class Shotta
+---@field timerEvents { [number]: any }
 local Shotta = LibStub("AceAddon-3.0"):NewAddon("Shotta", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 
 Shotta:RegisterChatCommand("shotta", "OpenToCategory")
@@ -41,7 +42,7 @@ end
 ---Converts minutes to seconds
 ---@param min number how many minutes should be converted to seconds
 ---@return number minutes in seconds
-local function minutes(min)
+local function toMinutes(min)
 	return min * 60
 end
 
@@ -101,8 +102,10 @@ local defaults = {
 		events = {
 			["**"] = false,
 			blizzard = {
-				PLAYER_LOGIN = true, -- enable this by default
+				-- enable these events by default
+				PLAYER_LOGIN = true,
 				PLAYER_LEVEL_UP = true,
+				PLAYER_DEAD = true,
 				LOOT_ITEM_ROLL_WON = true,
 				BOSS_KILL = true,
 			},
@@ -237,61 +240,9 @@ function Shotta:getConfig()
 				inline = true,
 				order = 1,
 				args = {
-					-- Timer-based events
-					every_5_minutes = {
-						name = localizedCheckboxName,
-						type = "toggle",
-						order = 0,
-						set = function(info, val)
-							self.db.profile.events.timer.every_5_minutes = val
-
-							if val then
-								self.screenshotFifthMinuteTimer =
-									self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", minutes(5))
-							else
-								self:CancelTimer(self.screenshotFifthMinuteTimer)
-							end
-						end,
-						get = function(info)
-							return self.db.profile.events.timer.every_5_minutes
-						end,
-					},
-					every_10_minutes = {
-						name = localizedCheckboxName,
-						order = 1,
-						type = "toggle",
-						set = function(info, val)
-							self.db.profile.events.timer.every_10_minutes = val
-
-							if val then
-								self.screenshotTenMinuteTimer =
-									self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", minutes(10))
-							else
-								self:CancelTimer(self.screenshotTenMinuteTimer)
-							end
-						end,
-						get = function(info)
-							return self.db.profile.events.timer.every_10_minutes
-						end,
-					},
-					every_30_minutes = {
-						name = localizedCheckboxName,
-						type = "toggle",
-						order = 2,
-						set = function(info, val)
-							self.db.profile.events.timer.every_30_minutes = val
-
-							if val then
-								self.screenshotThirtyMinuteTimer =
-									self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", minutes(30))
-							else
-								self:CancelTimer(self.screenshotThirtyMinuteTimer)
-							end
-						end,
-						get = function(info)
-							return self.db.profile.events.timer.every_30_minutes
-						end,
-					},
+					every_5_minutes = self:setupTimerEvent(5, 0),
+					every_10_minutes = self:setupTimerEvent(10, 1),
+					every_30_minutes = self:setupTimerEvent(30, 2),
 				},
 			},
 		},
@@ -408,8 +359,43 @@ local aboutOptions = {
 	},
 }
 
+---comment
+---@param minutes integer how many minutes to repeat the timer for
+---@param order integer order in the Ace3 options table to have, see docs https://legacy.curseforge.com/wow/addons/ace3/pages/ace-config-3-0-options-tables
+---@return table
+function Shotta:setupTimerEvent(minutes, order)
+	return {
+		name = localizedCheckboxName,
+		type = "toggle",
+		order = order,
+		set = function(info, val)
+			self.db.profile.events.timer[minutes] = val
+
+			self:conditionallyEnableTimer(val, minutes)
+		end,
+		get = function(info)
+			return self.db.profile.events.timer[minutes]
+		end,
+	}
+end
+
+function Shotta:conditionallyEnableTimer(val, minutes)
+	if val then
+		--@alpha@
+		Shotta:Print(format("Enabling %s minute timer", minutes))
+		--@end-alpha@
+		self.timerEvents[minutes] = self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", toMinutes(minutes))
+	else
+		--@alpha@
+		Shotta:Print(format("Cancelling %s minute timer", minutes))
+		--@end-alpha@
+		self:CancelTimer(self.timerEvents[minutes])
+	end
+end
+
 function Shotta:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("ShottaDBv2", defaults)
+	self.timerEvents = {}
 
 	LibStub("LibDBIcon-1.0"):Register("Shotta", iconOptions, self.db.profile.minimap)
 
@@ -433,19 +419,16 @@ function Shotta:OnEnable()
 	-- Register Events, Hook functions, Create Frames, Get information from
 	-- the game that wasn't available in OnInitialize
 	--
-	-- TODO: FIX ME
 	for event, enabled in pairs(self.db.profile.events.blizzard) do
-		-- if enabled then
-		-- 	local info = { event }
-		-- 	self:getConfig().args[event].set(info, true)
-		-- end
+		if enabled then
+			self:conditionallyRegisterBlizzardEvent(true, event)
+		end
 	end
 
-	for event, enabled in pairs(self.db.profile.events.timer) do
-		-- if enabled then
-		-- 	local info = { event }
-		-- 	self:getConfig().args[event].set(info, true)
-		-- end
+	for min, enabled in pairs(self.db.profile.events.timer) do
+		if enabled then
+			self:conditionallyEnableTimer(true, min)
+		end
 	end
 end
 
@@ -463,117 +446,3 @@ function Shotta:OnDisable()
 
 	self:CancelAllTimers()
 end
-
----@type { [triggerId]: Trigger }
-local hiddenTriggers = {
-	timePlayed = {
-		eventName = "TIME_PLAYED_MSG",
-		register = registerEvent,
-		unregister = unregisterEvent,
-		---Executed when the event is triggered
-		---@param _ Trigger
-		---@param screenshotFrame ShottaFrame contains state for the application
-		triggerFunc = function(_, screenshotFrame)
-			ns.Debug("TIME_PLAYED_MSG triggered")
-
-			if screenshotFrame.waitingForTimePlayed then
-				screenshotFrame.waitingForTimePlayed = false
-
-				TakeScreenshot()
-			end
-		end,
-	},
-}
-
----@class Event
----@field enabled boolean|nil Whether the user has enabled this event
-
----@class ShottaFrame contains state of addon, created from Blizzard's CreateFrame() function
----@field SetScript fun(self: ShottaFrame, callbackName: string, callback: fun(self: ShottaFrame, event: string, ...))
----@field blizzardTrigger {[string]: Trigger}
----@field waitingForTimePlayed boolean
-local screenshotFrame = CreateFrame("Frame")
-screenshotFrame:SetScript("OnEvent", function(self, event, ...)
-	screenshotFrame.blizzardTrigger[event]:triggerFunc(self, ...)
-end)
-
----@param ts Trigger[]
----@return {[string]: Trigger}
-local function makeBlizzardTriggerMap(ts)
-	local blizzardTriggerMap = {}
-
-	for id, details in pairs(ts) do
-		if details.eventName then
-			blizzardTriggerMap[details.eventName] = details
-			blizzardTriggerMap[details.eventName].id = id
-		end
-	end
-
-	return blizzardTriggerMap
-end
-
----Conditionally register or unregister event based on enabled
----@param trigger string
----@param enabled boolean
-function screenshotFrame:registerUnregisterEvent(trigger, enabled)
-	local event = triggers[trigger]
-
-	if enabled then
-		event:register(self)
-	else
-		event:unregister(self)
-	end
-end
-
--- local function AddonLoadedEventHandler(self, event, addOnName)
--- 	if addOnName ~= Shotta.ADDON_NAME then
--- 		return
--- 	end
--- 	if event ~= "ADDON_LOADED" then
--- 		ns.PrintToChat(format("Got unsupported event %s, should be ADDON_LOADED", event))
--- 		return
--- 	end
---
--- 	---@type ShottaDatabase
--- 	Shotta.db = ns.FetchOrCreateDatabase(DB_DEFAULTS)
---
--- 	ns.InitializeOptions(self, triggers, screenshotFrame, icon)
---
--- 	icon:Register(Shotta.ADDON_NAME, shottaLDB, Shotta.db.profile.minimap)
---
--- 	--- Persist DB as SavedVariable since we've been using it as a local
--- 	ShottaDB = Shotta.db
---
--- 	screenshotFrame.blizzardTrigger = makeBlizzardTriggerMap(triggers)
---
--- 	for trigger, _ in pairs(triggers) do
--- 		local enabled = false
---
--- 		if Shotta.db.screenshottableEvents[trigger] then
--- 			---@type boolean enabled should always be there after this if check
--- 			enabled = Shotta.db.screenshottableEvents[trigger].enabled
--- 		end
---
--- 		screenshotFrame:registerUnregisterEvent(trigger, enabled)
--- 	end
---
--- 	for _, trigger in pairs(hiddenTriggers) do
--- 		screenshotFrame.blizzardTrigger["TIME_PLAYED_MSG"] = hiddenTriggers.timePlayed
--- 		trigger:register(screenshotFrame)
--- 	end
---
--- 	self:UnregisterEvent(event)
---
--- 	ns.PrintToChat(Shotta.VERSION .. " loaded. Use /shotta or /sh to open the options menu.")
--- end
---
--- local EventFrame = CreateFrame("Frame")
--- EventFrame:RegisterEvent("ADDON_LOADED")
--- EventFrame:SetScript("OnEvent", AddonLoadedEventHandler)
---
---SLASH_SHOTTA1, SLASH_SHOTTA2 = "/shotta", "/sh"
-----
---SlashCmdList["SHOTTA"] = function()
---	-- Call this twice to ensure the correct category is selected
---	Settings.OpenToCategory(Shotta.ADDON_NAME)
---end
