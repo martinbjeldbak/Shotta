@@ -4,9 +4,25 @@ local Shotta = LibStub("AceAddon-3.0"):NewAddon("Shotta", "AceConsole-3.0", "Ace
 Shotta:RegisterChatCommand("shotta", "OpenToCategory")
 Shotta:RegisterChatCommand("sh", "OpenToCategory")
 
+---@type string
 Shotta.ADDON_NAME = "Shotta"
+---@type string
 Shotta.VERSION = "@project-version@"
+--@alpha@
+Shotta.VERSION = "main" -- hardcode for debuggability
+--@end-alpha@
 
+---@type string
+Shotta.DISCORD_LINK = "https://discord.gg/MHqGRpZxbB"
+Shotta.GITHUB_LINK = "https://github.com/martinbjeldbak/shotta"
+
+---@type string
+Shotta.UPDATED_TIMESTAMP = "@project-timestamp@"
+--@alpha@
+Shotta.UPDATED_TIMESTAMP = "1725716326" -- hardcode for debuggability
+--@end-alpha@
+
+---@type boolean
 Shotta.TRANSLATE_FAIL_SILENTLY = true
 --@alpha@
 Shotta.TRANSLATE_FAIL_SILENTLY = false
@@ -116,7 +132,6 @@ function Shotta:blizzardEventAceOption()
 		end,
 	}
 end
-
 
 function Shotta:PLAYER_STARTED_MOVING()
 	Shotta:Print("Got overridden event, taking screenshot")
@@ -319,8 +334,79 @@ function Shotta:DefaultBlizzardHandler(eventName)
 	TakeScreenshot()
 end
 
--- function Shotta:PLAYER_LEVEL_UP()
--- end
+---Computes number of days the input day is from today
+---@param sourceDate string|number The iso timestamp of requested day
+---@return integer number of days since sourceDate
+local function daysAgo(sourceDate)
+	local currentTime = time()
+	local sourceDatetime = tonumber(sourceDate)
+	local diffSeconds = currentTime - sourceDatetime
+	return math.floor(diffSeconds / (24 * 60 * 60))
+end
+
+local function folderName()
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		return "retail"
+	elseif WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+		return "classic"
+	elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+		return "classic_era"
+	end
+
+	return "unknown"
+end
+
+local aboutOptions = {
+	type = "group",
+	name = L["about"],
+	args = {
+		version = {
+			name = format("Version: %s", Shotta.VERSION),
+			order = 0,
+			type = "description",
+		},
+		date = {
+			name = format(
+				"Date: %s (%s days ago)",
+				date("%x", Shotta.UPDATED_TIMESTAMP),
+				daysAgo(Shotta.UPDATED_TIMESTAMP)
+			),
+			order = 1,
+			type = "description",
+		},
+		screenshotLocation = {
+			name = format(L["saveLocationHelpText"], folderName(), folderName()),
+			order = 5,
+			fontSize = "large",
+			type = "description",
+		},
+		discord = {
+			name = format("%s (%s)", L["joinDiscord"], L["pressCtrlC"]),
+			type = "input",
+			order = 6,
+			width = "double",
+			get = function(info)
+				return Shotta.DISCORD_LINK
+			end,
+		},
+		code = {
+			name = format("%s (%s)", L["gitHubLink"], L["pressCtrlC"]),
+			type = "input",
+			order = 7,
+			width = "double",
+			get = function(info)
+				return Shotta.GITHUB_LINK
+			end,
+		},
+
+		love = {
+			name = "For Nandar. Made with love in Melbourne, Australia",
+			order = 80,
+			fontSize = "small",
+			type = "description",
+		},
+	},
+}
 
 function Shotta:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("ShottaDBv2", defaults)
@@ -331,11 +417,13 @@ function Shotta:OnInitialize()
 
 	local acreg = LibStub("AceConfigRegistry-3.0")
 	acreg:RegisterOptionsTable("Shotta", self:getConfig())
+	acreg:RegisterOptionsTable("Shotta about", aboutOptions)
 	acreg:RegisterOptionsTable("Shotta profiles", profileOptions)
 
 	local acdia = LibStub("AceConfigDialog-3.0")
 	acdia:AddToBlizOptions("Shotta", "Shotta")
 	acdia:AddToBlizOptions("Shotta profiles", "Profiles", "Shotta")
+	acdia:AddToBlizOptions("Shotta about", "About", "Shotta")
 
 	Shotta:Print(self.VERSION .. " loaded!")
 end
@@ -345,6 +433,7 @@ function Shotta:OnEnable()
 	-- Register Events, Hook functions, Create Frames, Get information from
 	-- the game that wasn't available in OnInitialize
 	--
+	-- TODO: FIX ME
 	for event, enabled in pairs(self.db.profile.events.blizzard) do
 		-- if enabled then
 		-- 	local info = { event }

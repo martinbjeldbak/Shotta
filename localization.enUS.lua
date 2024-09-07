@@ -28,8 +28,6 @@ T["checkboxText.ACHIEVEMENT_EARNED"] = "Upon earning an achievement"
 T["checkboxText.general_options"] = "General Options"
 T["checkboxText.blizzard_events"] = "Blizzard Events"
 T["checkboxText.timer_events"] = "Timer Events"
-T["events"] = "Events"
-T["settings"] = "Settings"
 T["about"] = "About"
 T["saveLocationHelpText"] = [[
 Screenshots are saved to the default location for your operating system
@@ -42,3 +40,4 @@ T["minimap.ctrlClick"] = "Control-click to take a screenshot"
 T["minimap.shiftClick"] = "Shift-click to open settings"
 T["pressCtrlC"] = "Press Ctrl+C to copy the URL to your clipboard"
 T["joinDiscord"] = "Join our Discord!"
+T["gitHubLink"] = "GitHub link"
