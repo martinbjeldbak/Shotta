@@ -1,6 +1,5 @@
--- local _, ns = ...
-
-local Shotta = LibStub("AceAddon-3.0"):NewAddon("Shotta", "AceEvent-3.0", "AceConsole-3.0")
+---@class Shotta
+local Shotta = LibStub("AceAddon-3.0"):NewAddon("Shotta", "AceConsole-3.0", "AceEvent-3.0")
 
 Shotta:RegisterChatCommand("shotta", "OpenToCategory")
 Shotta:RegisterChatCommand("sh", "OpenToCategory")
@@ -19,6 +18,8 @@ function Shotta:OpenToCategory()
 	Settings.OpenToCategory(self.ADDON_NAME)
 end
 
+---Makes client take a screenshot. Simply wraps the WoW global method.
+---@param text? string Optional text to log
 local function TakeScreenshot(text)
 	if text ~= nil then
 		Shotta:Print(text)
@@ -27,7 +28,7 @@ local function TakeScreenshot(text)
 	Screenshot()
 end
 
-local function TakeUILessScreenshot(text)
+function TakeUILessScreenshot(text)
 	UIParent:Hide()
 
 	TakeScreenshot(text)
@@ -37,42 +38,50 @@ local function TakeUILessScreenshot(text)
 	end)
 end
 
-local shottaLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Shotta", {
-	type = "data source",
-	text = "Shotta",
-	icon = 237290,
-	OnClick = function()
-		if IsShiftKeyDown() then
-			HideUIPanel(SettingsPanel)
-			Settings.OpenToCategory("Shotta")
-		elseif IsControlKeyDown() then
-			TakeScreenshot()
-		else
-			TakeUILessScreenshot()
-		end
-	end,
-	OnTooltipShow = function(tooltip)
-		if not tooltip or not tooltip.AddLine then
-			return
-		end
+function Shotta:getLDB()
+	return LibStub("LibDataBroker-1.1"):NewDataObject("Shotta", {
+		type = "data source",
+		text = "Shotta",
+		icon = 237290,
+		OnClick = function()
+			if IsShiftKeyDown() then
+				HideUIPanel(SettingsPanel)
+				Settings.OpenToCategory("Shotta")
+			elseif IsControlKeyDown() then
+				TakeScreenshot()
+			else
+				TakeUILessScreenshot()
+			end
+		end,
+		OnTooltipShow = function(tooltip)
+			if not tooltip or not tooltip.AddLine then
+				return
+			end
 
-		tooltip:AddLine("Shotta")
-		tooltip:AddLine(" ")
-		tooltip:AddLine(L["minimap.click"])
-		tooltip:AddLine(L["minimap.ctrlClick"])
-		tooltip:AddLine(" ")
-		tooltip:AddLine(L["minimap.shiftClick"])
-	end,
-})
+			tooltip:AddLine("Shotta")
+			tooltip:AddLine(" ")
+			tooltip:AddLine(L["minimap.click"])
+			tooltip:AddLine(L["minimap.ctrlClick"])
+			tooltip:AddLine(" ")
+			tooltip:AddLine(L["minimap.shiftClick"])
+		end,
+	})
+end
 
 local defaults = {
 	profile = {
 		minimap = {
 			hide = false,
 		},
-		screenshottableEvents = {
+		blizzardEvents = {
 			["**"] = false,
 			PLAYER_LOGIN = true, -- enable this by default
+			PLAYER_LEVEL_UP = true,
+			LOOT_ITEM_ROLL_WON = true,
+			BOSS_KILL = true,
+		},
+		timedEvents = {
+			["**"] = false,
 		},
 	},
 }
@@ -83,7 +92,7 @@ local defaults = {
 
 ---Hello world
 ---@return AceOptions table for AceOptions to display a Blizzard-triggered event
-local function setupBlizzardEventv2()
+function Shotta:blizzardEventAceOption()
 	return {
 		name = function(info)
 			return L["checkboxText." .. info[1]]
@@ -92,125 +101,148 @@ local function setupBlizzardEventv2()
 		type = "toggle",
 		set = function(info, val)
 			local triggerName = info[1]
-			Shotta.db.profile.screenshottableEvents[triggerName] = val
-			Shotta:conditionallyRegisterEvent(val, triggerName)
+			self.db.profile.blizzardEvents[triggerName] = val
+			self:conditionallyRegisterBlizzardEvent(val, triggerName)
 		end,
 		get = function(info)
 			local triggerName = info[1]
-			return Shotta.db.profile.screenshottableEvents[triggerName]
+			return self.db.profile.blizzardEvents[triggerName]
 		end,
 	}
 end
 
-triggerFunctions = {
-	PLAYER_STARTED_MOVING = function()
-		Shotta:Print("Got overridden event, taking screenshot")
-	end,
-	PLAYER_LOGIN = function()
-		--@alpha@
-		Shotta:Print("Got event player login: taking screenshot")
-		--@end-alpha@
-		C_Timer.After(5, function()
-			TakeScreenshot()
-		end)
-	end,
-}
+function Shotta:PLAYER_STARTED_MOVING()
+	self:Print("Got overridden event, taking screenshot")
+end
 
-options = {
-	type = "group",
-	args = {
-		enable = {
-			name = "Enable",
-			desc = "Enables / disables the addon",
-			type = "toggle",
-			set = function(info, val)
-				Shotta.enabled = val
-			end,
-			get = function(info)
-				return Shotta.enabled
-			end,
+function Shotta:PLAYER_LOGIN()
+	--@alpha@
+	DevTool:AddData(Shotta, "My local var")
+	Shotta:Print("Got event player login: taking screenshot")
+	--@end-alpha@
+	C_Timer.After(5, function()
+		TakeScreenshot()
+	end)
+end
+function Shotta:TRADE_ACCEPT_UPDATE(playerAccepted)
+	-- TODO: TEST ME
+	if playerAccepted == 1 then
+		TakeScreenshot()
+	end
+end
+
+function Shotta:PLAYER_LEVEL_UP()
+	-- 	-- TODO: implement these modifiers
+	-- 	-- if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat then
+	-- 	-- 	if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat.enabled then
+	-- 	-- 		ChatFrame1Tab:Click()
+	-- 	-- 	end
+	-- 	-- end
+
+	-- 	-- if Shotta.db.screenshottableEvents.levelUp.modifiers.showPlayed.enabled then
+	-- 	-- 	screenshotFrame.waitingForTimePlayed = true
+	-- 	-- 	RequestTimePlayed() -- trigger "TIME_PLAYED_MSG" event
+	-- 	-- 	return
+	-- 	-- end
+
+	C_Timer.After(0.5, function()
+		TakeScreenshot()
+	end)
+end
+
+function Shotta:options()
+	return {
+		type = "group",
+		args = {
+			-- enable = {
+			-- 	name = "Enable",
+			-- 	desc = "Enables / disables the addon",
+			-- 	type = "toggle",
+			-- 	set = function(info, val)
+			-- 		Shotta.enabled = val
+			-- 	end,
+			-- 	get = function(info)
+			-- 		return Shotta.enabled
+			-- 	end,
+			-- },
+			PLAYER_LOGIN = self:blizzardEventAceOption(),
+			CHAT_MSG_CHANNEL = self:blizzardEventAceOption(),
+			PLAYER_LEVEL_UP = self:blizzardEventAceOption(),
+			MAIL_SHOW = self:blizzardEventAceOption(),
+			READY_CHECK = self:blizzardEventAceOption(),
+			ZONE_CHANGED = self:blizzardEventAceOption(),
+			ZONE_CHANGED_NEW_AREA = self:blizzardEventAceOption(),
+			HEARTHSTONE_BOUND = self:blizzardEventAceOption(),
+			--@debug@
+			PLAYER_STARTED_MOVING = self:blizzardEventAceOption(),
+			--@end-debug@
+			AUCTION_HOUSE_SHOW = self:blizzardEventAceOption(),
+			GROUP_FORMED = self:blizzardEventAceOption(),
+			TRADE_ACCEPT_UPDATE = self:blizzardEventAceOption(),
+			BOSS_KILL = self:blizzardEventAceOption(),
+			ENCOUNTER_END = self:blizzardEventAceOption(),
+			QUEST_TURNED_IN = self:blizzardEventAceOption(),
+			LOOT_ITEM_ROLL_WON = self:blizzardEventAceOption(),
+			every_5_minutes = {
+				name = "Every 5 minutes",
+				-- desc = "Enables / disables the addon",
+				type = "toggle",
+				set = function(info, val)
+					Shotta.db.profile.timedEvents.every_5_minutes = val
+				end,
+				get = function(info)
+					return Shotta.db.profile.timedEvents.every_5_minutes
+				end,
+			},
 		},
-		PLAYER_LOGIN = setupBlizzardEventv2(),
-		CHAT_MSG_CHANNEL = setupBlizzardEventv2(),
-		PLAYER_LEVEL_UP = setupBlizzardEventv2(),
-		MAIL_SHOW = setupBlizzardEventv2(),
-		READY_CHECK = setupBlizzardEventv2(),
-		ZONE_CHANGED = setupBlizzardEventv2(),
-		ZONE_CHANGED_NEW_AREA = setupBlizzardEventv2(),
-		HEARTHSTONE_BOUND = setupBlizzardEventv2(),
-		--@debug@
-		PLAYER_STARTED_MOVING = setupBlizzardEventv2(),
-		--@end-debug@
-		AUCTION_HOUSE_SHOW = setupBlizzardEventv2(),
-	},
-}
+	}
+end
 
----comment
----@param val boolean
+---Either register o unregister a blizzard-based Event
+---@param newValue boolean
 ---@param blizzardEvent string
-function Shotta:conditionallyRegisterEvent(val, blizzardEvent)
-	local handler = triggerFunctions[blizzardEvent]
+function Shotta:conditionallyRegisterBlizzardEvent(newValue, blizzardEvent)
+	local handler = self[blizzardEvent]
+
 	if not handler then
 		handler = "DefaultBlizzardHandler"
 	end
 
-	if val then
-		--@alpha@
-		Shotta:Print("Registering event " .. blizzardEvent)
-		--@end-alpha@
+	if newValue then
 		self:RegisterEvent(blizzardEvent, handler)
 	else
-		--@alpha@
-		Shotta:Print("Unregistering event " .. blizzardEvent)
-		--@end-alpha@
 		self:UnregisterEvent(blizzardEvent)
 	end
 end
 
 function Shotta:DefaultBlizzardHandler(eventName)
 	--@alpha@
-	Shotta:Print("Default handler: got enabled Blizzard event " .. eventName .. ", taking screenshot.")
+	self:Print("Default handler: got enabled Blizzard event " .. eventName .. ", taking screenshot.")
 	--@end-alpha@
 	TakeScreenshot()
 end
 
 -- function Shotta:PLAYER_LEVEL_UP()
--- 	-- TODO: implement these modifiers
--- 	-- if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat then
--- 	-- 	if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat.enabled then
--- 	-- 		ChatFrame1Tab:Click()
--- 	-- 	end
--- 	-- end
-
--- 	-- if Shotta.db.screenshottableEvents.levelUp.modifiers.showPlayed.enabled then
--- 	-- 	screenshotFrame.waitingForTimePlayed = true
--- 	-- 	RequestTimePlayed() -- trigger "TIME_PLAYED_MSG" event
--- 	-- 	return
--- 	-- end
-
--- 	C_Timer.After(0.5, function()
--- 		TakeScreenshot()
--- 	end)
 -- end
 
 function Shotta:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("ShottaDBv2", defaults)
 
-	LibStub("LibDBIcon-1.0"):Register("Shotta", shottaLDB, self.db.profile.minimap)
+	LibStub("LibDBIcon-1.0"):Register("Shotta", self:getLDB(), self.db.profile.minimap)
 
 	local profileOptions = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 
 	local acreg = LibStub("AceConfigRegistry-3.0")
-	acreg:RegisterOptionsTable("Shotta config", options)
+	acreg:RegisterOptionsTable("Shotta config", self:options())
 	acreg:RegisterOptionsTable("Shotta profiles", profileOptions)
 
 	local acdia = LibStub("AceConfigDialog-3.0")
 	acdia:AddToBlizOptions("Shotta config", "Shotta")
 	acdia:AddToBlizOptions("Shotta profiles", "Profiles", "Shotta")
 
-	for event, enabled in pairs(self.db.profile.screenshottableEvents) do
+	for event, enabled in pairs(self.db.profile.blizzardEvents) do
 		if enabled then
-			Shotta:conditionallyRegisterEvent(true, event)
+			self:conditionallyRegisterBlizzardEvent(true, event)
 		end
 	end
 
