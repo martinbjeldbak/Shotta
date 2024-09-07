@@ -101,7 +101,6 @@ function Shotta:blizzardEventAceOption()
 		name = function(info)
 			return L["checkboxText." .. info[1]]
 		end,
-		-- desc = "" -- TODO: implement descriptions
 		type = "toggle",
 		set = function(info, val)
 			local triggerName = info[1]
@@ -124,6 +123,11 @@ function Shotta:PLAYER_LOGIN()
 	Shotta:Print("Got event player login: taking screenshot")
 	--@end-alpha@
 	C_Timer.After(5, function()
+		TakeScreenshot()
+	end)
+end
+function Shotta:CHAT_MSG_TEXT_EMOTE()
+	C_Timer.After(0.5, function()
 		TakeScreenshot()
 	end)
 end
@@ -154,7 +158,7 @@ function Shotta:PLAYER_LEVEL_UP()
 end
 
 function Shotta:getConfig()
-	return {
+	local config = {
 		type = "group",
 		args = {
 			PLAYER_LOGIN = self:blizzardEventAceOption(),
@@ -176,6 +180,7 @@ function Shotta:getConfig()
 			QUEST_TURNED_IN = self:blizzardEventAceOption(),
 			LOOT_ITEM_ROLL_WON = self:blizzardEventAceOption(),
 			PLAYER_DEAD = self:blizzardEventAceOption(),
+			CHAT_MSG_TEXT_EMOTE = self:blizzardEventAceOption(),
 			-- Timer-based events
 			every_5_minutes = {
 				name = function(info)
@@ -236,6 +241,12 @@ function Shotta:getConfig()
 			},
 		},
 	}
+
+	if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC) then
+		config.args.ACHIEVEMENT_EARNED = self:blizzardEventAceOption()
+	end
+
+	return config
 end
 
 function Shotta:RepeatingScreenshotTimer()
@@ -295,19 +306,16 @@ function Shotta:OnEnable()
 	-- the game that wasn't available in OnInitialize
 	--
 	for event, enabled in pairs(self.db.profile.events.blizzard) do
-		-- if enabled then
-		-- 	self:conditionallyRegisterBlizzardEvent(true, event)
-		-- end
 		if enabled then
 			local info = { event }
 			self:getConfig().args[event].set(info, true)
 		end
 	end
 
-	for timedEvent, enabled in pairs(self.db.profile.events.timer) do
+	for event, enabled in pairs(self.db.profile.events.timer) do
 		if enabled then
-			local info = { timedEvent }
-			self:getConfig().args[timedEvent].set(info, true)
+			local info = { event }
+			self:getConfig().args[event].set(info, true)
 		end
 	end
 end
@@ -325,129 +333,6 @@ function Shotta:OnDisable()
 	end
 
 	self:CancelAllTimers()
-end
-
----@class Trigger
----@field eventName string|nil Name of Blizzard event, or nil if custom event
----@field register (fun(self, frame): nil)
----@field unregister (fun(self, frame): nil)
----@field triggerFunc (fun(self: Trigger, shottaFrame: ShottaFrame, ...): nil)|nil Function to execute if not to take a screenshot straight away
----@field id? string sometimes added when top level triggerId not available, see blizzardTriggerMap
-
----Creates a Trigger table given an in-game triggered event
----@param eventName string of the Blizzard event, one of https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_list)
----@return Trigger Trigger table implmementing required functions for event
-local function setupBlizzardEvent(eventName)
-	return {
-		eventName = eventName,
-		register = registerEvent,
-		unregister = unregisterEvent,
-		triggerFunc = function(self)
-			ns.Debug(format('Got event "%s", taking screenshot!', ns.T[format("checkboxText.%s", self.id)]:lower()))
-			TakeScreenshot()
-		end,
-	}
-end
-
----@type { [triggerId]: Trigger }
-local triggers = {
-	login = {
-		eventName = "PLAYER_LOGIN",
-		register = registerEvent,
-		unregister = unregisterEvent,
-		triggerFunc = function()
-			C_Timer.After(5, function()
-				TakeScreenshot()
-			end)
-		end,
-	},
-	channelChat = setupBlizzardEvent("CHAT_MSG_CHANNEL"),
-	levelUp = {
-		eventName = "PLAYER_LEVEL_UP",
-		register = registerEvent,
-		unregister = unregisterEvent,
-		triggerFunc = function(_, screenshotFrame)
-			if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat then
-				if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat.enabled then
-					ChatFrame1Tab:Click()
-				end
-			end
-
-			if Shotta.db.screenshottableEvents.levelUp.modifiers.showPlayed.enabled then
-				screenshotFrame.waitingForTimePlayed = true
-				RequestTimePlayed() -- trigger "TIME_PLAYED_MSG" event
-				return
-			end
-
-			C_Timer.After(0.5, function()
-				TakeScreenshot()
-			end)
-		end,
-		modifiers = { "showPlayed", "showMainChat" },
-	},
-	mailboxOpened = setupBlizzardEvent("MAIL_SHOW"),
-	readyCheck = setupBlizzardEvent("READY_CHECK"),
-	zoneChanged = setupBlizzardEvent("ZONE_CHANGED"),
-	zoneChangedNewArea = setupBlizzardEvent("ZONE_CHANGED_NEW_AREA"),
-	hearthstoneBound = setupBlizzardEvent("HEARTHSTONE_BOUND"),
-	--@debug@
-	movementStart = {
-		eventName = "PLAYER_STARTED_MOVING",
-		register = registerEvent,
-		unregister = unregisterEvent,
-		triggerFunc = function(self, screenshotFrame)
-			screenshotFrame.waitingForTimePlayed = true
-			ns.PrintToChat(
-				format('Got event "%s", should be taking screenshot!', ns.T[format("checkboxText.%s", self.id)]:lower())
-			)
-			-- Comment back to really take a screenshot
-			-- TakeScreenshot()
-		end,
-	},
-	--@end-debug@
-	auctionWindowShow = setupBlizzardEvent("AUCTION_HOUSE_SHOW"),
-	groupFormed = setupBlizzardEvent("GROUP_FORMED"),
-	tradeAccepted = {
-		eventName = "TRADE_ACCEPT_UPDATE",
-		register = registerEvent,
-		unregister = unregisterEvent,
-		triggerFunc = function(playerAccepted)
-			if playerAccepted == 1 then
-				TakeScreenshot()
-			end
-		end,
-	},
-	bossKill = setupBlizzardEvent("BOSS_KILL"),
-	encounterEnd = setupBlizzardEvent("ENCOUNTER_END"),
-	questFinished = setupBlizzardEvent("QUEST_TURNED_IN"),
-	lootItemRollWin = setupBlizzardEvent("LOOT_ITEM_ROLL_WON"),
-	-- every5Minutes = setupTimedTrigger(5),
-	-- every10Minutes = setupTimedTrigger(10),
-	-- every30Minutes = setupTimedTrigger(30),
-	onDeath = setupBlizzardEvent("PLAYER_DEAD"),
-	chatAllEmotesWithToken = {
-		eventName = "CHAT_MSG_TEXT_EMOTE",
-		register = registerEvent,
-		unregister = unregisterEvent,
-		triggerFunc = function()
-			C_Timer.After(0.5, function()
-				TakeScreenshot()
-			end)
-		end,
-	},
-}
-
-if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC) then
-	triggers["achievementEarned"] = {
-		eventName = "ACHIEVEMENT_EARNED",
-		register = registerEvent,
-		unregister = unregisterEvent,
-		triggerFunc = function()
-			C_Timer.After(0.5, function()
-				TakeScreenshot()
-			end)
-		end,
-	}
 end
 
 ---@type { [triggerId]: Trigger }
