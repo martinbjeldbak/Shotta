@@ -10,6 +10,9 @@ externals:
   Libs/AceDB-3.0
     url: https://repos.curseforge.com/wow/ace3/trunk/AceDB-3.0
     type: svn
+  Libs/AceDBOptions-3.0
+    url: https://repos.curseforge.com/wow/ace3/trunk/AceDBOptions-3.0
+    type: svn
   Libs/AceConfig-3.0
     url: https://repos.curseforge.com/wow/ace3/trunk/AceConfig-3.0
     type: svn
