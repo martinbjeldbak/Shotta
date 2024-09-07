@@ -1,9 +1,9 @@
-## Interface: 11502
+## Interface: 11503, 40400, 110002
 ## Title: DevTool
 ## Notes: A multipurpose tool to assist with addon development
 ## IconTexture: Interface\Icons\inv_misc_gear_08
 ## Author: Britt W. Yazel
-## Version: 1.0.15
+## Version: @project-version@
 ## DefaultState: enabled
 ## SavedVariables: DevToolDatabase
 ## SavedVariablesPerCharacter:
