@@ -27,6 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_LUA: false
           VALIDATE_JSCPD: false # can't find out how to ignore Libs/
+          FILTER_REGEX_EXCLUDE: .*Libs/.* # we are not in control of Libs/ files
 
   luacheck:
     runs-on: ubuntu-latest
