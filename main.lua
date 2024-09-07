@@ -38,35 +38,33 @@ function TakeUILessScreenshot(text)
 	end)
 end
 
-function Shotta:getLDB()
-	return LibStub("LibDataBroker-1.1"):NewDataObject("Shotta", {
-		type = "data source",
-		text = "Shotta",
-		icon = 237290,
-		OnClick = function()
-			if IsShiftKeyDown() then
-				HideUIPanel(SettingsPanel)
-				Settings.OpenToCategory("Shotta")
-			elseif IsControlKeyDown() then
-				TakeScreenshot()
-			else
-				TakeUILessScreenshot()
-			end
-		end,
-		OnTooltipShow = function(tooltip)
-			if not tooltip or not tooltip.AddLine then
-				return
-			end
+local iconOptions = LibStub("LibDataBroker-1.1"):NewDataObject("Shotta", {
+	type = "data source",
+	text = "Shotta",
+	icon = 237290,
+	OnClick = function()
+		if IsShiftKeyDown() then
+			HideUIPanel(SettingsPanel)
+			Settings.OpenToCategory("Shotta")
+		elseif IsControlKeyDown() then
+			TakeScreenshot()
+		else
+			TakeUILessScreenshot()
+		end
+	end,
+	OnTooltipShow = function(tooltip)
+		if not tooltip or not tooltip.AddLine then
+			return
+		end
 
-			tooltip:AddLine("Shotta")
-			tooltip:AddLine(" ")
-			tooltip:AddLine(L["minimap.click"])
-			tooltip:AddLine(L["minimap.ctrlClick"])
-			tooltip:AddLine(" ")
-			tooltip:AddLine(L["minimap.shiftClick"])
-		end,
-	})
-end
+		tooltip:AddLine("Shotta")
+		tooltip:AddLine(" ")
+		tooltip:AddLine(L["minimap.click"])
+		tooltip:AddLine(L["minimap.ctrlClick"])
+		tooltip:AddLine(" ")
+		tooltip:AddLine(L["minimap.shiftClick"])
+	end,
+})
 
 local defaults = {
 	profile = {
@@ -90,7 +88,6 @@ local defaults = {
 ---@field name string|function The name of the option
 ---@field type integer
 
----Hello world
 ---@return AceOptions table for AceOptions to display a Blizzard-triggered event
 function Shotta:blizzardEventAceOption()
 	return {
@@ -112,7 +109,7 @@ function Shotta:blizzardEventAceOption()
 end
 
 function Shotta:PLAYER_STARTED_MOVING()
-	self:Print("Got overridden event, taking screenshot")
+	Shotta:Print("Got overridden event, taking screenshot")
 end
 
 function Shotta:PLAYER_LOGIN()
@@ -217,7 +214,7 @@ end
 
 function Shotta:DefaultBlizzardHandler(eventName)
 	--@alpha@
-	self:Print("Default handler: got enabled Blizzard event " .. eventName .. ", taking screenshot.")
+	Shotta:Print("Default handler: got enabled Blizzard event " .. eventName .. ", taking screenshot.")
 	--@end-alpha@
 	TakeScreenshot()
 end
@@ -228,7 +225,7 @@ end
 function Shotta:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("ShottaDBv2", defaults)
 
-	LibStub("LibDBIcon-1.0"):Register("Shotta", self:getLDB(), self.db.profile.minimap)
+	LibStub("LibDBIcon-1.0"):Register("Shotta", iconOptions, self.db.profile.minimap)
 
 	local profileOptions = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 
@@ -246,7 +243,7 @@ function Shotta:OnInitialize()
 		end
 	end
 
-	self:Print(self.VERSION .. " loaded!")
+	Shotta:Print(self.VERSION .. " loaded!")
 end
 
 function Shotta:OnEnable()
