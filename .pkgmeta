@@ -2,23 +2,40 @@ enable-toc-creation: yes
 ignore:
   - README.md
 externals:
-  Libs/CallbackHandler-1.0:
-    url: https://repos.curseforge.com/wow/callbackhandler/trunk
-    type: svn
-  Libs/LibDataBroker-1.1:
-    url: https://repos.curseforge.com/wow/libdatabroker-1-1
-    type: git
   Libs/LibStub:
     url: https://repos.curseforge.com/wow/libstub/trunk
     type: svn
-  Libs/LibDBIcon-1.0:
-    url: https://repos.curseforge.com/wow/libdbicon-1-0/trunk
+  Libs/CallbackHandler-1.0:
+    url: https://repos.curseforge.com/wow/callbackhandler/trunk
+  Libs/AceDB-3.0
+    url: https://repos.curseforge.com/wow/ace3/trunk/AceDB-3.0
     type: svn
   Libs/AceConfig-3.0
     url: https://repos.curseforge.com/wow/ace3/trunk/AceConfig-3.0
     type: svn
+  Libs/AceEvent-3.0
+    url: https://repos.curseforge.com/wow/ace3/trunk/AceEvent-3.0
+    type: svn
+  Libs/AceTimer-3.0
+    url: https://repos.curseforge.com/wow/ace3/trunk/AceTimer-3.0
+    type: svn
+  Libs/AceLocale-3.0
+    url: https://repos.curseforge.com/wow/ace3/trunk/AceLocale-3.0
+    type: svn
+  Libs/AceAddon-3.0
+    url: https://repos.curseforge.com/wow/ace3/trunk/AceAddon-3.0
+    type: svn
+  Libs/AceConsole-3.0
+    url: https://repos.curseforge.com/wow/ace3/trunk/AceConsole-3.0
+    type: svn
+  Libs/LibDataBroker-1.1:
+    url: https://repos.curseforge.com/wow/libdatabroker-1-1
+    type: git
+  Libs/LibDBIcon-1.0:
+    url: https://repos.curseforge.com/wow/libdbicon-1-0/trunk
+    type: svn
 
 tools-used:
-  - devtooll
+  - devtool
   - bugsack
   - bug-grabber

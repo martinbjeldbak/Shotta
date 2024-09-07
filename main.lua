@@ -15,6 +15,7 @@ Shotta.VERSION = "main" -- hardcode for debuggability
 
 ---@type string
 Shotta.DISCORD_LINK = "https://discord.gg/MHqGRpZxbB"
+---@type string
 Shotta.GITHUB_LINK = "https://github.com/martinbjeldbak/shotta"
 
 ---@type string
