@@ -39,7 +39,7 @@ On Windows (assuming WoW is installed to C drive):
 - `C:\Program Files (x86)\World of Warcraft\_retail_\Screenshots`
 - `C:\Program Files (x86)\World of Warcraft\_classic_era_\Screenshots`
 
-On MacOS:
+On macOS:
 
 - `\World of Warcraft\_retail_\Screenshots`
 - `\World of Warcraft\_classic_era_\Screenshots`
