@@ -12,16 +12,7 @@
 ## X-Wago-ID: 96E7gaGg
 
 
-#@do-not-package@
-# Libs\DevTool\DevTool.lua
-#@end-do-not-package@
-
-Libs\LibStub\LibStub.lua
-Libs\CallbackHandler-1.0\CallbackHandler-1.0\CallbackHandler-1.0.xml
-Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
-Libs\LibDBIcon-1.0\LibDBIcon-1.0\LibDBIcon-1.0.lua
-Libs\AceAddon-3.0\AceAddon-3.0.lua
-Libs\AceConfig-3.0\AceConfig-3.0.lua
+Libs\embeds.xml
 
 localization.enUS.lua
 localization.zhTW.lua
