@@ -36,3 +36,5 @@ read_globals = {
 exclude_files = {
 	"Libs",
 }
+
+files["types.lua"] = { ignore = { "631" } }

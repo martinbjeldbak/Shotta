@@ -1,31 +1,37 @@
 ---@type Shotta
 local Shotta = LibStub("AceAddon-3.0"):NewAddon("Shotta", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 
+-- luacheck: push ignore VERSION
 local VERSION = "@project-version@"
 --@alpha@
 VERSION = "main" -- hardcode for debuggability
 --@end-alpha@
+-- luacheck: pop
 
 ---@type string
 local DISCORD_LINK = "https://discord.gg/MHqGRpZxbB"
 ---@type string
 local GITHUB_LINK = "https://github.com/martinbjeldbak/shotta"
 
+-- luacheck: push ignore UPDATED_TIMESTAMP
 ---@type string
 local UPDATED_TIMESTAMP = "@project-timestamp@"
 --@alpha@
 UPDATED_TIMESTAMP = "1725716326" -- hardcode for debuggability
 --@end-alpha@
+-- luacheck: pop
 
+-- luacheck: push ignore TRANSLATE_FAIL_SILENTLY
 ---@type boolean
 local TRANSLATE_FAIL_SILENTLY = true
 --@alpha@
 TRANSLATE_FAIL_SILENTLY = false
 --@end-alpha@
+-- luacheck: pop
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Shotta", TRANSLATE_FAIL_SILENTLY)
 
-function Shotta:OpenToCategory()
+function Shotta.OpenToCategory()
 	Settings.OpenToCategory("Shotta")
 end
 
