@@ -116,12 +116,8 @@ local defaults = {
 	},
 }
 
----@class AceOptions
----@field name string|function The name of the option
----@field type integer
-
----@return AceOptions table for AceOptions to display a Blizzard-triggered event
-function Shotta:blizzardEventAceOption()
+function Shotta:BlizzardEventOption()
+	---@type AceOptionsTable
 	return {
 		name = localizedCheckboxName,
 		type = "toggle",
@@ -187,7 +183,7 @@ function Shotta:PLAYER_LEVEL_UP()
 	self:ScheduleTimer("TimedScreenshot", 0.5)
 end
 
-function Shotta:getConfig()
+function Shotta:LoadOptions()
 	local config = {
 		type = "group",
 		args = {
@@ -220,26 +216,26 @@ function Shotta:getConfig()
 				order = 2,
 				inline = true,
 				args = {
-					PLAYER_LOGIN = self:blizzardEventAceOption(),
-					CHAT_MSG_CHANNEL = self:blizzardEventAceOption(),
-					PLAYER_LEVEL_UP = self:blizzardEventAceOption(),
-					MAIL_SHOW = self:blizzardEventAceOption(),
-					READY_CHECK = self:blizzardEventAceOption(),
-					ZONE_CHANGED = self:blizzardEventAceOption(),
-					ZONE_CHANGED_NEW_AREA = self:blizzardEventAceOption(),
-					HEARTHSTONE_BOUND = self:blizzardEventAceOption(),
+					PLAYER_LOGIN = self:BlizzardEventOption(),
+					CHAT_MSG_CHANNEL = self:BlizzardEventOption(),
+					PLAYER_LEVEL_UP = self:BlizzardEventOption(),
+					MAIL_SHOW = self:BlizzardEventOption(),
+					READY_CHECK = self:BlizzardEventOption(),
+					ZONE_CHANGED = self:BlizzardEventOption(),
+					ZONE_CHANGED_NEW_AREA = self:BlizzardEventOption(),
+					HEARTHSTONE_BOUND = self:BlizzardEventOption(),
 					--@debug@
-					PLAYER_STARTED_MOVING = self:blizzardEventAceOption(),
+					PLAYER_STARTED_MOVING = self:BlizzardEventOption(),
 					--@end-debug@
-					AUCTION_HOUSE_SHOW = self:blizzardEventAceOption(),
-					GROUP_FORMED = self:blizzardEventAceOption(),
-					TRADE_ACCEPT_UPDATE = self:blizzardEventAceOption(),
-					BOSS_KILL = self:blizzardEventAceOption(),
-					ENCOUNTER_END = self:blizzardEventAceOption(),
-					QUEST_TURNED_IN = self:blizzardEventAceOption(),
-					LOOT_ITEM_ROLL_WON = self:blizzardEventAceOption(),
-					PLAYER_DEAD = self:blizzardEventAceOption(),
-					CHAT_MSG_TEXT_EMOTE = self:blizzardEventAceOption(),
+					AUCTION_HOUSE_SHOW = self:BlizzardEventOption(),
+					GROUP_FORMED = self:BlizzardEventOption(),
+					TRADE_ACCEPT_UPDATE = self:BlizzardEventOption(),
+					BOSS_KILL = self:BlizzardEventOption(),
+					ENCOUNTER_END = self:BlizzardEventOption(),
+					QUEST_TURNED_IN = self:BlizzardEventOption(),
+					LOOT_ITEM_ROLL_WON = self:BlizzardEventOption(),
+					PLAYER_DEAD = self:BlizzardEventOption(),
+					CHAT_MSG_TEXT_EMOTE = self:BlizzardEventOption(),
 				},
 			},
 			timer_events = {
@@ -248,30 +244,21 @@ function Shotta:getConfig()
 				inline = true,
 				order = 1,
 				args = {
-					every_5_minutes = self:setupTimerEvent(5, 0),
-					every_10_minutes = self:setupTimerEvent(10, 1),
-					every_30_minutes = self:setupTimerEvent(30, 2),
+					every_5_minutes = self:TimerEventOption(5, 0),
+					every_10_minutes = self:TimerEventOption(10, 1),
+					every_30_minutes = self:TimerEventOption(30, 2),
 				},
 			},
 		},
 	}
 
 	if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC) then
-		config.args.blizzard_events.args.ACHIEVEMENT_EARNED = self:blizzardEventAceOption()
+		config.args.blizzard_events.args.ACHIEVEMENT_EARNED = self:BlizzardEventOption()
 	end
 
 	return config
 end
 
-function Shotta.RepeatingScreenshotTimer()
-	Shotta:Print("Timed trigger fired, taking screenshot!")
-
-	TakeScreenshot()
-end
-
----Either register o unregister a blizzard-based Event
----@param newValue boolean
----@param blizzardEvent string
 function Shotta:conditionallyRegisterBlizzardEvent(newValue, blizzardEvent)
 	local handler = self[blizzardEvent]
 
@@ -286,9 +273,9 @@ function Shotta:conditionallyRegisterBlizzardEvent(newValue, blizzardEvent)
 	end
 end
 
-function Shotta.DefaultBlizzardHandler(eventName)
+function Shotta:DefaultBlizzardHandler(eventName)
 	--@alpha@
-	Shotta:Print("Default handler: got enabled Blizzard event " .. eventName .. ", taking screenshot.")
+	self:Print("Default handler: got enabled Blizzard event " .. eventName .. ", taking screenshot.")
 	--@end-alpha@
 	TakeScreenshot()
 end
@@ -325,11 +312,7 @@ local aboutOptions = {
 			type = "description",
 		},
 		date = {
-			name = format(
-				"Date: %s (%s days ago)",
-				date("%x", UPDATED_TIMESTAMP),
-				daysAgo(UPDATED_TIMESTAMP)
-			),
+			name = format("Date: %s (%s days ago)", date("%x", UPDATED_TIMESTAMP), daysAgo(UPDATED_TIMESTAMP)),
 			order = 1,
 			type = "description",
 		},
@@ -367,9 +350,7 @@ local aboutOptions = {
 	},
 }
 
----@param minutes integer how many minutes to repeat the timer for
----@param order integer order in the Ace3 options table to have, see docs
-function Shotta:setupTimerEvent(minutes, order)
+function Shotta:TimerEventOption(minutes, order)
 	return {
 		name = localizedCheckboxName,
 		type = "toggle",
@@ -388,12 +369,12 @@ end
 function Shotta:conditionallyEnableTimer(val, minutes)
 	if val then
 		--@alpha@
-		Shotta:Print(format("Enabling %s minute timer", minutes))
+		self:Print(format("Enabling %s minute timer", minutes))
 		--@end-alpha@
-		self.timerEvents[minutes] = self:ScheduleRepeatingTimer("RepeatingScreenshotTimer", toMinutes(minutes))
+		self.timerEvents[minutes] = self:ScheduleRepeatingTimer("TimedScreenshot", toMinutes(minutes))
 	else
 		--@alpha@
-		Shotta:Print(format("Cancelling %s minute timer", minutes))
+		self:Print(format("Cancelling %s minute timer", minutes))
 		--@end-alpha@
 		self:CancelTimer(self.timerEvents[minutes])
 	end
@@ -408,7 +389,7 @@ function Shotta:OnInitialize()
 	local profileOptions = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 
 	local acreg = LibStub("AceConfigRegistry-3.0")
-	acreg:RegisterOptionsTable("Shotta", self:getConfig())
+	acreg:RegisterOptionsTable("Shotta", self:LoadOptions())
 	acreg:RegisterOptionsTable("Shotta about", aboutOptions)
 	acreg:RegisterOptionsTable("Shotta profiles", profileOptions)
 
