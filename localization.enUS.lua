@@ -32,9 +32,10 @@ T["about"] = "About"
 T["saveLocationHelpText"] = [[
 Screenshots are saved to the default location for your operating system
 
-
 Windows:  C:\Program Files (x86)\World of Warcraft\_%s_\Screenshots
-MacOS:     \World of Warcraft\_%s_\Screenshots]]
+MacOS:     \World of Warcraft\_%s_\Screenshots
+
+]]
 T["minimap.click"] = "Click to take a UI-less screenshot"
 T["minimap.ctrlClick"] = "Control-click to take a screenshot"
 T["minimap.shiftClick"] = "Shift-click to open settings"
