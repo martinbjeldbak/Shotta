@@ -36,6 +36,9 @@ function Shotta:OpenToCategory()
 	Settings.OpenToCategory(self.ADDON_NAME)
 end
 
+---Uses AcLocale to translate an option
+---@param info table
+---@return string
 local function localizedCheckboxName(info)
 	return L["checkboxText." .. info[#info]]
 end
@@ -96,12 +99,16 @@ local iconOptions = LibStub("LibDataBroker-1.1"):NewDataObject("Shotta", {
 })
 
 local defaults = {
+	---@type table<string, table>
 	profile = {
+		---@type table<string, boolean>
 		minimap = {
 			hide = false,
 		},
+		---@type table<string, table|boolean>
 		events = {
 			["**"] = false,
+			---@type table<string, boolean>
 			blizzard = {
 				-- enable these events by default
 				PLAYER_LOGIN = true,
@@ -110,6 +117,7 @@ local defaults = {
 				LOOT_ITEM_ROLL_WON = true,
 				BOSS_KILL = true,
 			},
+			---@type table<number, boolean>
 			timer = {},
 		},
 	},
@@ -141,18 +149,26 @@ function Shotta.PLAYER_STARTED_MOVING()
 	Shotta:Print("Got overridden event, taking screenshot")
 end
 
-function Shotta.PLAYER_LOGIN()
+function Shotta:PLAYER_LOGIN()
 	--@alpha@
 	Shotta:Print("Got event player login: taking screenshot")
 	--@end-alpha@
-	C_Timer.After(5, function()
-		TakeScreenshot()
-	end)
+	self:ScheduleTimer("TimedScreenshot", 5)
 end
-function Shotta.CHAT_MSG_TEXT_EMOTE()
-	C_Timer.After(0.5, function()
-		TakeScreenshot()
-	end)
+
+function Shotta:TimedScreenshot()
+	--@alpha@
+	self:Print("Got timed event, taking screenshot")
+	--@end-alpha@
+	TakeScreenshot()
+end
+
+function Shotta:ACHIEVEMENT_EARNED()
+	self:ScheduleTimer("TimedScreenshot", 0.5)
+end
+
+function Shotta:CHAT_MSG_TEXT_EMOTE()
+	self:ScheduleTimer("TimedScreenshot", 0.5)
 end
 function Shotta.TRADE_ACCEPT_UPDATE(playerAccepted)
 	-- TODO: TEST ME
@@ -161,7 +177,7 @@ function Shotta.TRADE_ACCEPT_UPDATE(playerAccepted)
 	end
 end
 
-function Shotta.PLAYER_LEVEL_UP()
+function Shotta:PLAYER_LEVEL_UP()
 	-- 	-- TODO: implement these modifiers
 	-- 	-- if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat then
 	-- 	-- 	if Shotta.db.screenshottableEvents.levelUp.modifiers.showMainChat.enabled then
@@ -175,9 +191,7 @@ function Shotta.PLAYER_LEVEL_UP()
 	-- 	-- 	return
 	-- 	-- end
 
-	C_Timer.After(0.5, function()
-		TakeScreenshot()
-	end)
+	self:ScheduleTimer("TimedScreenshot", 0.5)
 end
 
 function Shotta:getConfig()
