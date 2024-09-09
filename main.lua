@@ -1,39 +1,32 @@
----@class Shotta
----@field timerEvents { [number]: any }
+---@type Shotta
 local Shotta = LibStub("AceAddon-3.0"):NewAddon("Shotta", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 
-Shotta:RegisterChatCommand("shotta", "OpenToCategory")
-Shotta:RegisterChatCommand("sh", "OpenToCategory")
-
----@type string
-Shotta.ADDON_NAME = "Shotta"
----@type string
-Shotta.VERSION = "@project-version@"
+local VERSION = "@project-version@"
 --@alpha@
-Shotta.VERSION = "main" -- hardcode for debuggability
+VERSION = "main" -- hardcode for debuggability
 --@end-alpha@
 
 ---@type string
-Shotta.DISCORD_LINK = "https://discord.gg/MHqGRpZxbB"
+local DISCORD_LINK = "https://discord.gg/MHqGRpZxbB"
 ---@type string
-Shotta.GITHUB_LINK = "https://github.com/martinbjeldbak/shotta"
+local GITHUB_LINK = "https://github.com/martinbjeldbak/shotta"
 
 ---@type string
-Shotta.UPDATED_TIMESTAMP = "@project-timestamp@"
+local UPDATED_TIMESTAMP = "@project-timestamp@"
 --@alpha@
-Shotta.UPDATED_TIMESTAMP = "1725716326" -- hardcode for debuggability
+UPDATED_TIMESTAMP = "1725716326" -- hardcode for debuggability
 --@end-alpha@
 
 ---@type boolean
-Shotta.TRANSLATE_FAIL_SILENTLY = true
+local TRANSLATE_FAIL_SILENTLY = true
 --@alpha@
-Shotta.TRANSLATE_FAIL_SILENTLY = false
+TRANSLATE_FAIL_SILENTLY = false
 --@end-alpha@
 
-local L = LibStub("AceLocale-3.0"):GetLocale("Shotta", Shotta.TRANSLATE_FAIL_SILENTLY)
+local L = LibStub("AceLocale-3.0"):GetLocale("Shotta", TRANSLATE_FAIL_SILENTLY)
 
 function Shotta:OpenToCategory()
-	Settings.OpenToCategory(self.ADDON_NAME)
+	Settings.OpenToCategory("Shotta")
 end
 
 ---Uses AcLocale to translate an option
@@ -327,15 +320,15 @@ local aboutOptions = {
 	name = L["about"],
 	args = {
 		version = {
-			name = format("Version: %s", Shotta.VERSION),
+			name = format("Version: %s", VERSION),
 			order = 0,
 			type = "description",
 		},
 		date = {
 			name = format(
 				"Date: %s (%s days ago)",
-				date("%x", Shotta.UPDATED_TIMESTAMP),
-				daysAgo(Shotta.UPDATED_TIMESTAMP)
+				date("%x", UPDATED_TIMESTAMP),
+				daysAgo(UPDATED_TIMESTAMP)
 			),
 			order = 1,
 			type = "description",
@@ -352,7 +345,7 @@ local aboutOptions = {
 			order = 6,
 			width = "double",
 			get = function(_)
-				return Shotta.DISCORD_LINK
+				return DISCORD_LINK
 			end,
 		},
 		code = {
@@ -361,7 +354,7 @@ local aboutOptions = {
 			order = 7,
 			width = "double",
 			get = function(_)
-				return Shotta.GITHUB_LINK
+				return GITHUB_LINK
 			end,
 		},
 
@@ -374,10 +367,8 @@ local aboutOptions = {
 	},
 }
 
----comment
 ---@param minutes integer how many minutes to repeat the timer for
 ---@param order integer order in the Ace3 options table to have, see docs
----@return table
 function Shotta:setupTimerEvent(minutes, order)
 	return {
 		name = localizedCheckboxName,
@@ -426,7 +417,7 @@ function Shotta:OnInitialize()
 	acdia:AddToBlizOptions("Shotta profiles", "Profiles", "Shotta")
 	acdia:AddToBlizOptions("Shotta about", "About", "Shotta")
 
-	Shotta:Print(self.VERSION .. " loaded!")
+	Shotta:Print(VERSION .. " loaded!")
 end
 
 function Shotta:OnEnable()
@@ -461,3 +452,6 @@ function Shotta:OnDisable()
 
 	self:CancelAllTimers()
 end
+
+Shotta:RegisterChatCommand("shotta", "OpenToCategory")
+Shotta:RegisterChatCommand("sh", "OpenToCategory")
