@@ -53,6 +53,13 @@ local function TakeScreenshot(text)
 	Screenshot()
 end
 
+function Shotta:TimedScreenshot()
+	--@alpha@
+	self:Print("Got timed event, taking screenshot")
+	--@end-alpha@
+	TakeScreenshot()
+end
+
 local function TakeUILessScreenshot(text)
 	UIParent:Hide()
 
@@ -134,22 +141,15 @@ function Shotta:BlizzardEventOption()
 	}
 end
 
-function Shotta.PLAYER_STARTED_MOVING()
-	Shotta:Print("Got overridden event, taking screenshot")
+function Shotta:PLAYER_STARTED_MOVING()
+	self:Print("Got overridden event, taking screenshot")
 end
 
 function Shotta:PLAYER_LOGIN()
 	--@alpha@
-	Shotta:Print("Got event player login: taking screenshot")
+	self:Print("Got event player login: taking screenshot")
 	--@end-alpha@
 	self:ScheduleTimer("TimedScreenshot", 5)
-end
-
-function Shotta:TimedScreenshot()
-	--@alpha@
-	self:Print("Got timed event, taking screenshot")
-	--@end-alpha@
-	TakeScreenshot()
 end
 
 function Shotta:ACHIEVEMENT_EARNED()
@@ -159,6 +159,7 @@ end
 function Shotta:CHAT_MSG_TEXT_EMOTE()
 	self:ScheduleTimer("TimedScreenshot", 0.5)
 end
+
 function Shotta.TRADE_ACCEPT_UPDATE(playerAccepted)
 	-- TODO: TEST ME
 	if playerAccepted == 1 then
@@ -267,7 +268,7 @@ function Shotta:conditionallyRegisterBlizzardEvent(newValue, blizzardEvent)
 	end
 
 	if newValue then
-		self:RegisterEvent(blizzardEvent, handler)
+		self:RegisterEvent(blizzardEvent, handler, self)
 	else
 		self:UnregisterEvent(blizzardEvent)
 	end
@@ -398,7 +399,7 @@ function Shotta:OnInitialize()
 	acdia:AddToBlizOptions("Shotta profiles", "Profiles", "Shotta")
 	acdia:AddToBlizOptions("Shotta about", "About", "Shotta")
 
-	Shotta:Print(VERSION .. " loaded!")
+	self:Print(VERSION .. " loaded!")
 end
 
 function Shotta:OnEnable()

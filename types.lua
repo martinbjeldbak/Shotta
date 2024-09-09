@@ -48,7 +48,7 @@
 ---@field OnInitialize function
 ---@field OnEnable function
 ---@field OnDisable function
----@field RegisterEvent fun(self: Shotta, event: string, handler: string)
+---@field RegisterEvent fun(self: Shotta, event: string, handler: string, args?: any)
 ---@field UnregisterEvent fun(self: Shotta, event: string)
 ---@field RegisterChatCommand fun(self: Shotta, command: string, callback: ChatCommandCallbacks)
 ---@field Print function Prints to the chat
