@@ -52,7 +52,7 @@
 ---@field UnregisterEvent fun(self: Shotta, event: string)
 ---@field RegisterChatCommand fun(self: Shotta, command: string, callback: ChatCommandCallbacks)
 ---@field Print function Prints to the chat
----@field PLAYER_STARTED_MOVING fun()
+---@field PLAYER_STARTED_MOVING fun(self: Shotta)
 ---@field PLAYER_LOGIN fun(self: Shotta)
 ---@field ACHIEVEMENT_EARNED function
 ---@field CHAT_MSG_TEXT_EMOTE function
