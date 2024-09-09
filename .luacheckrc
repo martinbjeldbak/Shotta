@@ -1,12 +1,3 @@
-globals = {
-	"Shotta",
-	"ShottaDB",
-	"SLASH_SHOTTA1",
-	"SLASH_SHOTTA2",
-	"SlashCmdList",
-	"StaticPopupDialogs",
-}
-
 max_line_length = 150
 
 read_globals = {
@@ -37,8 +28,13 @@ read_globals = {
 	"ChatTypeInfo",
 	"DEFAULT_CHAT_FRAME",
 	"DevTool",
+	"Settings",
+	"time",
+	"date",
 }
 
 exclude_files = {
 	"Libs",
 }
+
+files["types.lua"] = { ignore = { "631" } }

@@ -21,6 +21,8 @@
         "WOW_PROJECT_WRATH_CLASSIC",
         "GetLocale",
         "RequestTimePlayed",
-        "ChatFrame1Tab"
+        "ChatFrame1Tab",
+        "date",
+        "time"
     ]
 }

@@ -1,0 +1,24 @@
+---
+globals:
+  WOW_PROJECT_ID:
+    any: true
+  WOW_PROJECT_MAINLINE:
+    any: true
+  WOW_PROJECT_WRATH_CLASSIC:
+    any: true
+  WOW_PROJECT_CLASSIC:
+    any: true
+  C_Timer:
+    any: true
+  LibStub:
+    any: true
+  UIParent:
+    any: true
+  SettingsPanel:
+    any: true
+  Settings:
+    any: true
+  HideUIPanel:
+    any: true
+  ChatFrame1Tab:
+    any: true
