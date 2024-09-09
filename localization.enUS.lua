@@ -38,6 +38,6 @@ MacOS:     \World of Warcraft\_%s_\Screenshots]]
 T["minimap.click"] = "Click to take a UI-less screenshot"
 T["minimap.ctrlClick"] = "Control-click to take a screenshot"
 T["minimap.shiftClick"] = "Shift-click to open settings"
-T["pressCtrlC"] = "Press Ctrl+C to copy the URL to your clipboard"
+T["pressCtrlC"] = "Highlight and Press Ctrl+C to copy the URL to your clipboard"
 T["joinDiscord"] = "Join our Discord!"
 T["gitHubLink"] = "GitHub link"
