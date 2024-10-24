@@ -1,6 +1,6 @@
 ---
 name: Lint
-on:  # yamllint disable-line rule:truthy
+on: # yamllint disable-line rule:truthy
   push: null
   pull_request: null
 concurrency:
@@ -27,7 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_LUA: false
           VALIDATE_JSCPD: false # can't find out how to ignore Libs/
-          FILTER_REGEX_EXCLUDE: .*Libs/.* # we are not in control of Libs/ files
+          FILTER_REGEX_EXCLUDE: .*Libs/.* # not in control of Libs/ files
 
   luacheck:
     runs-on: ubuntu-latest
