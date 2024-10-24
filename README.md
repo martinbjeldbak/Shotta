@@ -1,4 +1,5 @@
 # Shotta
+
 [![Release](https://github.com/martinbjeldbak/shotta/actions/workflows/release.yml/badge.svg)](https://github.com/martinbjeldbak/shotta/actions/workflows/release.yml)
 [![Lint](https://github.com/martinbjeldbak/shotta/actions/workflows/lint.yml/badge.svg)](https://github.com/martinbjeldbak/shotta/actions/workflows/lint.yml)
 
@@ -156,6 +157,7 @@ Full event list [here](https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_
 ## Resources
 
 - [WoW API](https://github.com/Gethe/wow-ui-source)
+- [Events](https://warcraft.wiki.gg/wiki/Events)
 
 ### Similar addons
 

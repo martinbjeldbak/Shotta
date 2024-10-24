@@ -258,6 +258,9 @@ function Shotta:LoadOptions()
 			},
 		},
 	}
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		config.args.blizzard_events.args.MAJOR_FACTION_RENOWN_LEVEL_CHANGED = self:BlizzardEventOption()
+	end
 
 	if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC) then
 		config.args.blizzard_events.args.ACHIEVEMENT_EARNED = self:BlizzardEventOption()
@@ -274,15 +277,21 @@ function Shotta:conditionallyRegisterBlizzardEvent(newValue, blizzardEvent)
 	end
 
 	if newValue then
+		--@alpha@
+		self:Print(format("Enabling event: %s ", blizzardEvent))
+		--@end-alpha@
 		self:RegisterEvent(blizzardEvent, handler, self)
 	else
+		--@alpha@
+		self:Print(format("Disabling event: %s ", blizzardEvent))
+		--@end-alpha@
 		self:UnregisterEvent(blizzardEvent)
 	end
 end
 
-function Shotta:DefaultBlizzardHandler(eventName)
+function Shotta:DefaultBlizzardHandler(shotta, eventName)
 	--@alpha@
-	self:Print("Default handler: got enabled Blizzard event " .. eventName .. ", taking screenshot.")
+	self:Print(format("Default handler: got enabled Blizzard event %s, taking screenshot.", eventName))
 	--@end-alpha@
 	TakeScreenshot()
 end
