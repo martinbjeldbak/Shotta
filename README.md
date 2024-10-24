@@ -8,9 +8,6 @@ Azeroth so you can cherish them forever.
 
 ![Shotta overview](.previews/overview.jpg)
 
-> [!IMPORTANT]
-> This has only been tested in WoW Classic, but it should work in all client versions
-
 ## Shotta Discord
 
 Head over to our [Shotta Discord server](https://discord.gg/MHqGRpZxbB)!
