@@ -147,7 +147,7 @@ not sure if any of these are possible
 - [ ] PvP: Battleground endings
 - [ ] PvE: Mythic+ dungion runs
 
-Full event list [here](https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_list))
+Full event list [here](<https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_list)>)
 
 ### Consider events
 

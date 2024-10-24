@@ -289,7 +289,7 @@ function Shotta:conditionallyRegisterBlizzardEvent(newValue, blizzardEvent)
 	end
 end
 
-function Shotta:DefaultBlizzardHandler(shotta, eventName)
+function Shotta:DefaultBlizzardHandler(eventName)
 	--@alpha@
 	self:Print(format("Default handler: got enabled Blizzard event %s, taking screenshot.", eventName))
 	--@end-alpha@
