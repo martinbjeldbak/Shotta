@@ -291,7 +291,7 @@ end
 
 function Shotta:DefaultBlizzardHandler(eventName)
 	--@alpha@
-	self:Print(format("Default handler: got enabled Blizzard event %s, taking screenshot.", eventName))
+	self:Print("Default handler: got enabled Blizzard event, taking screenshot.")
 	--@end-alpha@
 	TakeScreenshot()
 end
