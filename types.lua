@@ -21,7 +21,6 @@
 ---@alias TimerCallbacks "TimedScreenshot"
 ---@alias ChatCommandCallbacks "OpenToCategory"
 
-
 ---@class AceOptionsTable
 ---@field name string|function
 ---@field type string
