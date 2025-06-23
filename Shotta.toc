@@ -1,4 +1,4 @@
-## Interface: 110105, 40402, 11507
+## Interface: 110107, 40402, 30404, 20504, 11507
 ## Title: Shotta
 ## Notes: Take screenshots on events throughout adventures in Azeroth and beyond
 ## Author: martinbjeldbak <https://martinbjeldbak.com>, thomasbjeldbak <https://thomasbjeldbak.com/>
