@@ -1,26 +1,32 @@
 {
   "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
   "runtime.version": "Lua 5.1",
-  "workspace.library": ["../wow-ui-source/Interface/"],
+  "runtime.builtin": {
+    "debug": "disable",
+    "io": "disable",
+    "os": "disable",
+    "package": "disable"
+  },
+  "workspace.checkThirdParty": false,
+  "workspace.ignoreDir": [".git", "Libs"],
   "diagnostics.globals": [
-    "Shotta",
-    "Screenshot",
-    "format",
-    "CreateFrame",
     "C_Timer",
-    "InterfaceOptionsFrame_Show",
-    "HideUIPanel",
-    "SettingsPanel",
-    "InterfaceOptionsFrame_OpenToCategory",
-    "IsShiftKeyDown",
     "IsControlKeyDown",
-    "UIParent",
+    "IsShiftKeyDown",
     "LibStub",
-    "WOW_PROJECT_WRATH_CLASSIC",
-    "GetLocale",
-    "RequestTimePlayed",
-    "ChatFrame1Tab",
+    "Screenshot",
+    "Settings",
+    "Shotta",
+    "UIParent",
+    "WOW_PROJECT_BURNING_CRUSADE_CLASSIC",
+    "WOW_PROJECT_CLASSIC",
+    "WOW_PROJECT_ID",
+    "WOW_PROJECT_MAINLINE",
+    "WOW_PROJECT_MISTS_CLASSIC",
     "date",
+    "format",
     "time"
-  ]
+  ],
+  "diagnostics.unusedLocalExclude": ["_*"],
+  "format.enable": true
 }
