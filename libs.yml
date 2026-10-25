@@ -10,6 +10,8 @@ globals:
     any: true
   WOW_PROJECT_BURNING_CRUSADE_CLASSIC:
     any: true
+  WOW_PROJECT_CAMELOT:
+    any: true
   WOW_PROJECT_CLASSIC:
     any: true
   WOW_PROJECT_ID:

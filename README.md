@@ -29,8 +29,8 @@ Shotta will automatically take screenshots
 
 All libraries are embedded, so there is nothing else to install. I'm always adding new events as I come up with them and would love your feedback for what you'd like to see.
 
-Shotta supports Retail, Mists of Pandaria Classic, Classic Era, and Burning
-Crusade Classic Anniversary.
+Shotta supports Retail, Forever, Mists of Pandaria Classic, Classic Era, and
+Burning Crusade Classic Anniversary.
 
 Screenshots are saved to the `Screenshots` folder inside the game installation
 for the client you are playing:
@@ -38,6 +38,7 @@ for the client you are playing:
 | Client | Folder |
 | --- | --- |
 | Retail | `_retail_/Screenshots` |
+| Forever | `_camelot_/Screenshots` |
 | Mists of Pandaria Classic | `_classic_/Screenshots` |
 | Classic Era | `_classic_era_/Screenshots` |
 | Burning Crusade Classic Anniversary | `_anniversary_/Screenshots` |

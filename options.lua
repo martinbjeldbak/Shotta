@@ -366,7 +366,7 @@ local function folderName()
   if IS_MAINLINE then
     return 'retail'
   elseif IS_FOREVER then
-    return 'forever'
+    return 'camelot'
   elseif IS_MISTS then
     return 'classic'
   elseif IS_TBC then
@@ -423,7 +423,7 @@ local aboutOptions = {
     },
 
     love = {
-      name = 'For Nandar. Made with love in Melbourne, Australia',
+      name = 'For Nandar. Made with love in Sydney, Australia',
       order = 80,
       fontSize = 'small',
       type = 'description',

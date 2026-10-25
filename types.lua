@@ -21,7 +21,8 @@
 ---@field IS_MISTS boolean Mists of Pandaria Classic
 ---@field IS_CLASSIC_ERA boolean Classic Era
 ---@field IS_TBC boolean Burning Crusade Classic Anniversary
----@field HAS_ACHIEVEMENTS boolean Only retail and MoP Classic have achievements
+---@field HAS_ACHIEVEMENTS boolean Only retail, Forever and MoP Classic have achievements
+---@field DEBUG_BUILD boolean Debug build, set by the packager's @debug@ filter
 ---@field Shotta Shotta The addon instance, created in main.lua
 
 ---@class ShottaFirstKillOptions
