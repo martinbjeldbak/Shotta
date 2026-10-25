@@ -23,9 +23,18 @@
 ---@field HAS_ACHIEVEMENTS boolean Only retail and MoP Classic have achievements
 ---@field Shotta Shotta The addon instance, created in main.lua
 
+---@class ShottaFirstKillOptions
+---@field only boolean Only screenshot the first kill of each boss
+
+---Bosses killed while "first kill only" was enabled, keyed by instance and encounter, valued by kill timestamp
+---@alias ShottaBossKills table<string, number>
+
 ---@class ShottaProfile
 ---@field minimap ShottaMinimap
 ---@field events ShottaEvents
+---@field firstKill ShottaFirstKillOptions
+---@field bossKills ShottaBossKills
+---@field bossKillsOwner? string The character that owns bossKills, so the list resets for other characters
 
 ---@class ShottaDb
 ---@field profile ShottaProfile
@@ -64,6 +73,9 @@
 ---@field TimerEventOption fun(self: Shotta, minutes: minutes, order: integer): AceOptionsTable
 ---@field conditionallyRegisterBlizzardEvent fun(self: Shotta, enabled: boolean, blizzardEvent: string)
 ---@field DefaultBlizzardHandler fun(self: Shotta)
+---@field RecordBossKill fun(self: Shotta, encounterID: integer?, encounterName: string?, instanceName: string?) Marks a boss as killed in the active profile
+---@field ResetBossKills fun(self: Shotta) Forgets every boss killed so far in the active profile
+---@field ResetBossKillsIfStale fun(self: Shotta) Clears bossKills when a different character loads the profile
 --- Below fields are provided by the Ace3 framework, see https://legacy.curseforge.com/wow/addons/ace3
 ---@field ScheduleTimer fun(self: Shotta, callback: TimerCallbacks, seconds: number): any
 ---@field ScheduleRepeatingTimer fun(self: Shotta, callback: TimerCallbacks, seconds: number): any
@@ -83,3 +95,4 @@
 ---@field CHAT_MSG_TEXT_EMOTE fun(self: Shotta)
 ---@field TRADE_ACCEPT_UPDATE fun(self: Shotta, event: string, playerAccepted: number)
 ---@field PLAYER_LEVEL_UP fun(self: Shotta)
+---@field BOSS_KILL fun(self: Shotta, isKill: boolean?) Screenshots the kill unless "first kill only" is on and the boss was already killed

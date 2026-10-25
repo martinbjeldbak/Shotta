@@ -10,7 +10,11 @@
   "workspace.checkThirdParty": false,
   "workspace.ignoreDir": [".git", "Libs"],
   "diagnostics.globals": [
+    "C_EncounterJournal",
+    "C_Map",
     "C_Timer",
+    "GetRealmName",
+    "GetRealZoneText",
     "IsControlKeyDown",
     "IsShiftKeyDown",
     "LibStub",
@@ -18,6 +22,8 @@
     "Settings",
     "Shotta",
     "UIParent",
+    "UNKNOWN",
+    "UnitName",
     "WOW_PROJECT_BURNING_CRUSADE_CLASSIC",
     "WOW_PROJECT_CLASSIC",
     "WOW_PROJECT_ID",
@@ -25,6 +31,7 @@
     "WOW_PROJECT_MISTS_CLASSIC",
     "date",
     "format",
+    "select",
     "time"
   ],
   "diagnostics.unusedLocalExclude": ["_*"],

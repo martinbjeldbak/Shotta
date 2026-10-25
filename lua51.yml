@@ -2,6 +2,24 @@
 globals:
   _G:
     property: new-fields
+  C_EncounterJournal:
+    property: new-fields
+  C_Map:
+    property: new-fields
+  GetRealmName:
+    args: []
+    must_use: true
+  GetRealZoneText:
+    args:
+      - required: false
+        type: number
+    must_use: true
+  UNKNOWN:
+    property: read-only
+  UnitName:
+    args:
+      - type: string
+    must_use: true
   _VERSION:
     property: read-only
   arg:

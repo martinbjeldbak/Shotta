@@ -24,12 +24,23 @@ local defaults = {
       },
       timer = {},
     },
+    ---@type ShottaFirstKillOptions
+    firstKill = {
+      -- Never seed killed bosses here: AceDB copies this table into every new profile,
+      -- which would make every boss count as already killed from the start.
+      only = false,
+    },
+    ---@type ShottaBossKills
+    bossKills = {},
+    ---@type string? Which character the bossKills table belongs to
+    bossKillsOwner = nil,
   },
 }
 
 function Shotta:OnInitialize()
   self.db = LibStub('AceDB-3.0'):New('ShottaDBv2', defaults)
   self:ResetTimers()
+  self:ResetBossKillsIfStale()
 
   self:RegisterMinimapIcon()
   self:RegisterOptions()

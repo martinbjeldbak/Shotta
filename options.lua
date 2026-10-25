@@ -112,6 +112,37 @@ function Shotta:LoadOptions()
           GROUP_FORMED = self:BlizzardEventOption(),
           TRADE_ACCEPT_UPDATE = self:BlizzardEventOption(),
           BOSS_KILL = self:BlizzardEventOption(),
+          -- An inline group is how AceConfig nests options under another one
+          firstKill = {
+            name = localizedOptionName,
+            type = 'group',
+            inline = true,
+            order = 10.5,
+            args = {
+              only = {
+                name = localizedOptionName,
+                desc = L['firstKill.onlyDesc'],
+                type = 'toggle',
+                order = 0,
+                set = function(_, val)
+                  self.db.profile.firstKill.only = val
+                end,
+                get = function(_)
+                  return self.db.profile.firstKill.only
+                end,
+              },
+              reset = {
+                name = localizedOptionName,
+                desc = L['firstKill.resetDesc'],
+                type = 'execute',
+                order = 1,
+                confirm = true,
+                func = function()
+                  self:ResetBossKills()
+                end,
+              },
+            },
+          },
           ENCOUNTER_END = self:BlizzardEventOption(),
           QUEST_TURNED_IN = self:BlizzardEventOption(),
           LOOT_ITEM_ROLL_WON = self:BlizzardEventOption(),
