@@ -61,14 +61,18 @@ Shotta is available from:
 
 ### WoWUp
 
-[WoWUp][WoWUp] is a great open-source addon manager. Once installed, open
-`Get Addons`, then search for "Shotta", or choose `Install from URL` and paste
-<https://github.com/martinbjeldbak/shotta> before clicking `Import`:
+[WoWUp][WoWUp] is a great open-source addon manager.
 
-![Screenshot of WoWUp client installing this addon](https://github.com/martinbjeldbak/shotta/assets/823316/25b92bbd-03aa-422d-abe9-10f68a0b1752)
+If you use WoWUp CurseForge edition, Shotta is just a normal search: open
+`Get Addons`, search for "Shotta" and click `Install`.
 
-Click `Install` and you're done — you will be prompted about future updates. See
-the [WoWUp guide][wowup-get-addons] for details.
+![Shotta listed in WoWUp CurseForge edition](./.previews/wowup-curseforge.png)
+
+If you use the standard WoWUp, choose `Install from URL` and paste
+<https://github.com/martinbjeldbak/shotta> before clicking `Import`.
+
+Either way you're done, and you will be prompted about future updates. See the
+[WoWUp guide][wowup-get-addons] for details.
 
 ## Usage
 
