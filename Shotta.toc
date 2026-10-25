@@ -1,4 +1,4 @@
-## Interface: 110200, 50500, 40402, 30404, 20504, 11507
+## Interface: 120105, 50504, 11509, 20506
 ## Title: Shotta
 ## Notes: Take screenshots on events throughout adventures in Azeroth and beyond
 ## Author: martinbjeldbak <https://martinbjeldbak.com>, thomasbjeldbak <https://thomasbjeldbak.com/>
@@ -8,6 +8,7 @@
 ## X-Curse-Project-ID: 972182
 ## X-WoWI-ID: 26687
 ## X-Wago-ID: 96E7gaGg
+## X-Website: https://github.com/martinbjeldbak/shotta
 
 
 embeds.xml

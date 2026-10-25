@@ -1,6 +1,24 @@
 enable-toc-creation: yes
 ignore:
+  - .editorconfig
+  - .github
+  - .gitattributes
+  - .justfile
+  - .luacheckrc
+  - .luarc.json
+  - .mise.toml
+  - .previews
+  - .stylua.toml
+  - .styluaignore
+  - .vscode
+  - Libs/DevTool-1.1.6
   - README.md
+  - lua51.yml
+  - libs.yml
+  - renovate.json
+  - selene.toml
+  - types.lua
+  - wow.toml
 externals:
   Libs/LibStub:
     url: https://repos.curseforge.com/wow/libstub/trunk

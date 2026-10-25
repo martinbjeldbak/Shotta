@@ -27,20 +27,23 @@ Shotta will automatically take screenshots
 - when you down a boss
 - and much more!
 
-It runs with zero dependencies and minimal code. I'm always adding new events as I come up with them and would love your feedback for what you'd like to see.
+All libraries are embedded, so there is nothing else to install. I'm always adding new events as I come up with them and would love your feedback for what you'd like to see.
 
-Screenshots will be saved to the local folders below, depending on operating
-system and version of World of Warcraft you are playing.
+Shotta supports Retail, Mists of Pandaria Classic, Classic Era, and Burning
+Crusade Classic Anniversary.
 
-On Windows (assuming WoW is installed to C drive):
+Screenshots are saved to the `Screenshots` folder inside the game installation
+for the client you are playing:
 
-- `C:\Program Files (x86)\World of Warcraft\_retail_\Screenshots`
-- `C:\Program Files (x86)\World of Warcraft\_classic_era_\Screenshots`
+| Client | Folder |
+| --- | --- |
+| Retail | `_retail_/Screenshots` |
+| Mists of Pandaria Classic | `_classic_/Screenshots` |
+| Classic Era | `_classic_era_/Screenshots` |
+| Burning Crusade Classic Anniversary | `_anniversary_/Screenshots` |
 
-On macOS:
-
-- `\World of Warcraft\_retail_\Screenshots`
-- `\World of Warcraft\_classic_era_\Screenshots`
+On Windows, these are under `C:\Program Files (x86)\World of Warcraft\`; on
+macOS they are under `\World of Warcraft\`.
 
 ## Installing
 
@@ -110,27 +113,69 @@ First of all, thanks for helping contribute! There are many ways you can help co
 > <https://wowpedia.fandom.com/wiki/Symlinking_AddOn_folders>, this will make it
 > so that you only need to reload the UI with `/reload` to see your changes.
 
+### Development
+
+Shotta targets the WoW Lua 5.1 sandbox. The libraries in `Libs/` are vendored
+and refreshed by the packaging tool at release time, so do not edit or format
+them.
+
+Recommended tooling:
+
+- [LuaLS](https://luals.github.io/) with the [WoW API extension](https://marketplace.visualstudio.com/items?itemName=Ketho.wow-api)
+  for API completion and type checking. `.luarc.json` configures Lua 5.1,
+  disables libraries that are unavailable in the game, and ignores `Libs/`.
+- [StyLua](https://github.com/JohnnyMorganz/StyLua) for formatting
+  (`.stylua.toml`; `Libs/` is ignored via `.styluaignore`).
+- [Luacheck](https://github.com/lunarmodules/luacheck) and
+  [Selene](https://github.com/Kampfkarren/selene) for linting.
+
+Tool versions are pinned in `.mise.toml` and managed by
+[mise](https://mise.jdx.dev/). `just` is pinned there too.
+
+```sh
+mise install         # or: just setup
+just lint            # luacheck, selene, StyLua, and justfile formatting
+just check           # lint plus actionlint for the workflows
+just fmt             # format Lua sources with StyLua
+```
+
+The recipes invoke `mise exec` internally, so they use the pinned tools even
+without shell activation. If `just` is not on your `PATH` yet, run
+`mise exec -- just lint`.
+
+The underlying commands are also available directly:
+
+```sh
+mise exec -- luacheck .
+mise exec -- selene .
+mise exec -- stylua --check .
+```
+
+`just doctor` verifies mise and the pinned tools are available. CI installs the
+same `.mise.toml` tools and runs `just check` on every pull request. Renovate
+keeps both the tool pins and GitHub Actions up to date (see `renovate.json`).
+
 ### TODO
 
-- [ ] Ability to hide/show minimap icon
+- [x] Ability to hide/show minimap icon
 - [ ] Ability to take 2 screenshots for every event: 1 with UI, 1 without
 - [ ] Setting to take screenshots with or without UI
-- [ ] More translation strings, see `localization.core.lua`
+- [ ] More translation strings, see `localization.enUS.lua`
 - [ ] UI Button: Reset state to default
-- [ ] Settings are global: make profile or chracter-specific bindings
+- [x] Profiles via AceDB (per-character/profile settings)
 - [x] [Timer](https://wowpedia.fandom.com/wiki/API_C_Timer.After) after ie 10s after readcheck
 - [x] Add slash command to open up options (if possible?)
 - [x] ~~Consider using [AceDB](https://www.wowace.com/projects/ace3)~~ too complicated, extra dependency
 - [ ] Make event success printing an option. Currently always printing to chat
 - [x] Create a better options frame - Could be 2 columns of events in case of too many events
-- [ ] If simpler: Implement the settings UI (+ more) using [Ace3](https://www.curseforge.com/wow/addons/ace3)
+- [x] If simpler: Implement the settings UI (+ more) using [Ace3](https://www.curseforge.com/wow/addons/ace3)
 
 ### Event ideas
 
 not sure if any of these are possible
 
 - [x] Boss/Rare/elite kills
-- [x] Every 5/10 minutes
+- [x] Every 5/10/30 minutes
 - [x] On death
 - [ ] When joining a party (with a friend)
 - [ ] When close to a friend

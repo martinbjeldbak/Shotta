@@ -1,0 +1,7 @@
+# Tool versions used by the justfile and CI. Renovate keeps these up to date.
+[tools]
+"aqua:casey/just" = "1.59.0"
+"aqua:JohnnyMorganz/StyLua" = "2.6.0"
+"aqua:Kampfkarren/selene" = "0.32.0"
+"aqua:rhysd/actionlint" = "1.7.12"
+"ubi:lunarmodules/luacheck" = "1.2.0"
