@@ -17,3 +17,9 @@ localization.enUS.lua
 localization.zhTW.lua
 localization.zhCN.lua
 main.lua
+constants.lua
+screenshot.lua
+events.lua
+minimap.lua
+options.lua
+Shotta.lua

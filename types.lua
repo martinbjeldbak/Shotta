@@ -10,6 +10,19 @@
 ---@class ShottaMinimap
 ---@field hide boolean
 
+---@class ShottaConstants
+---@field VERSION string The addon version, substituted by the packager at release
+---@field UPDATED_TIMESTAMP number Unix timestamp of the last commit, substituted by the packager
+---@field DISCORD_LINK string
+---@field GITHUB_LINK string
+---@field L table<string, string> The AceLocale table for the current client locale
+---@field IS_MAINLINE boolean Retail
+---@field IS_MISTS boolean Mists of Pandaria Classic
+---@field IS_CLASSIC_ERA boolean Classic Era
+---@field IS_TBC boolean Burning Crusade Classic Anniversary
+---@field HAS_ACHIEVEMENTS boolean Only retail and MoP Classic have achievements
+---@field Shotta Shotta The addon instance, created in main.lua
+
 ---@class ShottaProfile
 ---@field minimap ShottaMinimap
 ---@field events ShottaEvents
@@ -43,6 +56,10 @@
 ---@field TimedScreenshot fun(self: Shotta) Triggered when screenshot event fires
 ---@field LoadOptions fun(self: Shotta): AceOptionsTable
 ---@field conditionallyEnableTimer fun(self: Shotta, enabled: boolean, minutes: minutes)
+---@field ResetTimers fun(self: Shotta) Empties the timer bookkeeping table without cancelling timers
+---@field OnEnableTimers fun(self: Shotta) Starts every timer enabled in the profile
+---@field RegisterMinimapIcon fun(self: Shotta)
+---@field RegisterOptions fun(self: Shotta) Registers the options pages and the chat commands
 ---@field BlizzardEventOption fun(self: Shotta): AceOptionsTable
 ---@field TimerEventOption fun(self: Shotta, minutes: minutes, order: integer): AceOptionsTable
 ---@field conditionallyRegisterBlizzardEvent fun(self: Shotta, enabled: boolean, blizzardEvent: string)
