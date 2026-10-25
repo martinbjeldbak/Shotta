@@ -14,33 +14,31 @@ local defaults = {
     ---@type ShottaEvents
     events = {
       ['**'] = false,
-      blizzard = {
-        -- enable these events by default
-        PLAYER_LOGIN = true,
-        PLAYER_LEVEL_UP = true,
-        PLAYER_DEAD = true,
-        LOOT_ITEM_ROLL_WON = true,
-        BOSS_KILL = true,
-      },
+      -- Derive which events are on for new profiles from the single event table in constants.lua
+      blizzard = {},
       timer = {},
     },
     ---@type ShottaFirstKillOptions
     firstKill = {
-      -- Never seed killed bosses here: AceDB copies this table into every new profile,
-      -- which would make every boss count as already killed from the start.
       restrict = false,
     },
+  },
+  ---@type ShottaChar
+  char = {
     ---@type ShottaBossKills
     bossKills = {},
-    ---@type string? Which character the bossKills table belongs to
-    bossKillsOwner = nil,
   },
 }
+
+for event, definition in pairs(ns.EVENTS) do
+  if definition.default then
+    defaults.profile.events.blizzard[event] = true
+  end
+end
 
 function Shotta:OnInitialize()
   self.db = LibStub('AceDB-3.0'):New('ShottaDBv2', defaults)
   self:ResetTimers()
-  self:ResetBossKillsIfStale()
 
   self:RegisterMinimapIcon()
   self:RegisterOptions()

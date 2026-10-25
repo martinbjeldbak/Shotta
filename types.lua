@@ -45,11 +45,14 @@
 ---@field minimap ShottaMinimap
 ---@field events ShottaEvents
 ---@field firstKill ShottaFirstKillOptions
+
+---Per-character data. AceDB keeps this separate for every character, so nothing has to track an owner.
+---@class ShottaChar
 ---@field bossKills ShottaBossKills
----@field bossKillsOwner? string The character that owns bossKills, so the list resets for other characters
 
 ---@class ShottaDb
 ---@field profile ShottaProfile
+---@field char ShottaChar
 
 ---List of implemented functions that support being called by ScheduleTimer method
 ---@alias TimerCallbacks "TimedScreenshot"
@@ -87,10 +90,9 @@
 ---@field TimerEventOption fun(self: Shotta, minutes: minutes, order: integer): AceOptionsTable
 ---@field conditionallyRegisterBlizzardEvent fun(self: Shotta, enabled: boolean, blizzardEvent: string)
 ---@field DefaultBlizzardHandler fun(self: Shotta)
----@field RecordBossKill fun(self: Shotta, encounterID: integer?, encounterName: string?, instanceName: string?) Marks a boss as killed in the active profile
----@field ResetBossKills fun(self: Shotta) Forgets every boss killed so far in the active profile
----@field ResetBossKillsIfStale fun(self: Shotta) Clears bossKills when a different character loads the profile
----@field BossKillCount fun(self: Shotta): integer How many bosses the active profile remembers as killed
+---@field RecordBossKill fun(self: Shotta, encounterID: integer?, encounterName: string?, instanceName: string?) Marks a boss as killed for the current character
+---@field ResetBossKills fun(self: Shotta) Forgets every boss killed so far for the current character
+---@field BossKillCount fun(self: Shotta): integer How many bosses the current character has killed
 ---@field BossKillEntries fun(self: Shotta): ShottaBossKillEntry[] Killed bosses, most recent first
 ---@field ForgetBossKill fun(self: Shotta, key: string): boolean Forgets a single boss so its next kill counts again
 ---@field BossKillStateText fun(self: Shotta): string The killed boss count, phrased for the options page

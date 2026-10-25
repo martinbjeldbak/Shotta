@@ -74,13 +74,14 @@ local function bossKey(encounterID, instanceName)
   return format('%s|%s', instanceName and strtrim(strlower(instanceName)) or UNKNOWN, encounterID)
 end
 
----Reads the killed bosses for the active profile
+---Reads the killed bosses for the active character. These live in the char namespace, so AceDB keeps them
+---separate per character without the addon tracking an owner.
 ---@return table<string, ShottaBossKill>
 local function bossKillTable(self)
-  local bossKills = self.db.profile.bossKills
+  local bossKills = self.db.char.bossKills
   if type(bossKills) ~= 'table' then
     bossKills = {}
-    self.db.profile.bossKills = bossKills
+    self.db.char.bossKills = bossKills
   end
 
   return bossKills
@@ -161,26 +162,13 @@ end
 
 ---Forgets every boss killed so far, so each one counts as a first kill again
 function Shotta:ResetBossKills()
-  self.db.profile.bossKills = {}
+  self.db.char.bossKills = {}
 
   --@alpha@
   self:Print 'Cleared boss kills'
   --@end-alpha@
 
   LibStub('AceConfigRegistry-3.0'):NotifyChange 'Shotta'
-end
-
----Boss kills are per character, but profiles are shared across characters, so start a clean slate
----when a different character loads this profile. Remembering the owner keeps reloads and
----logout/login intact for the same character.
-function Shotta:ResetBossKillsIfStale()
-  local owner = format('%s - %s', UnitName 'player', GetRealmName())
-  if self.db.profile.bossKillsOwner == owner then
-    return
-  end
-
-  self.db.profile.bossKillsOwner = owner
-  self.db.profile.bossKills = {}
 end
 
 ---The map name the player is in, used to group bosses by instance in the options page
@@ -208,8 +196,7 @@ function Shotta:BOSS_KILL(_event, encounterID, encounterName)
 
   if self.db.profile.firstKill.restrict and encounterID then
     local instanceName = currentInstanceName()
-    local bossKills = self.db.profile.bossKills
-    if type(bossKills) == 'table' and bossKills[bossKey(encounterID, instanceName)] then
+    if bossKillTable(self)[bossKey(encounterID, instanceName)] then
       --@alpha@
       self:Print(format('First kill only: %s already killed, not taking a screenshot', tostring(encounterName)))
       --@end-alpha@

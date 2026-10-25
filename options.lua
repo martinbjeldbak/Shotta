@@ -71,18 +71,6 @@ function Shotta:BossKillStateText()
   return format(L['firstKill.state.count'], count)
 end
 
----The boss events, kept adjacent so they read as one feature. Flat rather than boxed: a nested group at the
----bottom of a long flow list gets a leftover height and clips. If more boss settings arrive (per-difficulty
----filtering, the killed-boss list), they get their own page instead of a group inside this one.
----@return table<string, AceOptionsTable>
-function Shotta:BossEventOptions()
-  return {
-    -- The event toggles whether the first kill settings do anything, so it comes first
-    BOSS_KILL = self:BlizzardEventOption(300),
-    ENCOUNTER_END = self:BlizzardEventOption(310),
-  }
-end
-
 ---Whether the "on boss kill" event is enabled, which every setting below depends on
 ---@return boolean
 function Shotta:BossKillEnabled()
@@ -186,52 +174,37 @@ function Shotta:TimerEventOption(minutes, order)
   }
 end
 
+---Whether this event can be offered on the current client and build.
+---@param definition ShottaEventDefinition
+---@return boolean
+local function eventAvailable(definition)
+  if definition.mainlineOnly and not IS_MAINLINE then
+    return false
+  end
+
+  if definition.requiresAchievements and not HAS_ACHIEVEMENTS then
+    return false
+  end
+
+  if definition.debugOnly and not ns.DEBUG_BUILD then
+    return false
+  end
+
+  return true
+end
+
 ---The event toggles, on their own page because the list is long enough to push everything else off the main
----page. The page itself is titled "Events", so it holds the toggles directly rather than wrapping them in a
----redundant nested heading.
+---page. Built from ns.EVENTS so adding an event does not mean editing this function.
+---@param page 'events'|'bosses'
 ---@return AceOptionsTable
-function Shotta:LoadEventOptions()
-  local args = {
-    -- Ordered explicitly: AceConfig sorts by key otherwise, which interleaves unrelated events.
-    -- Gaps of 10 leave room to add events without renumbering everything below them.
-    -- Session
-    PLAYER_LOGIN = self:BlizzardEventOption(0),
-    -- Levelling and exploration
-    PLAYER_LEVEL_UP = self:BlizzardEventOption(10),
-    QUEST_TURNED_IN = self:BlizzardEventOption(20),
-    ZONE_CHANGED_NEW_AREA = self:BlizzardEventOption(30),
-    ZONE_CHANGED = self:BlizzardEventOption(40),
-    HEARTHSTONE_BOUND = self:BlizzardEventOption(50),
-    -- Social and grouping
-    GROUP_FORMED = self:BlizzardEventOption(100),
-    READY_CHECK = self:BlizzardEventOption(110),
-    CHAT_MSG_TEXT_EMOTE = self:BlizzardEventOption(120),
-    CHAT_MSG_CHANNEL = self:BlizzardEventOption(130),
-    TRADE_ACCEPT_UPDATE = self:BlizzardEventOption(140),
-    -- Economy
-    MAIL_SHOW = self:BlizzardEventOption(200),
-    AUCTION_HOUSE_SHOW = self:BlizzardEventOption(210),
-    LOOT_ITEM_ROLL_WON = self:BlizzardEventOption(220),
-    -- Combat
-    PLAYER_DEAD = self:BlizzardEventOption(400),
-  }
+function Shotta:LoadEventOptions(page)
+  local args = {}
 
-  for key, option in pairs(self:BossEventOptions()) do
-    args[key] = option
+  for event, definition in pairs(ns.EVENTS) do
+    if definition.page == page and eventAvailable(definition) then
+      args[event] = self:BlizzardEventOption(definition.order)
+    end
   end
-
-  if HAS_ACHIEVEMENTS then
-    args.ACHIEVEMENT_EARNED = self:BlizzardEventOption(60)
-  end
-
-  -- Renown is a retail system: Forever keeps the Classic-era progression and has none
-  if IS_MAINLINE then
-    args.MAJOR_FACTION_RENOWN_LEVEL_CHANGED = self:BlizzardEventOption(70)
-  end
-
-  --@debug@
-  args.PLAYER_STARTED_MOVING = self:BlizzardEventOption(900)
-  --@end-debug@
 
   return {
     type = 'group',
@@ -250,7 +223,7 @@ function Shotta:FirstKillOptions()
   return {
     state = {
       name = function()
-        return self:BossKillStateText()
+        return format('%s\n%s', self:BossKillStateText(), L['bossKills.perCharacter'])
       end,
       type = 'description',
       fontSize = 'medium',
@@ -297,12 +270,12 @@ end
 
 ---@return AceOptionsTable
 function Shotta:LoadBossOptions()
-  -- Built explicitly rather than by merging tables with pairs(): merge order is unspecified, which made the
-  -- options render in an unexpected order.
-  local args = {
-    BOSS_KILL = self:BlizzardEventOption(300),
-    ENCOUNTER_END = self:BlizzardEventOption(305),
-  }
+  -- The boss event toggles come from the same event table as the Events page, so a new boss-related event
+  -- needs no edit here.
+  local args = {}
+  for event, option in pairs(self:LoadEventOptions('bosses').args) do
+    args[event] = option
+  end
 
   for key, option in pairs(self:FirstKillOptions()) do
     args[key] = option
@@ -464,7 +437,7 @@ function Shotta:RegisterOptions()
 
   local acreg = LibStub 'AceConfigRegistry-3.0'
   acreg:RegisterOptionsTable('Shotta', self:LoadOptions())
-  acreg:RegisterOptionsTable('Shotta events', self:LoadEventOptions())
+  acreg:RegisterOptionsTable('Shotta events', self:LoadEventOptions 'events')
   acreg:RegisterOptionsTable('Shotta boss kills', self:LoadBossOptions())
   acreg:RegisterOptionsTable('Shotta about', aboutOptions)
   acreg:RegisterOptionsTable('Shotta profiles', profileOptions)
