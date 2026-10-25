@@ -3,31 +3,36 @@
 [![Release](https://github.com/martinbjeldbak/shotta/actions/workflows/release.yml/badge.svg)](https://github.com/martinbjeldbak/shotta/actions/workflows/release.yml)
 [![Lint](https://github.com/martinbjeldbak/shotta/actions/workflows/lint.yml/badge.svg)](https://github.com/martinbjeldbak/shotta/actions/workflows/lint.yml)
 
-(_screen_)-shotta, mate. Automatically take screenshots of moments within
-Azeroth so you can cherish them forever.
+(_screen_)-shotta, mate. Automatically take screenshots of your best moments in
+Azeroth so you can keep them forever.
 
 ![Shotta overview](.previews/overview.jpg)
 
 ## Shotta Discord
 
-Head over to our [Shotta Discord server](https://discord.gg/MHqGRpZxbB)!
-Come share your best screenshots, tell us about your suggestions, or just chat!
+Join the [Shotta Discord server](https://discord.gg/MHqGRpZxbB) to share your
+best screenshots, suggest features, or just chat.
 
 ## Features
 
-Ever wished you had more pictures of your adventures throughout Azeroth and
-beyond? Look no further!
+Shotta takes screenshots for you automatically, so the moments worth keeping
+are saved without you thinking about it. Each event can be toggled on its own:
 
-Shotta will automatically take screenshots
+- levelling up, quest completions and reputation/renown gains
+- achievements, loot rolls and hearthstone binds
+- boss kills, including first kills and raid encounters
+- entering a new zone or area
+- ready checks, trade windows and group formation
+- emotes, mailboxes, auction houses and chat channels
+- death
+- on a timer: every 5, 10 or 30 minutes
 
-- at regular intervals
-- at specific events
-- when you're alone
-- when you're with your friends
-- when you down a boss
-- and much more!
+Screenshots include the interface by default. You can also take one on demand
+from the minimap button: click it for a screenshot without the UI, or
+control-click it to include the UI.
 
-All libraries are embedded, so there is nothing else to install. I'm always adding new events as I come up with them and would love your feedback for what you'd like to see.
+Every library is embedded, so there is nothing else to install. New events are
+added regularly and suggestions are very welcome via GitHub issues or Discord.
 
 Shotta supports Retail, Forever, Mists of Pandaria Classic, Classic Era, and
 Burning Crusade Classic Anniversary.
@@ -43,76 +48,74 @@ for the client you are playing:
 | Classic Era | `_classic_era_/Screenshots` |
 | Burning Crusade Classic Anniversary | `_anniversary_/Screenshots` |
 
-On Windows, these are under `C:\Program Files (x86)\World of Warcraft\`; on
-macOS they are under `\World of Warcraft\`.
+On Windows these live under `C:\Program Files (x86)\World of Warcraft\`, and on
+macOS under `/Applications/World of Warcraft/`.
 
 ## Installing
 
-### CurseForge
+Shotta is available from:
 
-You can download Shotta at the following link
-
-- <https://www.curseforge.com/wow/addons/shotta>
-
-### WoW Interface
-
-You can download Shotta at the following link
-
-- <https://www.wowinterface.com/downloads/info26687-Shotta.html>
-
-### Wago
-
-- <https://addons.wago.io/addons/shotta>
+- [CurseForge](https://www.curseforge.com/wow/addons/shotta)
+- [WoWInterface](https://www.wowinterface.com/downloads/info26687-Shotta.html)
+- [Wago Addons](https://addons.wago.io/addons/shotta)
 
 ### WoWUp
 
-[WoWUp] is a great open source Addon client.
+[WoWUp][WoWUp] is a great open-source addon manager. Once installed, open
+`Get Addons`, then search for "Shotta", or choose `Install from URL` and paste
+<https://github.com/martinbjeldbak/shotta> before clicking `Import`:
 
-Once installed, navigate to `Get Addons`, then either search for the addon, or click `Install from URL` and paste in the link to this
-repository:
+![Screenshot of WoWUp client installing this addon](https://github.com/martinbjeldbak/shotta/assets/823316/25b92bbd-03aa-422d-abe9-10f68a0b1752)
 
-- <https://github.com/martinbjeldbak/shotta>
-
-then click `Import`, you should see the below screen
-
-![Screenshot of WoWUp client installing this Addon](https://github.com/martinbjeldbak/shotta/assets/823316/25b92bbd-03aa-422d-abe9-10f68a0b1752)
-
-Simply click `Install` and you're done! You will be prompted to update on any future releases. For more details, see the WoWUp guide [here][wowup-get-addons]
+Click `Install` and you're done — you will be prompted about future updates. See
+the [WoWUp guide][wowup-get-addons] for details.
 
 ## Usage
 
-Once installed, there will be an addon loaded message in the chat, see
+After logging in, Shotta prints a loaded message to chat:
 
 ![Addon loaded](./.previews/screenshot-taken.png)
 
-You can then open the menu and start configuring the events you want to
-screenshot by typing `/sh` or `/shotta` in the chat
+Type `/sh` or `/shotta` to open the options. Shotta has its own page in the
+standard addon options, with a settings page, the events list, boss kill
+handling and profiles:
 
-![Addon menu](./.previews/menu.png)
+![Shotta options page](./.previews/options.jpg)
 
-Click the boxes you are interested in and they will trigger on the next time
-that event occurs!
+On the **Events** page you tick the events that should take a screenshot. Hover
+over an option to see what it does — this is also how you check whether a nested
+option only applies while its parent event is enabled:
 
-For example, on level up
+![Shotta events page](./.previews/events.jpg)
 
-![Leveled up screenshot confirmation](./.previews/level-up.png)
+Under **Boss kills** you can have each boss screenshotted only the first time you
+defeat it. Kills are remembered per character, and any boss can be forgotten from
+the list so that its next kill counts as a first kill again:
 
-I get this sweet screenshot
+![Shotta boss kills page](./.previews/boss-kills.jpg)
 
-![Leveled up screenshot](./.previews/level-up-screenshot.jpg)
+Once configured, Shotta takes a screenshot the next time each event happens. For
+a level up, for example, you get a confirmation:
+
+![Level up screenshot confirmation](./.previews/level-up.png)
+
+...followed by a screenshot like this:
+
+![Level up screenshot](./.previews/level-up-screenshot.jpg)
 
 ## Contributing
 
-First of all, thanks for helping contribute! There are many ways you can help contribute
+Thanks for helping out! The most useful contributions are:
 
-- filing feature request, bugs, or general issues using <https://github.com/martinbjeldbak/shotta/issues/new>
+- filing feature requests, bugs and general issues via
+  <https://github.com/martinbjeldbak/shotta/issues/new>
 - code contributions
 - translation strings for each supported language
 
-> If you wish to run this addon locally, I highly recommend setting up a symlink
-> to the cloned repository directory following the guide here:
-> <https://wowpedia.fandom.com/wiki/Symlinking_AddOn_folders>, this will make it
-> so that you only need to reload the UI with `/reload` to see your changes.
+> If you want to run this addon from a local checkout, symlink the cloned
+> repository directory into your `Interface/AddOns` folder following
+> <https://wowpedia.fandom.com/wiki/Symlinking_AddOn_folders>. You then only
+> need `/reload` to see your changes.
 
 ### Development
 
