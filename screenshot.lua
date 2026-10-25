@@ -68,7 +68,12 @@ function Shotta:ResetTimers()
 end
 
 function Shotta:OnEnableTimers()
-  for min, enabled in pairs(self.db.profile.events.timer) do
+  local events = self.db.profile.events
+  if not (events and events.timer) then
+    return
+  end
+
+  for min, enabled in pairs(events.timer) do
     if enabled then
       self:conditionallyEnableTimer(true, min)
     end

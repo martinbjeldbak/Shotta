@@ -16,7 +16,17 @@ globals:
     must_use: true
   UNKNOWN:
     property: read-only
+  WOW_PROJECT_CAMELOT:
+    property: read-only
   UnitName:
+    args:
+      - type: string
+    must_use: true
+  strlower:
+    args:
+      - type: string
+    must_use: true
+  strtrim:
     args:
       - type: string
     must_use: true

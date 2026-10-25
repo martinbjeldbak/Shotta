@@ -65,30 +65,107 @@ function Shotta:PLAYER_LEVEL_UP()
   self:ScheduleTimer('TimedScreenshot', 0.5)
 end
 
----Key used to remember a boss kill in the active profile
----@param encounterID integer? Journal encounter ID, when the client exposes one
----@param encounterName string? Localized boss name, used when there is no ID
----@param instanceName string? Map name the kill happened on
+---Key used to remember a boss kill in the active profile.
+---@param encounterID integer The journal encounter ID, which is globally unique per boss
+---@param instanceName string? Only used to group the options page, not to identify the boss
 ---@return string
-local function bossKey(encounterID, encounterName, instanceName)
-  local boss = encounterID or encounterName or UNKNOWN
-  return format('%s %s', instanceName or UNKNOWN, boss)
+local function bossKey(encounterID, instanceName)
+  return format('%s|%s', instanceName and strtrim(strlower(instanceName)) or UNKNOWN, encounterID)
 end
 
----Marks a boss as killed in the active profile, so "first kill only" skips it from now on
----@param encounterID integer?
----@param encounterName string?
----@param instanceName string?
-function Shotta:RecordBossKill(encounterID, encounterName, instanceName)
+---Reads the killed bosses for the active profile
+---@return table<string, ShottaBossKill>
+local function bossKillTable(self)
   local bossKills = self.db.profile.bossKills
   if type(bossKills) ~= 'table' then
     bossKills = {}
     self.db.profile.bossKills = bossKills
   end
 
-  bossKills[bossKey(encounterID, encounterName, instanceName)] = time()
+  return bossKills
+end
+
+---Counts the bosses remembered as killed in the active profile
+---@return integer
+function Shotta:BossKillCount()
+  local bossKills = self.db.profile.bossKills
+  if type(bossKills) ~= 'table' then
+    return 0
+  end
+
+  local count = 0
+  for _ in pairs(bossKills) do
+    count = count + 1
+  end
+
+  return count
+end
+
+---The bosses remembered as killed in the active profile, most recently killed first
+---@return ShottaBossKillEntry[]
+function Shotta:BossKillEntries()
+  local entries = {}
+  for key, kill in pairs(bossKillTable(self)) do
+    table.insert(entries, {
+      key = key,
+      encounterID = kill.encounterID,
+      name = kill.name,
+      instance = kill.instance,
+      time = kill.time,
+    })
+  end
+
+  -- Newest first, then by name so the order is stable when several kills share a timestamp
+  table.sort(entries, function(a, b)
+    if a.time ~= b.time then
+      return a.time > b.time
+    end
+
+    return tostring(a.name) < tostring(b.name)
+  end)
+
+  return entries
+end
+
+---Marks a boss as killed in the active profile, so "first kill only" skips it from now on
+---@param encounterID integer
+---@param encounterName string?
+---@param instanceName string?
+function Shotta:RecordBossKill(encounterID, encounterName, instanceName)
+  local bossKills = bossKillTable(self)
+  local key = bossKey(encounterID, instanceName)
+
+  -- Keep the first kill time if we somehow see the same boss again, since that is the one that matters
+  local existing = bossKills[key]
+  local killedAt = existing and existing.time or nil
+
+  bossKills[key] = {
+    encounterID = encounterID,
+    name = encounterName,
+    instance = instanceName,
+    time = killedAt or time(),
+  }
 
   LibStub('AceConfigRegistry-3.0'):NotifyChange 'Shotta'
+end
+
+---Forgets a single boss, so its next kill counts as a first kill again
+---@param key string A key from BossKillEntries
+---@return boolean forgotten Whether there was an entry to forget
+function Shotta:ForgetBossKill(key)
+  local bossKills = bossKillTable(self)
+  if not bossKills[key] then
+    return false
+  end
+
+  bossKills[key] = nil
+
+  --@alpha@
+  self:Print(format('Forgot boss kill: %s', key))
+  --@end-alpha@
+
+  LibStub('AceConfigRegistry-3.0'):NotifyChange 'Shotta'
+  return true
 end
 
 ---Forgets every boss killed so far, so each one counts as a first kill again
@@ -115,43 +192,36 @@ function Shotta:ResetBossKillsIfStale()
   self.db.profile.bossKills = {}
 end
 
----BOSS_KILL only carries a name, so look the running encounter up for its ID and instance
----@return integer? encounterID
----@return string? encounterName
----@return string? instanceName
-local function currentEncounter()
-  local instanceName
+---The map name the player is in, used to group bosses by instance in the options page
+---@return string?
+local function currentInstanceName()
   if C_Map and C_Map.GetBestMapForUnit then
-    instanceName = select(2, C_Map.GetBestMapForUnit 'player')
-  end
-  instanceName = instanceName or GetRealZoneText()
-
-  if not C_EncounterJournal then
-    return nil, nil, instanceName
+    local name = select(2, C_Map.GetBestMapForUnit 'player')
+    if name then
+      return name
+    end
   end
 
-  local encounter = C_EncounterJournal.GetActiveEncounter()
-  if not encounter then
-    return nil, nil, instanceName
-  end
-
-  local info = C_EncounterJournal.GetEncounterInfoByIndex(encounter.journalEncounterID, encounter.difficultyID)
-  return encounter.journalEncounterID, info and info.name, instanceName
+  return GetRealZoneText()
 end
 
-function Shotta:BOSS_KILL(isKill)
-  -- The encounter journal has no ID to key on in older clients, so fall back to the localized name.
-  local encounterID, encounterName, instanceName = currentEncounter()
+---A boss kill. BOSS_KILL only fires on a kill and passes the encounter details directly, so no other event or
+---lookup is needed. AceEvent passes the event name first, so the arguments are shifted by one.
+---@param _event string
+---@param encounterID integer
+---@param encounterName string
+---@param raidSize integer
+function Shotta:BOSS_KILL(_event, encounterID, encounterName)
+  --@alpha@
+  self:Print(format('DEBUG BOSS_KILL id=%s name=%s', tostring(encounterID), tostring(encounterName)))
+  --@end-alpha@
 
-  -- Retail also fires BOSS_KILL for loot rolls that end a raid boss, which are not kills. Older clients
-  -- pass no argument at all, so treat a missing flag as a kill.
-  isKill = isKill ~= false
-
-  if isKill and self.db.profile.firstKill.only then
+  if self.db.profile.firstKill.restrict and encounterID then
+    local instanceName = currentInstanceName()
     local bossKills = self.db.profile.bossKills
-    if type(bossKills) == 'table' and bossKills[bossKey(encounterID, encounterName, instanceName)] then
+    if type(bossKills) == 'table' and bossKills[bossKey(encounterID, instanceName)] then
       --@alpha@
-      self:Print(format('First kill only: %s already killed, not taking a screenshot', encounterName or 'this boss'))
+      self:Print(format('First kill only: %s already killed, not taking a screenshot', tostring(encounterName)))
       --@end-alpha@
       return
     end

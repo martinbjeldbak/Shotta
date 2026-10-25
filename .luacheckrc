@@ -16,6 +16,7 @@ read_globals = {
   'UNKNOWN',
   'UnitName',
   'WOW_PROJECT_BURNING_CRUSADE_CLASSIC',
+  'WOW_PROJECT_CAMELOT',
   'WOW_PROJECT_CLASSIC',
   'WOW_PROJECT_ID',
   'WOW_PROJECT_MAINLINE',
@@ -23,6 +24,8 @@ read_globals = {
   'date',
   'format',
   'select',
+  'strlower',
+  'strtrim',
   'time',
 }
 

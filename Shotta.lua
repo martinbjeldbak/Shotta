@@ -28,7 +28,7 @@ local defaults = {
     firstKill = {
       -- Never seed killed bosses here: AceDB copies this table into every new profile,
       -- which would make every boss count as already killed from the start.
-      only = false,
+      restrict = false,
     },
     ---@type ShottaBossKills
     bossKills = {},
@@ -49,9 +49,14 @@ function Shotta:OnInitialize()
 end
 
 function Shotta:OnEnable()
-  for event, enabled in pairs(self.db.profile.events.blizzard) do
-    if enabled then
-      self:conditionallyRegisterBlizzardEvent(true, event)
+  -- Profiles can lack these tables (see the note on BossKillEnabled). OnEnable throwing would abort every
+  -- registration below it, so read defensively rather than assuming AceDB merged the defaults in.
+  local events = self.db.profile.events
+  if events and events.blizzard then
+    for event, enabled in pairs(events.blizzard) do
+      if enabled then
+        self:conditionallyRegisterBlizzardEvent(true, event)
+      end
     end
   end
 

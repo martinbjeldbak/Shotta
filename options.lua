@@ -5,6 +5,7 @@ local Shotta = ns.Shotta
 local L = ns.L
 
 local IS_MAINLINE = ns.IS_MAINLINE
+local IS_FOREVER = ns.IS_FOREVER
 local IS_MISTS = ns.IS_MISTS
 local IS_CLASSIC_ERA = ns.IS_CLASSIC_ERA
 local IS_TBC = ns.IS_TBC
@@ -26,21 +27,114 @@ local function localizedOptionName(info)
   return L['checkboxText.' .. info[#info]]
 end
 
+---An event toggle. Events are ordered explicitly because AceConfig otherwise sorts them alphabetically by
+---key, which mixes unrelated events together.
+---@param order integer
 ---@return AceOptionsTable
-function Shotta:BlizzardEventOption()
+function Shotta:BlizzardEventOption(order)
   return {
     name = localizedOptionName,
     type = 'toggle',
     width = 'full',
+    order = order,
     set = function(info, val)
       local triggerName = info[#info]
+      self.db.profile.events = self.db.profile.events or {}
+      self.db.profile.events.blizzard = self.db.profile.events.blizzard or {}
       self.db.profile.events.blizzard[triggerName] = val
       self:conditionallyRegisterBlizzardEvent(val, triggerName)
+
+      -- Options nested under this event (the first kill settings) are disabled while it is off
+      LibStub('AceConfigRegistry-3.0'):NotifyChange 'Shotta'
     end,
     get = function(info)
       local triggerName = info[#info]
-      return self.db.profile.events.blizzard[triggerName]
+      local events = self.db.profile.events
+      local blizzard = events and events.blizzard
+      return blizzard ~= nil and blizzard[triggerName] == true
     end,
+  }
+end
+
+---How many bosses the profile remembers, shown above the first kill settings
+---@return string
+function Shotta:BossKillStateText()
+  local count = self:BossKillCount()
+  if count == 0 then
+    return L['firstKill.state.none']
+  end
+
+  if count == 1 then
+    return L['firstKill.state.one']
+  end
+
+  return format(L['firstKill.state.count'], count)
+end
+
+---The boss events, kept adjacent so they read as one feature. Flat rather than boxed: a nested group at the
+---bottom of a long flow list gets a leftover height and clips. If more boss settings arrive (per-difficulty
+---filtering, the killed-boss list), they get their own page instead of a group inside this one.
+---@return table<string, AceOptionsTable>
+function Shotta:BossEventOptions()
+  return {
+    -- The event toggles whether the first kill settings do anything, so it comes first
+    BOSS_KILL = self:BlizzardEventOption(300),
+    ENCOUNTER_END = self:BlizzardEventOption(310),
+  }
+end
+
+---Whether the "on boss kill" event is enabled, which every setting below depends on
+---@return boolean
+function Shotta:BossKillEnabled()
+  -- Read defensively: profiles created before an option existed (or emptied ones) can lack these tables,
+  -- and an unguarded index here throws during options rendering.
+  local events = self.db.profile.events
+  local blizzard = events and events.blizzard
+  return blizzard ~= nil and blizzard.BOSS_KILL == true
+end
+
+---The killed bosses keyed for the dropdown, and their labels. Both are read when the page renders rather than
+---when the options tree is built, so a kill or a reset shows up without a reload.
+---@return table<string, string> labels keyed by boss key
+local function bossKillChoices(self)
+  local labels = {}
+  for _, entry in ipairs(self:BossKillEntries()) do
+    local boss = entry.name or entry.key
+    local instance = entry.instance and format(' (%s)', entry.instance) or ''
+    labels[entry.key] = format('%s%s', boss, instance)
+  end
+
+  return labels
+end
+
+---Forget one remembered boss, so its next kill counts as a first kill again.
+---@param self Shotta
+---@return AceOptionsTable
+local function bossKillPicker(self)
+  return {
+    forgetChoice = {
+      name = L['bossKills.forgetChoice'],
+      desc = L['bossKills.forgetChoiceDesc'],
+      type = 'select',
+      width = 'full',
+      order = 24,
+      values = function()
+        return bossKillChoices(self)
+      end,
+      disabled = function()
+        return not self:BossKillEnabled()
+      end,
+      get = function()
+        return nil
+      end,
+      -- Selecting is the action: pick a boss and it is forgotten, with AceConfig confirming first
+      set = function(_, value)
+        self:ForgetBossKill(value)
+      end,
+      confirm = function()
+        return true, L['bossKills.forgetConfirm']
+      end,
+    },
   }
 end
 
@@ -51,27 +145,175 @@ function Shotta:TimerEventOption(minutes, order)
   return {
     name = localizedOptionName,
     type = 'toggle',
+    width = 'full',
     order = order,
     set = function(_, val)
+      self.db.profile.events = self.db.profile.events or {}
+      self.db.profile.events.timer = self.db.profile.events.timer or {}
       self.db.profile.events.timer[minutes] = val
 
       self:conditionallyEnableTimer(val, minutes)
     end,
     get = function(_)
-      return self.db.profile.events.timer[minutes]
+      local events = self.db.profile.events
+      local timer = events and events.timer
+      return timer ~= nil and timer[minutes] == true
     end,
+  }
+end
+
+---The event toggles, on their own page because the list is long enough to push everything else off the main
+---page. The page itself is titled "Events", so it holds the toggles directly rather than wrapping them in a
+---redundant nested heading.
+---@return AceOptionsTable
+function Shotta:LoadEventOptions()
+  local args = {
+    -- Ordered explicitly: AceConfig sorts by key otherwise, which interleaves unrelated events.
+    -- Gaps of 10 leave room to add events without renumbering everything below them.
+    -- Session
+    PLAYER_LOGIN = self:BlizzardEventOption(0),
+    -- Levelling and exploration
+    PLAYER_LEVEL_UP = self:BlizzardEventOption(10),
+    QUEST_TURNED_IN = self:BlizzardEventOption(20),
+    ZONE_CHANGED_NEW_AREA = self:BlizzardEventOption(30),
+    ZONE_CHANGED = self:BlizzardEventOption(40),
+    HEARTHSTONE_BOUND = self:BlizzardEventOption(50),
+    -- Social and grouping
+    GROUP_FORMED = self:BlizzardEventOption(100),
+    READY_CHECK = self:BlizzardEventOption(110),
+    CHAT_MSG_TEXT_EMOTE = self:BlizzardEventOption(120),
+    CHAT_MSG_CHANNEL = self:BlizzardEventOption(130),
+    TRADE_ACCEPT_UPDATE = self:BlizzardEventOption(140),
+    -- Economy
+    MAIL_SHOW = self:BlizzardEventOption(200),
+    AUCTION_HOUSE_SHOW = self:BlizzardEventOption(210),
+    LOOT_ITEM_ROLL_WON = self:BlizzardEventOption(220),
+    -- Combat
+    PLAYER_DEAD = self:BlizzardEventOption(400),
+  }
+
+  for key, option in pairs(self:BossEventOptions()) do
+    args[key] = option
+  end
+
+  if HAS_ACHIEVEMENTS then
+    args.ACHIEVEMENT_EARNED = self:BlizzardEventOption(60)
+  end
+
+  -- Renown is a retail system: Forever keeps the Classic-era progression and has none
+  if IS_MAINLINE then
+    args.MAJOR_FACTION_RENOWN_LEVEL_CHANGED = self:BlizzardEventOption(70)
+  end
+
+  --@debug@
+  args.PLAYER_STARTED_MOVING = self:BlizzardEventOption(900)
+  --@end-debug@
+
+  return {
+    type = 'group',
+    args = args,
+  }
+end
+
+---The first kill settings, returned flat rather than as a group: a nested group in this AceConfig build gets a
+---wrong height when it is not the only thing on a page, which rendered it as a tall empty box.
+---@return table<string, AceOptionsTable>
+function Shotta:FirstKillOptions()
+  local function bossKillDisabled()
+    return not self:BossKillEnabled()
+  end
+
+  return {
+    state = {
+      name = function()
+        return self:BossKillStateText()
+      end,
+      type = 'description',
+      fontSize = 'medium',
+      order = 20,
+    },
+    restrict = {
+      name = function()
+        return L['checkboxText.firstKill.restrict']
+      end,
+      desc = function()
+        if bossKillDisabled() then
+          return L['firstKill.disabledDesc']
+        end
+
+        return L['firstKill.restrictDesc']
+      end,
+      type = 'toggle',
+      width = 'full',
+      order = 21,
+      disabled = bossKillDisabled,
+      set = function(_, val)
+        self.db.profile.firstKill.restrict = val
+      end,
+      get = function(_)
+        return self.db.profile.firstKill.restrict
+      end,
+    },
+    reset = {
+      name = function()
+        return L['checkboxText.firstKill.reset']
+      end,
+      desc = L['firstKill.resetDesc'],
+      type = 'execute',
+      width = 'full',
+      order = 22,
+      confirm = true,
+      disabled = bossKillDisabled,
+      func = function()
+        self:ResetBossKills()
+      end,
+    },
+  }
+end
+
+---@return AceOptionsTable
+function Shotta:LoadBossOptions()
+  local args = {}
+  for key, option in pairs(self:BossEventOptions()) do
+    args[key] = option
+  end
+
+  for key, option in pairs(self:FirstKillOptions()) do
+    args[key] = option
+  end
+
+  for key, option in pairs(bossKillPicker(self)) do
+    args[key] = option
+  end
+
+  return {
+    type = 'group',
+    args = args,
   }
 end
 
 ---@return AceOptionsTable
 function Shotta:LoadOptions()
-  local config = {
+  return {
     type = 'group',
     args = {
+      -- Positive, well-spaced orders: AceConfig does not reliably sort negative orders ahead of the
+      -- defaults, which put the intro below the sections it introduces.
+      intro = {
+        name = L['intro.about'],
+        type = 'description',
+        fontSize = 'large',
+        order = 1,
+      },
+      introEvents = {
+        name = L['intro.events'],
+        type = 'description',
+        order = 2,
+      },
       general_options = {
         name = localizedOptionName,
         type = 'group',
-        order = 0,
+        order = 10,
         inline = true,
         args = {
           hideMinimap = {
@@ -91,70 +333,11 @@ function Shotta:LoadOptions()
           },
         },
       },
-      blizzard_events = {
-        name = localizedOptionName,
-        type = 'group',
-        order = 2,
-        inline = true,
-        args = {
-          PLAYER_LOGIN = self:BlizzardEventOption(),
-          CHAT_MSG_CHANNEL = self:BlizzardEventOption(),
-          PLAYER_LEVEL_UP = self:BlizzardEventOption(),
-          MAIL_SHOW = self:BlizzardEventOption(),
-          READY_CHECK = self:BlizzardEventOption(),
-          ZONE_CHANGED = self:BlizzardEventOption(),
-          ZONE_CHANGED_NEW_AREA = self:BlizzardEventOption(),
-          HEARTHSTONE_BOUND = self:BlizzardEventOption(),
-          --@debug@
-          PLAYER_STARTED_MOVING = self:BlizzardEventOption(),
-          --@end-debug@
-          AUCTION_HOUSE_SHOW = self:BlizzardEventOption(),
-          GROUP_FORMED = self:BlizzardEventOption(),
-          TRADE_ACCEPT_UPDATE = self:BlizzardEventOption(),
-          BOSS_KILL = self:BlizzardEventOption(),
-          -- An inline group is how AceConfig nests options under another one
-          firstKill = {
-            name = localizedOptionName,
-            type = 'group',
-            inline = true,
-            order = 10.5,
-            args = {
-              only = {
-                name = localizedOptionName,
-                desc = L['firstKill.onlyDesc'],
-                type = 'toggle',
-                order = 0,
-                set = function(_, val)
-                  self.db.profile.firstKill.only = val
-                end,
-                get = function(_)
-                  return self.db.profile.firstKill.only
-                end,
-              },
-              reset = {
-                name = localizedOptionName,
-                desc = L['firstKill.resetDesc'],
-                type = 'execute',
-                order = 1,
-                confirm = true,
-                func = function()
-                  self:ResetBossKills()
-                end,
-              },
-            },
-          },
-          ENCOUNTER_END = self:BlizzardEventOption(),
-          QUEST_TURNED_IN = self:BlizzardEventOption(),
-          LOOT_ITEM_ROLL_WON = self:BlizzardEventOption(),
-          PLAYER_DEAD = self:BlizzardEventOption(),
-          CHAT_MSG_TEXT_EMOTE = self:BlizzardEventOption(),
-        },
-      },
       timer_events = {
         name = localizedOptionName,
         type = 'group',
         inline = true,
-        order = 1,
+        order = 20,
         args = {
           every_5_minutes = self:TimerEventOption(5, 0),
           every_10_minutes = self:TimerEventOption(10, 1),
@@ -163,15 +346,6 @@ function Shotta:LoadOptions()
       },
     },
   }
-  if IS_MAINLINE then
-    config.args.blizzard_events.args.MAJOR_FACTION_RENOWN_LEVEL_CHANGED = self:BlizzardEventOption()
-  end
-
-  if HAS_ACHIEVEMENTS then
-    config.args.blizzard_events.args.ACHIEVEMENT_EARNED = self:BlizzardEventOption()
-  end
-
-  return config
 end
 
 ---Computes number of days the input day is from today
@@ -192,6 +366,8 @@ end
 local function folderName()
   if IS_MAINLINE then
     return 'retail'
+  elseif IS_FOREVER then
+    return 'forever'
   elseif IS_MISTS then
     return 'classic'
   elseif IS_TBC then
@@ -223,10 +399,15 @@ local aboutOptions = {
       fontSize = 'large',
       type = 'description',
     },
+    screenshotUI = {
+      name = L['screenshotUIHelpText'],
+      order = 6,
+      type = 'description',
+    },
     discord = {
       name = format('%s (%s)', L['joinDiscord'], L['pressCtrlC']),
       type = 'input',
-      order = 6,
+      order = 7,
       width = 'double',
       get = function(_)
         return DISCORD_LINK
@@ -251,18 +432,22 @@ local aboutOptions = {
   },
 }
 
----Registers the settings page, the profiles page, the about page and the chat commands that open them
+---Registers the settings page, the events page, the profiles page, the about page and the chat commands
 function Shotta:RegisterOptions()
   local profileOptions = LibStub('AceDBOptions-3.0'):GetOptionsTable(self.db)
 
   local acreg = LibStub 'AceConfigRegistry-3.0'
   acreg:RegisterOptionsTable('Shotta', self:LoadOptions())
+  acreg:RegisterOptionsTable('Shotta events', self:LoadEventOptions())
+  acreg:RegisterOptionsTable('Shotta boss kills', self:LoadBossOptions())
   acreg:RegisterOptionsTable('Shotta about', aboutOptions)
   acreg:RegisterOptionsTable('Shotta profiles', profileOptions)
 
   local acdia = LibStub 'AceConfigDialog-3.0'
   local _, categoryID = acdia:AddToBlizOptions('Shotta', 'Shotta')
   self.optionsCategoryID = categoryID
+  acdia:AddToBlizOptions('Shotta events', L['checkboxText.events'], 'Shotta')
+  acdia:AddToBlizOptions('Shotta boss kills', L['checkboxText.bossKillsPage'], 'Shotta')
   acdia:AddToBlizOptions('Shotta profiles', 'Profiles', 'Shotta')
   acdia:AddToBlizOptions('Shotta about', 'About', 'Shotta')
 
