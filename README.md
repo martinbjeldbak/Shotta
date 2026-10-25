@@ -6,7 +6,7 @@
 (_screen_)-shotta, mate. Automatically take screenshots of your best moments in
 Azeroth so you can keep them forever.
 
-![Shotta overview](.previews/overview.jpg)
+![Shotta options page](./.previews/options.jpg)
 
 ## Shotta Discord
 
@@ -77,16 +77,14 @@ After logging in, Shotta prints a loaded message to chat:
 ![Addon loaded](./.previews/screenshot-taken.png)
 
 Type `/sh` or `/shotta` to open the options. Shotta has its own page in the
-standard addon options, with a settings page, the events list, boss kill
-handling and profiles:
+standard addon options: a settings page, the events list, boss kill handling and
+profiles.
 
-![Shotta options page](./.previews/options.jpg)
+![Shotta events page](./.previews/events.jpg)
 
 On the **Events** page you tick the events that should take a screenshot. Hover
 over an option to see what it does — this is also how you check whether a nested
-option only applies while its parent event is enabled:
-
-![Shotta events page](./.previews/events.jpg)
+option only applies while its parent event is enabled.
 
 Under **Boss kills** you can have each boss screenshotted only the first time you
 defeat it. Kills are remembered per character, and any boss can be forgotten from
