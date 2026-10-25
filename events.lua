@@ -65,9 +65,10 @@ function Shotta:PLAYER_LEVEL_UP()
   self:ScheduleTimer('TimedScreenshot', 0.5)
 end
 
----Key used to remember a boss kill in the active profile.
+---Key used to remember a boss kill in the active profile. The instance namespaces the key and keeps it
+---readable; the encounter ID alone is already unique per boss.
 ---@param encounterID integer The journal encounter ID, which is globally unique per boss
----@param instanceName string? Only used to group the options page, not to identify the boss
+---@param instanceName string? The map the kill happened on, also used to group the options page
 ---@return string
 local function bossKey(encounterID, instanceName)
   return format('%s|%s', instanceName and strtrim(strlower(instanceName)) or UNKNOWN, encounterID)
@@ -88,17 +89,7 @@ end
 ---Counts the bosses remembered as killed in the active profile
 ---@return integer
 function Shotta:BossKillCount()
-  local bossKills = self.db.profile.bossKills
-  if type(bossKills) ~= 'table' then
-    return 0
-  end
-
-  local count = 0
-  for _ in pairs(bossKills) do
-    count = count + 1
-  end
-
-  return count
+  return #self:BossKillEntries()
 end
 
 ---The bosses remembered as killed in the active profile, most recently killed first
@@ -210,7 +201,6 @@ end
 ---@param _event string
 ---@param encounterID integer
 ---@param encounterName string
----@param raidSize integer
 function Shotta:BOSS_KILL(_event, encounterID, encounterName)
   --@alpha@
   self:Print(format('DEBUG BOSS_KILL id=%s name=%s', tostring(encounterID), tostring(encounterName)))
