@@ -1,6 +1,6 @@
 local ADDON_NAME, ns = ...
 ---@type Shotta
-local Shotta = LibStub('AceAddon-3.0'):NewAddon('Shotta', 'AceConsole-3.0', 'AceEvent-3.0', 'AceTimer-3.0')
+local Shotta = LibStub('AceAddon-3.0'):NewAddon(ADDON_NAME, 'AceConsole-3.0', 'AceEvent-3.0', 'AceTimer-3.0')
 ns.Shotta = Shotta
 
 -- luacheck: push ignore VERSION
@@ -42,7 +42,7 @@ local HAS_ACHIEVEMENTS = IS_MAINLINE or IS_MISTS
 local L = LibStub('AceLocale-3.0'):GetLocale('Shotta', TRANSLATE_FAIL_SILENTLY)
 
 function Shotta:OpenToCategory()
-  Settings.OpenToCategory(self.name)
+  Settings.OpenToCategory(self.optionsCategoryID or self.name)
 end
 
 ---Uses AceLocale to translate an option
@@ -93,7 +93,7 @@ local iconOptions = LibStub('LibDataBroker-1.1'):NewDataObject('Shotta', {
   icon = 237290,
   OnClick = function()
     if IsShiftKeyDown() then
-      Settings.OpenToCategory(ADDON_NAME)
+      Shotta:OpenToCategory()
     elseif IsControlKeyDown() then
       TakeScreenshot()
     else
@@ -424,7 +424,8 @@ function Shotta:OnInitialize()
   acreg:RegisterOptionsTable('Shotta profiles', profileOptions)
 
   local acdia = LibStub 'AceConfigDialog-3.0'
-  acdia:AddToBlizOptions('Shotta', 'Shotta')
+  local _, categoryID = acdia:AddToBlizOptions('Shotta', 'Shotta')
+  self.optionsCategoryID = categoryID
   acdia:AddToBlizOptions('Shotta profiles', 'Profiles', 'Shotta')
   acdia:AddToBlizOptions('Shotta about', 'About', 'Shotta')
 

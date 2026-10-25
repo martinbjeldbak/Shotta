@@ -36,6 +36,7 @@
 ---@class Shotta
 ---@field [string] any Allows event handlers to be looked up by event name
 ---@field name string The addon name, as passed to AceAddon
+---@field optionsCategoryID any The Settings category ID returned by AceConfigDialog:AddToBlizOptions
 ---@field timerEvents table<minutes, any>
 ---@field db ShottaDb
 ---@field OpenToCategory fun(self: Shotta) Makes the UI open to the plugin
