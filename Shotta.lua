@@ -14,18 +14,27 @@ local defaults = {
     ---@type ShottaEvents
     events = {
       ['**'] = false,
-      blizzard = {
-        -- enable these events by default
-        PLAYER_LOGIN = true,
-        PLAYER_LEVEL_UP = true,
-        PLAYER_DEAD = true,
-        LOOT_ITEM_ROLL_WON = true,
-        BOSS_KILL = true,
-      },
+      -- Derive which events are on for new profiles from the single event table in constants.lua
+      blizzard = {},
       timer = {},
     },
+    ---@type ShottaFirstKillOptions
+    firstKill = {
+      restrict = false,
+    },
+  },
+  ---@type ShottaChar
+  char = {
+    ---@type ShottaBossKills
+    bossKills = {},
   },
 }
+
+for event, definition in pairs(ns.EVENTS) do
+  if definition.default then
+    defaults.profile.events.blizzard[event] = true
+  end
+end
 
 function Shotta:OnInitialize()
   self.db = LibStub('AceDB-3.0'):New('ShottaDBv2', defaults)
@@ -38,9 +47,14 @@ function Shotta:OnInitialize()
 end
 
 function Shotta:OnEnable()
-  for event, enabled in pairs(self.db.profile.events.blizzard) do
-    if enabled then
-      self:conditionallyRegisterBlizzardEvent(true, event)
+  -- Profiles can lack these tables (see the note on BossKillEnabled). OnEnable throwing would abort every
+  -- registration below it, so read defensively rather than assuming AceDB merged the defaults in.
+  local events = self.db.profile.events
+  if events and events.blizzard then
+    for event, enabled in pairs(events.blizzard) do
+      if enabled then
+        self:conditionallyRegisterBlizzardEvent(true, event)
+      end
     end
   end
 

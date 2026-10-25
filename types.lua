@@ -17,18 +17,42 @@
 ---@field GITHUB_LINK string
 ---@field L table<string, string> The AceLocale table for the current client locale
 ---@field IS_MAINLINE boolean Retail
+---@field IS_FOREVER boolean World of Warcraft: Forever, which shares Mainline's API
 ---@field IS_MISTS boolean Mists of Pandaria Classic
 ---@field IS_CLASSIC_ERA boolean Classic Era
 ---@field IS_TBC boolean Burning Crusade Classic Anniversary
 ---@field HAS_ACHIEVEMENTS boolean Only retail and MoP Classic have achievements
 ---@field Shotta Shotta The addon instance, created in main.lua
 
+---@class ShottaFirstKillOptions
+---@field restrict boolean Only screenshot the first kill of each boss
+
+---A single boss remembered as killed
+---@class ShottaBossKill
+---@field encounterID integer The journal encounter ID, unique per boss across the game
+---@field name? string The boss name as the client reported it, absent if the journal could not resolve it
+---@field instance? string The map or zone the kill happened on
+---@field time number Unix timestamp of the first kill
+
+---@class ShottaBossKillEntry : ShottaBossKill
+---@field key string The key in ShottaBossKills, for a per-boss reset
+
+---Bosses killed while "first kill only" was enabled. Keyed by `<instance>|<encounterID>`. BOSS_KILL does not
+---report a difficulty, so normal and heroic share one entry.
+---@alias ShottaBossKills table<string, ShottaBossKill>
+
 ---@class ShottaProfile
 ---@field minimap ShottaMinimap
 ---@field events ShottaEvents
+---@field firstKill ShottaFirstKillOptions
+
+---Per-character data. AceDB keeps this separate for every character, so nothing has to track an owner.
+---@class ShottaChar
+---@field bossKills ShottaBossKills
 
 ---@class ShottaDb
 ---@field profile ShottaProfile
+---@field char ShottaChar
 
 ---List of implemented functions that support being called by ScheduleTimer method
 ---@alias TimerCallbacks "TimedScreenshot"
@@ -54,7 +78,9 @@
 ---@field db ShottaDb
 ---@field OpenToCategory fun(self: Shotta) Makes the UI open to the plugin
 ---@field TimedScreenshot fun(self: Shotta) Triggered when screenshot event fires
----@field LoadOptions fun(self: Shotta): AceOptionsTable
+---@field LoadOptions fun(self: Shotta): AceOptionsTable The main settings page
+---@field LoadEventOptions fun(self: Shotta): AceOptionsTable The Blizzard event toggles page
+---@field LoadBossOptions fun(self: Shotta): AceOptionsTable The boss kill settings page
 ---@field conditionallyEnableTimer fun(self: Shotta, enabled: boolean, minutes: minutes)
 ---@field ResetTimers fun(self: Shotta) Empties the timer bookkeeping table without cancelling timers
 ---@field OnEnableTimers fun(self: Shotta) Starts every timer enabled in the profile
@@ -64,6 +90,14 @@
 ---@field TimerEventOption fun(self: Shotta, minutes: minutes, order: integer): AceOptionsTable
 ---@field conditionallyRegisterBlizzardEvent fun(self: Shotta, enabled: boolean, blizzardEvent: string)
 ---@field DefaultBlizzardHandler fun(self: Shotta)
+---@field RecordBossKill fun(self: Shotta, encounterID: integer?, encounterName: string?, instanceName: string?) Marks a boss as killed for the current character
+---@field ResetBossKills fun(self: Shotta) Forgets every boss killed so far for the current character
+---@field BossKillCount fun(self: Shotta): integer How many bosses the current character has killed
+---@field BossKillEntries fun(self: Shotta): ShottaBossKillEntry[] Killed bosses, most recent first
+---@field ForgetBossKill fun(self: Shotta, key: string): boolean Forgets a single boss so its next kill counts again
+---@field BossKillStateText fun(self: Shotta): string The killed boss count, phrased for the options page
+---@field FirstKillOptions fun(self: Shotta): AceOptionsTable The first kill settings, shown on the boss kills page
+---@field BossKillEnabled fun(self: Shotta): boolean Whether the "on boss kill" event is enabled
 --- Below fields are provided by the Ace3 framework, see https://legacy.curseforge.com/wow/addons/ace3
 ---@field ScheduleTimer fun(self: Shotta, callback: TimerCallbacks, seconds: number): any
 ---@field ScheduleRepeatingTimer fun(self: Shotta, callback: TimerCallbacks, seconds: number): any
@@ -83,3 +117,5 @@
 ---@field CHAT_MSG_TEXT_EMOTE fun(self: Shotta)
 ---@field TRADE_ACCEPT_UPDATE fun(self: Shotta, event: string, playerAccepted: number)
 ---@field PLAYER_LEVEL_UP fun(self: Shotta)
+---@field BOSS_KILL fun(self: Shotta, encounterID: integer, encounterName: string) Screenshots the kill unless the boss was already killed
+---@field ENCOUNTER_END fun(self: Shotta, ...) Only used so its toggle can exist; BOSS_KILL carries everything needed
