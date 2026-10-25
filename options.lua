@@ -95,6 +95,7 @@ end
 
 ---The killed bosses keyed for the dropdown, and their labels. Both are read when the page renders rather than
 ---when the options tree is built, so a kill or a reset shows up without a reload.
+---@param self Shotta
 ---@return table<string, string> labels keyed by boss key
 local function bossKillChoices(self)
   local labels = {}
@@ -107,32 +108,55 @@ local function bossKillChoices(self)
   return labels
 end
 
----Forget one remembered boss, so its next kill counts as a first kill again.
+---Pick a boss, then forget it with the button. Selecting is harmless so the dropdown can double as a
+---preview; only the button destroys data, and it asks first.
 ---@param self Shotta
----@return AceOptionsTable
+---@return table<string, AceOptionsTable>
 local function bossKillPicker(self)
+  local function disabled()
+    return not self:BossKillEnabled()
+  end
+
   return {
     forgetChoice = {
       name = L['bossKills.forgetChoice'],
       desc = L['bossKills.forgetChoiceDesc'],
       type = 'select',
       width = 'full',
-      order = 24,
+      order = 330,
       values = function()
         return bossKillChoices(self)
       end,
-      disabled = function()
-        return not self:BossKillEnabled()
-      end,
+      disabled = disabled,
+      -- Remembers the selection between renders so the button below knows what to forget
       get = function()
+        local choices = bossKillChoices(self)
+        if self.forgetChoice and choices[self.forgetChoice] then
+          return self.forgetChoice
+        end
+
         return nil
       end,
-      -- Selecting is the action: pick a boss and it is forgotten, with AceConfig confirming first
       set = function(_, value)
-        self:ForgetBossKill(value)
+        self.forgetChoice = value
       end,
-      confirm = function()
-        return true, L['bossKills.forgetConfirm']
+    },
+    forget = {
+      name = L['bossKills.forget'],
+      desc = L['bossKills.forgetDesc'],
+      type = 'execute',
+      width = 'full',
+      order = 340,
+      confirm = true,
+      disabled = function()
+        local choices = bossKillChoices(self)
+        return disabled() or not (self.forgetChoice and choices[self.forgetChoice])
+      end,
+      func = function()
+        if self.forgetChoice then
+          self:ForgetBossKill(self.forgetChoice)
+          self.forgetChoice = nil
+        end
       end,
     },
   }
@@ -230,7 +254,7 @@ function Shotta:FirstKillOptions()
       end,
       type = 'description',
       fontSize = 'medium',
-      order = 20,
+      order = 310,
     },
     restrict = {
       name = function()
@@ -245,7 +269,7 @@ function Shotta:FirstKillOptions()
       end,
       type = 'toggle',
       width = 'full',
-      order = 21,
+      order = 320,
       disabled = bossKillDisabled,
       set = function(_, val)
         self.db.profile.firstKill.restrict = val
@@ -261,7 +285,7 @@ function Shotta:FirstKillOptions()
       desc = L['firstKill.resetDesc'],
       type = 'execute',
       width = 'full',
-      order = 22,
+      order = 325,
       confirm = true,
       disabled = bossKillDisabled,
       func = function()
@@ -273,10 +297,12 @@ end
 
 ---@return AceOptionsTable
 function Shotta:LoadBossOptions()
-  local args = {}
-  for key, option in pairs(self:BossEventOptions()) do
-    args[key] = option
-  end
+  -- Built explicitly rather than by merging tables with pairs(): merge order is unspecified, which made the
+  -- options render in an unexpected order.
+  local args = {
+    BOSS_KILL = self:BlizzardEventOption(300),
+    ENCOUNTER_END = self:BlizzardEventOption(305),
+  }
 
   for key, option in pairs(self:FirstKillOptions()) do
     args[key] = option
