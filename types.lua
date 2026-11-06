@@ -8,7 +8,10 @@
 ---@field timer table<minutes, boolean>
 
 ---@class ShottaMinimap
----@field hide boolean
+---@field hide boolean Set by MinimapDb; the inverse of floatButton. LibDBIcon uses it to hide the ring button
+---@field floatButton boolean Whether the user also wants Shotta on the minimap ring, not just in the compartment
+---@field showInCompartment boolean Forced on; Shotta is always listed in the minimap's addon compartment
+---@field minimapPos number Angle in degrees around the minimap; LibDBIcon falls back to a crowded 225 when absent
 
 ---@class ShottaConstants
 ---@field VERSION string The addon version, substituted by the packager at release
@@ -86,6 +89,8 @@
 ---@field ResetTimers fun(self: Shotta) Empties the timer bookkeeping table without cancelling timers
 ---@field OnEnableTimers fun(self: Shotta) Starts every timer enabled in the profile
 ---@field RegisterMinimapIcon fun(self: Shotta)
+---@field MinimapDb fun(self: Shotta): ShottaMinimap The minimap settings, created if the profile predates them
+---@field SetMinimapFloat fun(self: Shotta, float: boolean) Shows or hides the optional minimap ring button
 ---@field RegisterOptions fun(self: Shotta) Registers the options pages and the chat commands
 ---@field BlizzardEventOption fun(self: Shotta): AceOptionsTable
 ---@field TimerEventOption fun(self: Shotta, minutes: minutes, order: integer): AceOptionsTable

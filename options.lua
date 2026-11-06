@@ -318,16 +318,14 @@ function Shotta:LoadOptions()
           hideMinimap = {
             name = localizedOptionName,
             type = 'toggle',
+            -- A lone toggle in an inline group: default 'normal' width clips the longer labels, zhCN especially.
+            width = 'full',
             set = function(_, val)
-              self.db.profile.minimap.hide = val
-              if val then
-                LibStub('LibDBIcon-1.0'):Hide 'Shotta'
-              else
-                LibStub('LibDBIcon-1.0'):Show 'Shotta'
-              end
+              self:SetMinimapFloat(val)
             end,
             get = function(_)
-              return self.db.profile.minimap.hide
+              -- Read only: AceConfig calls this right after set, so anything that writes here would undo it.
+              return self:MinimapDb().floatButton
             end,
           },
         },

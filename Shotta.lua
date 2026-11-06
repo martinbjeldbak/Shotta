@@ -9,7 +9,15 @@ local defaults = {
   profile = {
     ---@type ShottaMinimap
     minimap = {
-      hide = false,
+      -- Shotta is listed in the minimap's addon compartment; floatButton opts into a ring button as well.
+      -- RegisterMinimapIcon derives `hide` from floatButton, so these only seed a brand-new profile.
+      hide = true,
+      floatButton = false,
+      showInCompartment = true,
+      -- LibDBIcon has no collision handling: every addon that does not set a position lands on its 225° default
+      -- and stacks there, so a new button can end up invisible under several others. AllTheThings uses 193°;
+      -- 170° gives Shotta a clear slot that the user can still drag anywhere.
+      minimapPos = 170,
     },
     ---@type ShottaEvents
     events = {

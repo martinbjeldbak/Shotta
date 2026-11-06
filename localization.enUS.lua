@@ -23,7 +23,7 @@ T['checkboxText.ENCOUNTER_END'] = 'At end of a dungeon or raid boss kill'
 T['checkboxText.QUEST_TURNED_IN'] = 'Upon completion of a quest'
 T['checkboxText.HEARTHSTONE_BOUND'] = 'When binding your hearthstone'
 T['checkboxText.LOOT_ITEM_ROLL_WON'] = 'Upon winning a loot roll'
-T['checkboxText.hideMinimap'] = 'Hide minimap icon'
+T['checkboxText.hideMinimap'] = 'Show minimap button too'
 T['checkboxText.ACHIEVEMENT_EARNED'] = 'Upon earning an achievement'
 T['checkboxText.firstKill.settings'] = 'First kill settings'
 T['checkboxText.firstKill.reset'] = 'Clear boss list'
@@ -56,11 +56,11 @@ Windows:  C:\Program Files (x86)\World of Warcraft\_%s_\Screenshots
 MacOS:     \World of Warcraft\_%s_\Screenshots
 
 ]]
-T['screenshotUIHelpText'] = 'Screenshots include the interface by default. Click the minimap button without holding a key '
+T['screenshotUIHelpText'] = 'Screenshots include the interface by default. Shift-click Shotta in the minimap compartment '
   .. 'to take one with the UI hidden, or control-click it to take one with the UI shown.'
-T['minimap.click'] = 'Click to take a UI-less screenshot'
+T['minimap.click'] = 'Click to open settings'
 T['minimap.ctrlClick'] = 'Control-click to take a screenshot'
-T['minimap.shiftClick'] = 'Shift-click to open settings'
+T['minimap.shiftClick'] = 'Shift-click to take a UI-less screenshot'
 T['pressCtrlC'] = 'Highlight and Press Ctrl+C to copy the URL to your clipboard'
 T['joinDiscord'] = 'Join our Discord!'
 T['gitHubLink'] = 'GitHub link'

@@ -28,8 +28,10 @@ are saved without you thinking about it. Each event can be toggled on its own:
 - on a timer: every 5, 10 or 30 minutes
 
 Screenshots include the interface by default. You can also take one on demand
-from the minimap button: click it for a screenshot without the UI, or
-control-click it to include the UI.
+from Shotta's entry in the minimap's addon compartment (the icon next to the
+minimap): click it to open the settings, shift-click for a screenshot without
+the UI, or control-click to include the UI. Prefer a button on the minimap
+ring? Enable "Show minimap button too" in the settings.
 
 Every library is embedded, so there is nothing else to install. New events are
 added regularly and suggestions are very welcome via GitHub issues or Discord.
@@ -163,7 +165,7 @@ keeps both the tool pins and GitHub Actions up to date (see `renovate.json`).
 
 ### TODO
 
-- [x] Ability to hide/show minimap icon
+- [x] Ability to hide/show minimap icon (Shotta lives in the minimap's addon compartment; the ring button is opt-in)
 - [ ] Ability to take 2 screenshots for every event: 1 with UI, 1 without
 - [ ] Setting to take screenshots with or without UI
 - [ ] More translation strings, see `localization.enUS.lua`

@@ -25,7 +25,7 @@ T['checkboxText.ENCOUNTER_END'] = '地城或團隊戰鬥結束'
 T['checkboxText.QUEST_TURNED_IN'] = '完成任務'
 T['checkboxText.HEARTHSTONE_BOUND'] = '綁定爐石'
 T['checkboxText.LOOT_ITEM_ROLL_WON'] = '贏得拾取骰子'
-T['checkboxText.hideMinimap'] = '隱藏小地圖圖示'
+T['checkboxText.hideMinimap'] = '同時顯示小地圖按鈕'
 T['checkboxText.ACHIEVEMENT_EARNED'] = '獲得成就'
 T['checkboxText.firstKill.settings'] = '首次擊殺設定'
 T['checkboxText.bosses'] = '首領'
@@ -39,9 +39,9 @@ T['saveLocationHelpText'] = [[截圖儲存在你的作業系統中預設的路�
 
 Windows:  C:\Program Files (x86)\World of Warcraft\_%s_\Screenshots
 macOS:     \World of Warcraft\_%s_\Screenshots]]
-T['minimap.click'] = '點擊截取一張無介面的截圖'
+T['minimap.click'] = '點擊打開設定選項'
 T['minimap.ctrlClick'] = 'Control + 點擊截圖'
-T['minimap.shiftClick'] = 'Shift + 點擊打開設定選項'
+T['minimap.shiftClick'] = 'Shift + 點擊截取一張無介面的截圖'
 T['pressCtrlC'] = 'Ctrl+C 複製網址'
 T['joinDiscord'] = '加入 Discord!'
 T['gitHubLink'] = 'GitHub 連結'
