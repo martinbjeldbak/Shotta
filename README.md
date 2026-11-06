@@ -45,7 +45,7 @@ for the client you are playing:
 | Client | Folder |
 | --- | --- |
 | Retail | `_retail_/Screenshots` |
-| Forever | `_camelot_/Screenshots` |
+| Forever | `_forever_/Screenshots` |
 | Mists of Pandaria Classic | `_classic_/Screenshots` |
 | Classic Era | `_classic_era_/Screenshots` |
 | Burning Crusade Classic Anniversary | `_anniversary_/Screenshots` |
