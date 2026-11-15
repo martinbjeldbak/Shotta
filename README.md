@@ -149,6 +149,7 @@ mise install         # or: just setup
 just lint            # luacheck, selene, StyLua, and justfile formatting
 just check           # lint plus actionlint for the workflows
 just fmt             # format Lua sources with StyLua
+just release 2.9.1   # tag HEAD on main as v2.9.1 and push the tag to release
 ```
 
 The recipes invoke `mise exec` internally, so they use the pinned tools even

@@ -21,6 +21,30 @@ jobs:
         run: |
           rm -rf Libs/
 
+      # Immutable releases refuse assets once a release is published, and the packager
+      # publishes before it uploads. Pre-creating the release as a draft keeps it mutable
+      # until the packager does its PATCH (which publishes it) + uploads.
+      - name: Ensure draft release exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "Release $GITHUB_REF_NAME already exists, leaving it alone."
+            exit 0
+          fi
+          notes=$(git log --reverse --no-merges --pretty=format:'- %s' "$(git describe --tags --abbrev=0 "HEAD~")"..HEAD)
+          heading=$(awk -F': ' '/^## Title:/ { print $2 }' Shotta.toc)
+          gh release create "$GITHUB_REF_NAME" \
+            --draft \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --notes "$heading
+
+          ## $GITHUB_REF_NAME
+
+          $notes"
+
       - name: Package and release
         uses: BigWigsMods/packager@01e8631a69c69d7654c788d152630d5fed9e3812 # v2.7.0
         env:

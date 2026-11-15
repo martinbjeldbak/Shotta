@@ -56,6 +56,47 @@ just-fmt:
 [group('Check')]
 check: lint actionlint
 
+# Release Recipes
+[doc('Tag HEAD as v<version> and push the tag to start the release workflow (e.g. just release 2.9.1)')]
+[group('Release')]
+release version:
+    #!/usr/bin/env -S bash -uo pipefail
+    set -e
+    input='{{ version }}'
+    version="${input#v}"
+    if ! [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+([-+][0-9a-zA-Z.-]+)?$ ]]; then
+        echo "Not a version: ${input}" >&2
+        echo "Usage: just release 2.9.1" >&2
+        exit 1
+    fi
+    tag="v${version}"
+    if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+        echo "Tag ${tag} already exists." >&2
+        exit 1
+    fi
+    if [[ $(git rev-parse --abbrev-ref HEAD) != "main" ]]; then
+        echo "Not on main (currently on $(git rev-parse --abbrev-ref HEAD))." >&2
+        exit 1
+    fi
+    git fetch --quiet origin "main:refs/remotes/origin/main"
+    if [[ $(git rev-parse HEAD) != $(git rev-parse refs/remotes/origin/main) ]]; then
+        echo "HEAD ($(git rev-parse --short HEAD)) is not the tip of origin/main ($(git rev-parse --short refs/remotes/origin/main))." >&2
+        echo "Switch to main and pull first." >&2
+        exit 1
+    fi
+    latest=$(git tag --list 'v*.*.*' --sort=-v:refname | head -n1)
+    if [[ -n $latest ]] && [[ $(printf '%s\n%s\n' "${latest#v}" "${version}" | sort -V | tail -n1) != "$version" ]]; then
+        echo "${version} is not newer than the latest tag ${latest}." >&2
+        exit 1
+    fi
+    if git ls-remote --exit-code --tags origin "refs/tags/${tag}" >/dev/null 2>&1; then
+        echo "Tag ${tag} already exists on the remote." >&2
+        exit 1
+    fi
+    echo "Tagging $(git rev-parse --short HEAD) as ${tag} (previous: ${latest:-none})"
+    git tag -a "${tag}" -m "${tag}"
+    git push origin "refs/tags/${tag}"
+
 # Setup Recipes
 [doc('Install the pinned tools with mise')]
 [group('Setup')]
