@@ -52,7 +52,9 @@ jobs:
             echo
           } > "$notes"
 
-          assets=(.release/Shotta-"$GITHUB_REF_NAME".zip .release/release.json)
+          # The packager only writes release.json when it owns the GitHub release (GITHUB_OAUTH),
+          # which it does not here, so the zip is the only asset.
+          assets=(.release/Shotta-"$GITHUB_REF_NAME".zip)
           for asset in "${assets[@]}"; do
             [[ -f $asset ]] || { echo "Missing packaged asset: $asset" >&2; exit 1; }
           done
