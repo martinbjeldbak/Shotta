@@ -369,7 +369,7 @@ local function folderName()
   if IS_MAINLINE then
     return 'retail'
   elseif IS_FOREVER then
-    return 'camelot'
+    return 'forever'
   elseif IS_MISTS then
     return 'classic'
   elseif IS_TBC then
