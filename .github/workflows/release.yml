@@ -21,37 +21,51 @@ jobs:
         run: |
           rm -rf Libs/
 
-      # Immutable releases refuse assets once a release is published, and the packager
-      # publishes before it uploads. Pre-creating the release as a draft keeps it mutable
-      # until the packager does its PATCH (which publishes it) + uploads.
-      - name: Ensure draft release exists
+      # Immutable releases freeze the moment they are published, and the packager creates and
+      # publishes before it uploads, so it can never attach assets here. It still handles
+      # CurseForge, WoWInterface and Wago; the GitHub release is published below instead.
+      - name: Package and release
+        id: packager
+        uses: BigWigsMods/packager@01e8631a69c69d7654c788d152630d5fed9e3812 # v2.7.0
+        env:
+          CF_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+          WOWI_API_TOKEN: ${{ secrets.WOW_INTERFACE_API_KEY }}
+          WAGO_API_TOKEN: ${{ secrets.WAGO_API_KEY }}
+
+      # `gh release create` with files creates a draft, uploads while it is still mutable,
+      # then publishes. Generating the notes first also gives us a changelog to keep.
+      - name: Publish GitHub release with assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: |
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            echo "Release $GITHUB_REF_NAME already exists, leaving it alone."
-            exit 0
-          fi
-          notes=$(git log --reverse --no-merges --pretty=format:'- %s' "$(git describe --tags --abbrev=0 "HEAD~")"..HEAD)
           heading=$(awk -F': ' '/^## Title:/ { print $2 }' Shotta.toc)
+          notes="$RUNNER_TEMP/notes.md"
+          previous=$(git describe --tags --abbrev=0 'HEAD~' 2>/dev/null || true)
+          {
+            echo "# $heading"
+            echo
+            echo "## [$GITHUB_REF_NAME](https://github.com/$GH_REPO/tree/$GITHUB_REF_NAME) ($(date -u +%Y-%m-%d))"
+            echo "[Full Changelog](https://github.com/$GH_REPO/compare/${previous:-$(git rev-list --max-parents=0 HEAD)}...$GITHUB_REF_NAME) [Previous Releases](https://github.com/$GH_REPO/releases)"
+            echo
+            git log --reverse --no-merges --pretty=format:'- %s' "${previous:+$previous..}HEAD"
+            echo
+          } > "$notes"
+
+          assets=(.release/Shotta-"$GITHUB_REF_NAME".zip .release/release.json)
+          for asset in "${assets[@]}"; do
+            [[ -f $asset ]] || { echo "Missing packaged asset: $asset" >&2; exit 1; }
+          done
+
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "Release $GITHUB_REF_NAME already exists, leaving it alone." >&2
+            exit 1
+          fi
+
           gh release create "$GITHUB_REF_NAME" \
-            --draft \
-            --verify-tag \
             --title "$GITHUB_REF_NAME" \
-            --notes "$heading
-
-          ## $GITHUB_REF_NAME
-
-          $notes"
-
-      - name: Package and release
-        uses: BigWigsMods/packager@01e8631a69c69d7654c788d152630d5fed9e3812 # v2.7.0
-        env:
-          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
-          CF_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-          WOWI_API_TOKEN: ${{ secrets.WOW_INTERFACE_API_KEY }}
-          WAGO_API_TOKEN: ${{ secrets.WAGO_API_KEY }}
+            --notes-file "$notes" \
+            "${assets[@]}"
 
       - name: Shotta Discord notification
         env:
