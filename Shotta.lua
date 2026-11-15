@@ -9,8 +9,9 @@ local defaults = {
   profile = {
     ---@type ShottaMinimap
     minimap = {
-      -- Shotta is listed in the minimap's addon compartment; floatButton opts into a ring button as well.
-      -- RegisterMinimapIcon derives `hide` from floatButton, so these only seed a brand-new profile.
+      -- Where the client has a minimap addon compartment (mainline only) Shotta is listed there and floatButton
+      -- opts into a ring button as well; the classic clients have no compartment, so there the ring button is
+      -- always shown. RegisterMinimapIcon derives `hide` from both, so these only seed a brand-new profile.
       hide = true,
       floatButton = false,
       showInCompartment = true,

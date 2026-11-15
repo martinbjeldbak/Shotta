@@ -41,6 +41,9 @@ local IS_TBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 local IS_FOREVER = WOW_PROJECT_CAMELOT ~= nil and WOW_PROJECT_ID == WOW_PROJECT_CAMELOT
 -- Out of the supported clients, only retail, Forever and MoP Classic have achievements.
 local HAS_ACHIEVEMENTS = IS_MAINLINE or IS_FOREVER or IS_MISTS
+-- The minimap's addon compartment (the dropdown next to the Minimap) only exists on the mainline family. The
+-- classic clients ship no AddonCompartmentFrame at all, which is why they fall back to the minimap button.
+local HAS_COMPARTMENT = AddonCompartmentFrame ~= nil
 
 -- luacheck: push ignore DEBUG_BUILD
 ---@type boolean
@@ -64,6 +67,7 @@ ns.IS_MISTS = IS_MISTS
 ns.IS_CLASSIC_ERA = IS_CLASSIC_ERA
 ns.IS_TBC = IS_TBC
 ns.HAS_ACHIEVEMENTS = HAS_ACHIEVEMENTS
+ns.HAS_COMPARTMENT = HAS_COMPARTMENT
 ns.DEBUG_BUILD = DEBUG_BUILD
 
 ---One Blizzard event the addon can screenshot on.

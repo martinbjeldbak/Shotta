@@ -33,6 +33,10 @@ minimap): click it to open the settings, shift-click for a screenshot without
 the UI, or control-click to include the UI. Prefer a button on the minimap
 ring? Enable "Show minimap button too" in the settings.
 
+Mists of Pandaria Classic, Classic Era and Burning Crusade Classic Anniversary
+have no addon compartment, so on those clients Shotta always shows the minimap
+button instead — that is the only way in.
+
 Every library is embedded, so there is nothing else to install. New events are
 added regularly and suggestions are very welcome via GitHub issues or Discord.
 
@@ -165,7 +169,7 @@ keeps both the tool pins and GitHub Actions up to date (see `renovate.json`).
 
 ### TODO
 
-- [x] Ability to hide/show minimap icon (Shotta lives in the minimap's addon compartment; the ring button is opt-in)
+- [x] Ability to hide/show minimap icon (compartment entry on Retail and Forever, always-on minimap button on the Classic clients)
 - [ ] Ability to take 2 screenshots for every event: 1 with UI, 1 without
 - [ ] Setting to take screenshots with or without UI
 - [ ] More translation strings, see `localization.enUS.lua`

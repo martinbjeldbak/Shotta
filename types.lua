@@ -8,9 +8,9 @@
 ---@field timer table<minutes, boolean>
 
 ---@class ShottaMinimap
----@field hide boolean Set by MinimapDb; the inverse of floatButton. LibDBIcon uses it to hide the ring button
----@field floatButton boolean Whether the user also wants Shotta on the minimap ring, not just in the compartment
----@field showInCompartment boolean Forced on; Shotta is always listed in the minimap's addon compartment
+---@field hide boolean Derived at registration from floatButton, forced off where there is no compartment; hides the ring button
+---@field floatButton boolean Whether the user also wants Shotta on the minimap ring, not just in the compartment; ignored without one
+---@field showInCompartment boolean Forced on; Shotta is listed in the minimap's addon compartment where the client has one
 ---@field minimapPos number Angle in degrees around the minimap; LibDBIcon falls back to a crowded 225 when absent
 
 ---@class ShottaConstants
@@ -25,6 +25,7 @@
 ---@field IS_CLASSIC_ERA boolean Classic Era
 ---@field IS_TBC boolean Burning Crusade Classic Anniversary
 ---@field HAS_ACHIEVEMENTS boolean Only retail, Forever and MoP Classic have achievements
+---@field HAS_COMPARTMENT boolean Only the mainline family has a minimap addon compartment
 ---@field DEBUG_BUILD boolean Debug build, set by the packager's @debug@ filter
 ---@field Shotta Shotta The addon instance, created in main.lua
 

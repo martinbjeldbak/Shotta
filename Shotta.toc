@@ -1,6 +1,8 @@
 ## Interface: 120105, 16001, 50504, 11509, 20506
 ## Title: Shotta
 ## Notes: Take screenshots on events throughout adventures in Azeroth and beyond
+## Notes-zhCN: 在艾泽拉斯及更远之地的冒险中，于各类事件发生时自动截图
+## Notes-zhTW: 在艾澤拉斯及更遠之地的冒險中，於各類事件發生時自動截圖
 ## Category: Other
 ## Category-deDE: Anderes
 ## Category-esES: Otros

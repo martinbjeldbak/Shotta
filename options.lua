@@ -10,6 +10,7 @@ local IS_MISTS = ns.IS_MISTS
 local IS_CLASSIC_ERA = ns.IS_CLASSIC_ERA
 local IS_TBC = ns.IS_TBC
 local HAS_ACHIEVEMENTS = ns.HAS_ACHIEVEMENTS
+local HAS_COMPARTMENT = ns.HAS_COMPARTMENT
 
 local VERSION = ns.VERSION
 local UPDATED_TIMESTAMP = ns.UPDATED_TIMESTAMP
@@ -309,7 +310,11 @@ function Shotta:LoadOptions()
         type = 'description',
         order = 2,
       },
-      general_options = {
+      -- The only entry here is compartment-specific, and an inline group with no args still renders its heading,
+      -- so gate the whole group. Without a compartment the ring button is the only way into the addon, so a
+      -- toggle that hid it would strand the user on /shotta. If a general option is ever added, gate
+      -- `hideMinimap` alone instead.
+      general_options = HAS_COMPARTMENT and {
         name = localizedOptionName,
         type = 'group',
         order = 10,
@@ -329,7 +334,7 @@ function Shotta:LoadOptions()
             end,
           },
         },
-      },
+      } or nil,
       timer_events = {
         name = localizedOptionName,
         type = 'group',

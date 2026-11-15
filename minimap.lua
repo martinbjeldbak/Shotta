@@ -1,5 +1,7 @@
--- The minimap entry, registered through LibDataBroker and LibDBIcon. Shotta lives in the minimap's addon
--- compartment (the dropdown next to the Minimap); the floating ring button is opt-in via `minimap.floatButton`.
+-- The minimap entry, registered through LibDataBroker and LibDBIcon. On the mainline family Shotta lives in the
+-- minimap's addon compartment (the dropdown next to the Minimap) and the floating ring button is opt-in via
+-- `minimap.floatButton`. The classic clients have no compartment at all, so the ring button is the only way in
+-- there and is always shown.
 local _, ns = ...
 ---@type Shotta
 local Shotta = ns.Shotta
@@ -58,7 +60,8 @@ function Shotta:MinimapDb()
     minimap.floatButton = false
   end
 
-  -- Shotta's entry lives in the minimap's addon compartment; this is not a user setting, so it is forced on.
+  -- Shotta's entry lives in the minimap's addon compartment where the client has one; this is not a user setting,
+  -- so it is forced on. LibDBIcon ignores it where there is no AddonCompartmentFrame.
   minimap.showInCompartment = true
 
   -- minimapPos is deliberately not seeded here. LibDBIcon writes it every frame while the button is dragged, so
@@ -69,7 +72,8 @@ function Shotta:MinimapDb()
 end
 
 ---Show or hide the optional minimap ring button. `hide` is the inverse of `floatButton` because that is the
----field LibDBIcon reads, both at registration and here. This is the only place `hide` is written.
+---field LibDBIcon reads, both at registration and here. This is the only place a user choice writes it; the
+---option is not offered on clients without a compartment, where `RegisterMinimapIcon` keeps the button shown.
 ---@param float boolean Whether the ring button should be visible
 function Shotta:SetMinimapFloat(float)
   local minimap = self:MinimapDb()
@@ -88,6 +92,8 @@ function Shotta:RegisterMinimapIcon()
   local minimap = self:MinimapDb()
   -- Registration reads `hide` to decide whether the ring button is shown at login, so apply the saved choice
   -- before handing the table over. Register also copies it into the compartment when showInCompartment is true.
-  minimap.hide = not minimap.floatButton
+  -- Where there is no compartment the ring button is the only way in, so it is shown regardless of what the
+  -- profile has stored, and the option that would hide it is not registered there.
+  minimap.hide = ns.HAS_COMPARTMENT and not minimap.floatButton
   LibStub('LibDBIcon-1.0'):Register('Shotta', iconOptions, minimap)
 end

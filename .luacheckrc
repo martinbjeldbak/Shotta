@@ -2,6 +2,7 @@ std = 'lua51'
 max_line_length = 160
 
 read_globals = {
+  'AddonCompartmentFrame',
   'C_EncounterJournal',
   'C_Map',
   'C_Timer',

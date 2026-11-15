@@ -10,6 +10,7 @@
   "workspace.checkThirdParty": false,
   "workspace.ignoreDir": [".git", "Libs"],
   "diagnostics.globals": [
+    "AddonCompartmentFrame",
     "C_EncounterJournal",
     "C_Map",
     "C_Timer",
